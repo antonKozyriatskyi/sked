@@ -2,7 +2,7 @@ package kozyriatskyi.anton.sked.ui.custom
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.StringDef
+import android.support.annotation.IntDef
 import android.support.design.widget.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,7 @@ import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.storage.StorageManager
 import kozyriatskyi.anton.sked.util.find
+import kotlin.properties.Delegates
 
 
 /**
@@ -23,16 +24,16 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         const val TAG = "lds"
 
         const val USER_TYPE = "type"
-        const val USER_TYPE_STUDENT = "type_student"
-        const val USER_TYPE_TEACHER = "type_teacher"
+        const val USER_TYPE_STUDENT = 1L
+        const val USER_TYPE_TEACHER = 2L
 
-        @StringDef(USER_TYPE_STUDENT, USER_TYPE_TEACHER)
+        @IntDef(USER_TYPE_STUDENT, USER_TYPE_TEACHER)
         @Retention(AnnotationRetention.SOURCE)
         annotation class Type
 
         private const val KEY_LESSON = "lesson"
 
-        fun create(lesson: LessonUi, @Type type: String): LessonDetailsSheet {
+        fun create(lesson: LessonUi, @Type type: Long): LessonDetailsSheet {
             val manager = StorageManager.get()
             val storage = manager.obtainStorage(TAG)
             storage.save(KEY_LESSON, lesson)
@@ -41,8 +42,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private lateinit var lesson: LessonUi
-    private lateinit var userType: String
+    private var userType: Long by Delegates.notNull()
 
     private lateinit var name: TextView
     private lateinit var type: TextView
@@ -56,7 +56,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val storageManager = StorageManager.get()
         val storage = storageManager.obtainStorage(TAG)
-        userType = storage.getString(USER_TYPE)!!
+        userType = storage.getLong(USER_TYPE)
         val layoutId = if (userType == USER_TYPE_STUDENT) R.layout.bottomsheet_lesson_student else R.layout.bottomsheet_lesson_teacher
         val rootView = inflater.inflate(layoutId, container, false)
 
@@ -69,9 +69,11 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         date = rootView.find<TextView>(R.id.details_date_value)
         addedOn = rootView.find<TextView>(R.id.details_added_on_value)
 
-        lesson = storage.get<LessonUi>(KEY_LESSON)!!
+        val lesson = storage.get<LessonUi>(KEY_LESSON)
 
-        showLesson(lesson)
+        if (lesson != null) {
+            showLesson(lesson)
+        }
 
         return rootView
     }
