@@ -54,6 +54,17 @@ public class Storage {
         return (int) object;
     }
 
+    @NotNull
+    public long getLong(String key) {
+        ensureState();
+
+        Object object = objects.get(key);
+
+        if (object == null) return 0;
+
+        return (long) object;
+    }
+
     @Nullable
     public String getString(String key) {
         ensureState();
