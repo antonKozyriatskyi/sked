@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_main_update"
+        android:actionLayout="@layout/action_main_progress"
+        android:icon="@drawable/ic_notif_update"
+        android:title="@string/nav_update"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/main_relogin"
+        android:title="@string/nav_relogin" />
+
+    <!--<item
+        android:id="@+id/navigation_add_sun"
+        android:title="Add sun" />
+
+    <item
+        android:id="@+id/navigation_rem_sun"
+        android:title="Rem sun" />
+
+    <item
+        android:id="@+id/navigation_add_sat"
+        android:icon="@drawable/nav_day"
+        android:title="Add sat" />
+
+    <item
+        android:id="@+id/navigation_rem_sat"
+        android:icon="@drawable/nav_day"
+        android:title="Rem sat" />
+
+    <item
+        android:id="@+id/navigation_daynight"
+        android:icon="@drawable/nav_settings"
+        android:title="Notif" />-->
+
+    <item
+        android:id="@+id/main_preferences"
+        android:icon="@drawable/nav_settings"
+        android:title="@string/nav_settings" />
+
+    <item
+        android:id="@+id/main_about"
+        android:icon="@drawable/nav_about"
+        android:title="@string/nav_about" />
+
+</menu>

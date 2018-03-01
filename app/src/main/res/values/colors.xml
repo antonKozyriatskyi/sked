@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App colors -->
+    <color name="primary">@color/teal500</color>
+    <color name="primaryDark">@color/teal700</color>
+    <color name="primaryLight">@color/teal300</color>
+    <color name="accent">@color/lightGreen400</color>
+
+    <color name="textPrimary">@color/grey900</color>
+    <color name="textSecondary">@color/grey600</color>
+    <color name="textIcons">@color/white</color>
+
+    <color name="lessonTypeUnknown">@color/black</color>
+    <color name="lessonTypeExam">@color/yellowAс700</color>
+    <color name="lessonTypeExamLight">@color/purpleAс100</color>
+    <color name="lessonTypeLab">@color/lightBlue700</color>
+    <color name="lessonTypeLabLight">@color/blue300</color>
+    <color name="lessonTypeLecture">@color/orange300</color>
+    <color name="lessonTypeLectureLight">@color/orange800</color>
+    <color name="lessonTypePractice">@color/green800</color>
+    <color name="lessonTypePracticeLight">@color/green400</color>
+    <color name="lessonTypeLessonsDivider">@color/grey300</color>
+    <color name="lessonTypeSeminar">@color/redAс700</color>
+    <color name="lessonTypeSeminarLight">@color/redAс100</color>
+    <color name="lessonTypeTest">@color/lightGreenAс400</color>
+    <color name="lessonTypeTestLight">@color/lightGreenAс200</color>
+
+    <color name="licenseBackground">@color/grey200</color>
+
+    <color name="dividerColor">@color/grey300</color>
+
+
+    <!-- Palette -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="blue300">#64b5f6</color>
+
+    <color name="green400">#66bb6a</color>
+    <color name="green800">#2e7d32</color>
+
+    <color name="grey200">#eeeeee</color>
+    <color name="grey300">#e0e0e0</color>
+    <color name="grey600">#757575</color>
+    <color name="grey600A120">#78757575</color>
+    <color name="grey900">#212121</color>
+
+    <color name="lightBlue700">#FF0288D1</color>
+    <color name="lightGreen400">#9ccc65</color>
+    <color name="lightGreenAс200">#b2ff59</color>
+    <color name="lightGreenAс400">#FF76FF03</color>
+
+    <color name="orange300">#ffb74d</color>
+    <color name="orange800">#ef6c00</color>
+
+    <color name="purpleAс100">#FFEA80FC</color>
+
+    <color name="redAс100">#ff8a80</color>
+    <color name="redAс700">#d50000</color>
+
+    <color name="teal300">#64FFDA</color>
+    <color name="teal500">#009688</color>
+    <color name="teal700">#00796B</color>
+
+    <color name="tealAс200">#64FFDA</color>
+    <color name="tealAс400">#1DE9B6</color>
+    <color name="tealAс700">#00BFA5</color>
+
+    <color name="yellowAс700">#ffd600</color>
+
+
+    <!--<typeColor name="colorUnknownType">@typeColor/black</typeColor>-->
+    <!--<typeColor name="colorExam">#ffd000</typeColor>-->
+    <!--<typeColor name="colorExamLight">#df7ae6</typeColor>-->
+    <!--<typeColor name="colorLab">#007ada</typeColor>-->
+    <!--<typeColor name="colorLabLight">#71c0ff</typeColor>-->
+    <!--<typeColor name="colorLecture">#d67b0c</typeColor>-->
+    <!--<typeColor name="colorLectureLight">#ffb255</typeColor>-->
+    <!--<typeColor name="colorPractice">#00a900</typeColor>-->
+    <!--<typeColor name="colorPracticeLight">#70c470</typeColor>-->
+    <!--<typeColor name="colorLessonsDivider">#d2d2d2</typeColor>-->
+    <!--<typeColor name="colorSeminar">#d20007</typeColor>-->
+    <!--<typeColor name="colorSeminarLight">#ff7f83</typeColor>-->
+    <!--<typeColor name="colorTest">#55ff00</typeColor>-->
+    <!--<typeColor name="colorTestLight">#a5ff78</typeColor>-->
+
+</resources>

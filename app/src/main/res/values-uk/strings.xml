@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="login_course">Курс</string>
+    <string name="login_department">Кафедра</string>
+    <string name="login_faculty">Факультет</string>
+    <string name="login_group">Група</string>
+    <string name="login_student">Студент</string>
+    <string name="login_teacher">Викладач</string>
+
+    <string-array name="pref_theme_themes">
+        <item>Авто</item>
+        <item>Світла</item>
+        <item>Темна</item>
+    </string-array>
+
+    <string-array name="pref_theme_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="days_of_week">
+        <item>Понеділок</item>
+        <item>Вівторок</item>
+        <item>Середа</item>
+        <item>Четвер</item>
+        <item>П\'ятниця</item>
+        <item>Субота</item>
+        <item>Неділя</item>
+    </string-array>
+
+    <string name="about_activity_title">Про додаток</string>
+    <string name="about_developed_by">Розроблено Антоном Козиряцьким</string>
+    <string name="exit">Вийти</string>
+    <string name="intro_title">Виберіть свою сторону</string>
+    <string name="login_load_schedule">Завантажити розклад</string>
+    <string name="login_no_connection">Очікуюємо підключення</string>
+    <string name="nav_about">Про додаток</string>
+    <string name="nav_by_day_schedule">День</string>
+    <string name="nav_by_week_schedule">Тиждень</string>
+    <string name="nav_relogin">Перезайти</string>
+    <string name="nav_settings">Налаштування</string>
+    <string name="no_lessons">Немає пар</string>
+    <string name="notification_schedule_updated_successfully">Розклад оновлено</string>
+    <string name="notification_schedule_updated_unsuccessfully">Не вдалось оновити розклад</string>
+    <string name="pref_notifications_header">Сповіщення</string>
+    <string name="pref_notifications_schedule_updates_summary">Сповіщати про оновлення розкладу</string>
+    <string name="pref_theme_header">Тема</string>
+    <string name="pref_notifications_schedule_updates_title">Оновлення розкладу</string>
+    <string name="retry">Спробувати знов</string>
+    <string name="settings_title">Налаштування</string>
+    <string name="login_error_courses">Помилка при завантаженні курсів</string>
+    <string name="login_error_departments">Помилка при завантаженні кафедр</string>
+    <string name="login_error_faculties">Помилка при завантаженні факультетів</string>
+    <string name="login_error_groups">Помилка при завантаженні груп</string>
+    <string name="login_error_schedule">Помилка при завантаженні розкладу</string>
+    <string name="login_error_students">Помилка при завантаженні студентів</string>
+    <string name="login_error_teachers">Помилка при завантаженні вчителів</string>
+    <string name="nav_update">Оновити</string>
+    <string name="pref_appearance_header">Зовнішній вигляд</string>
+    <string name="settings_schedule_update_time">Розклад було оновлено</string>
+    <string name="lesson_details_name">Назва:</string>
+    <string name="lesson_details_type">Тип:</string>
+    <string name="lesson_details_number">Номер пари:</string>
+    <string name="lesson_details_time">Час:</string>
+    <string name="lesson_details_date">Дата:</string>
+    <string name="lesson_details_added_on">Додано:</string>
+    <string name="lesson_details_who_groups">Група(и):</string>
+    <string name="lesson_details_who_teacher">Викладач:</string>
+    <string name="lesson_details_room">Аудиторія:</string>
+
+</resources>

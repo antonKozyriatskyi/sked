@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_day_tv_no_lessons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_lessons"
+        android:layout_above="@+id/item_day_tv_no_lessons_date"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/item_day_tv_no_lessons_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="27.08" />
+
+</RelativeLayout>

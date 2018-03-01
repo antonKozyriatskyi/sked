@@ -1,0 +1,38 @@
+package kozyriatskyi.anton.sked.data.pojo
+
+/**
+ * Created by Anton on 08.07.2017.
+ */
+
+sealed class User {
+    abstract val name: String
+    abstract val type: Type
+
+    enum class Type { STUDENT, TEACHER }
+}
+
+class Student : User() {
+    var faculty = ""
+    var facultyId = ""
+    var course = ""
+    var courseId = ""
+    var group = ""
+    var groupId = ""
+
+    override val type: Type = Type.STUDENT
+
+    override val name: String
+        get() = group
+}
+
+class Teacher : User() {
+    var department = ""
+    var departmentId = ""
+    var teacher = ""
+    var teacherId = ""
+
+    override val type: Type = Type.TEACHER
+
+    override val name: String
+        get() = teacher
+}

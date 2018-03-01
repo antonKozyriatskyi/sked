@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="exit">Выйти</string>
+    <string name="about_activity_title">О приложении</string>
+    <string name="about_developed_by">Разработано Антоном Козыряцким</string>
+    <string name="intro_title">Выберите свою сторону</string>
+    <string name="login_course">Курс</string>
+    <string name="login_department">Кафедра</string>
+    <string name="login_error_courses">Ошибка при загрузке курсов</string>
+    <string name="login_error_departments">Ошибка при загрузке кафедр</string>
+    <string name="login_error_faculties">Ошибка при загрузке факультетов</string>
+    <string name="login_error_groups">Ошибка при загрузке груп</string>
+    <string name="login_error_schedule">Ошибка при загрузке расписания</string>
+    <string name="login_error_students">Ошибка при загрузке студентов</string>
+    <string name="login_error_teachers">Ошибка при загрузке преподавателей</string>
+    <string name="login_faculty">Факультет</string>
+    <string name="login_group">Группа</string>
+    <string name="login_load_schedule">Загрузить расписание</string>
+    <string name="login_no_connection">Ожидаем подключения</string>
+    <string name="login_student">Студент</string>
+    <string name="login_teacher">Преподаватель</string>
+    <string name="nav_about">О приложении</string>
+    <string name="nav_by_day_schedule">День</string>
+    <string name="nav_by_week_schedule">Неделя</string>
+    <string name="nav_relogin">Перезайти</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="no_lessons">Нет пар</string>
+    <string name="notification_schedule_updated_successfully">Расписание обновлено</string>
+    <string name="notification_schedule_updated_unsuccessfully">Не удалось обновить расписание</string>
+    <string name="pref_notifications_header">Уведомления</string>
+    <string name="pref_notifications_schedule_updates_summary">Уведомлять об обновлении расписания</string>
+    <string name="pref_notifications_schedule_updates_title">Обновление расписания</string>
+    <string name="pref_theme_header">Тема</string>
+    <string name="retry">Попробовать еще раз</string>
+    <string name="settings_title">Настройки</string>
+
+    <string-array name="pref_theme_themes">
+        <item>Авто</item>
+        <item>Светлая</item>
+        <item>Темная</item>
+    </string-array>
+
+    <string-array name="pref_theme_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="days_of_week">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+
+    <string name="nav_update">Обновить</string>
+    <string name="pref_appearance_header">Внешний вид</string>
+
+    <string name="settings_schedule_update_time">Расписание было обновлено</string>
+    <string name="lesson_details_name">Название:</string>
+    <string name="lesson_details_type">Тип:</string>
+    <string name="lesson_details_number">Номер пары:</string>
+    <string name="lesson_details_time">Время:</string>
+    <string name="lesson_details_date">Дата:</string>
+    <string name="lesson_details_added_on">Добавлено:</string>
+    <string name="lesson_details_who_groups">Группа(ы):</string>
+    <string name="lesson_details_who_teacher">Преподаватель:</string>
+    <string name="lesson_details_room">Аудитория:</string>
+
+</resources>
