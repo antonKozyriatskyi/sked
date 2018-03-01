@@ -22,9 +22,10 @@ class DayViewPresenter(private val dayNumber: Int, private val nextWeek: Boolean
     }
 
     fun onLessonClick(lesson: LessonUi) {
-        if (interactor.getUser().type == User.Type.TEACHER) {
+        val type = interactor.getUser().type
+        if (type == User.Type.TEACHER) {
             viewState.showTeacherLessonDetails(lesson)
-        } else if (interactor.getUser().type == User.Type.STUDENT) {
+        } else if (type == User.Type.STUDENT) {
             viewState.showStudentLessonDetails(lesson)
         }
     }
