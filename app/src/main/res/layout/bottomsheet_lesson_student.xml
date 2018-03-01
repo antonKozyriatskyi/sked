@@ -78,7 +78,7 @@
             app:layout_constraintLeft_toRightOf="@+id/details_cabinet"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/details_cabinet"
-            tools:text="228" />
+            tools:text="222" />
 
         <TextView
             android:id="@+id/details_date_value"
