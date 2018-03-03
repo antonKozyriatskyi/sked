@@ -3,6 +3,7 @@ package kozyriatskyi.anton.sked.util
 import android.content.Context
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
+import kozyriatskyi.anton.sked.updater.UpdaterJobService
 
 class JobManager(private val context: Context) {
 

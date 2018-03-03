@@ -1,7 +1,7 @@
 package kozyriatskyi.anton.sked.data.parser
 
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
-import kozyriatskyi.anton.sked.domain.repository.TeacherScheduleLoader
+import kozyriatskyi.anton.sked.repository.TeacherScheduleLoader
 import kozyriatskyi.anton.sked.util.DateUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element

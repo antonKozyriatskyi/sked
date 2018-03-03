@@ -2,7 +2,7 @@ package kozyriatskyi.anton.sked.data.repository
 
 import kozyriatskyi.anton.sked.data.parser.TeacherInfoParser
 import kozyriatskyi.anton.sked.data.pojo.Item
-import kozyriatskyi.anton.sked.domain.repository.TeacherInfoLoader
+import kozyriatskyi.anton.sked.repository.TeacherInfoLoader
 
 class TeacherParsedInfoLoader(private val parser: TeacherInfoParser) : TeacherInfoLoader {
 

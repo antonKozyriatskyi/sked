@@ -12,9 +12,9 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.di.module.StorageModule
-import kozyriatskyi.anton.sked.domain.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
-import kozyriatskyi.anton.sked.util.UpdaterJobService
+import kozyriatskyi.anton.sked.updater.UpdaterJobService
 import kozyriatskyi.anton.sked.util.logD
 import kozyriatskyi.anton.sked.util.logE
 

@@ -10,7 +10,7 @@ import kozyriatskyi.anton.sked.data.repository.ScheduleDatabase
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.App
-import kozyriatskyi.anton.sked.domain.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import javax.inject.Named
 

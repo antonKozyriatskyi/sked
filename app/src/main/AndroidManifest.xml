@@ -20,15 +20,15 @@
 
         <service
             android:exported="false"
-            android:name=".util.UpdaterJobService">
+            android:name=".updater.UpdaterJobService">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".login.LoginActivity" />
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/main_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,15 +37,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/settings_title"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.activity.IntroActivity"
+            android:name=".intro.IntroActivity"
             android:label="@string/intro_title"
             android:theme="@style/AppTheme" />
 
-        <activity android:name=".ui.activity.AboutActivity"
+        <activity android:name=".about.AboutActivity"
             android:label="@string/about_activity_title"
             android:theme="@style/AppTheme"/>
 

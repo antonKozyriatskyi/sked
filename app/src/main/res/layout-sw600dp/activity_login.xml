@@ -9,7 +9,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    tools:context="kozyriatskyi.anton.sked.ui.activity.LoginActivity">
+    tools:context="kozyriatskyi.anton.sked.login.LoginActivity">
 
     <FrameLayout
         android:id="@+id/login_layout_container"

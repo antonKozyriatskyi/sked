@@ -4,9 +4,9 @@ import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.data.pojo.User
-import kozyriatskyi.anton.sked.domain.repository.ScheduleLoader
-import kozyriatskyi.anton.sked.domain.repository.StudentScheduleLoader
-import kozyriatskyi.anton.sked.domain.repository.TeacherScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.StudentScheduleLoader
+import kozyriatskyi.anton.sked.repository.TeacherScheduleLoader
 
 /**
  * Created by Anton on 26.07.2017.

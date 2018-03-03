@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import kozyriatskyi.anton.sked.data.LessonsDatabase
 import kozyriatskyi.anton.sked.data.pojo.Day
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
-import kozyriatskyi.anton.sked.domain.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 
 /**

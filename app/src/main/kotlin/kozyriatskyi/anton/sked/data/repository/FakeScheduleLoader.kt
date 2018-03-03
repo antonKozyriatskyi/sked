@@ -2,7 +2,7 @@ package kozyriatskyi.anton.sked.data.repository
 
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
 import kozyriatskyi.anton.sked.data.pojo.User
-import kozyriatskyi.anton.sked.domain.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import java.text.SimpleDateFormat
 import java.util.*
 

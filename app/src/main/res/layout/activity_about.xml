@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="kozyriatskyi.anton.sked.ui.activity.AboutActivity">
+    tools:context="kozyriatskyi.anton.sked.about.AboutActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
