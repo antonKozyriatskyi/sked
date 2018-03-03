@@ -76,14 +76,8 @@ fun Context.toast(@StringRes id: Int, length: Int = Toast.LENGTH_LONG) {
     toast(getString(id), length)
 }
 
-/**
- * Log.i() function for any object
- **/
 fun Any.logI(str: String) = Log.i(this.javaClass.simpleName, str)
 
-/**
- * Log.e() function for any object
- **/
 fun Any.logE(str: String, t: Throwable? = null, tag: String = this.javaClass.simpleName) {
     if (t == null) {
         Log.e(tag, str)
@@ -92,9 +86,6 @@ fun Any.logE(str: String, t: Throwable? = null, tag: String = this.javaClass.sim
     }
 }
 
-/**
- * Log.d() function for any object
- **/
 fun Any.logD(str: String, t: Throwable? = null, tag: String = this.javaClass.simpleName) {
     if (t == null) {
         Log.d(tag, str)
