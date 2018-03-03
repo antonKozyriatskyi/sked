@@ -3,16 +3,24 @@ package kozyriatskyi.anton.sked.di
 import android.annotation.SuppressLint
 import android.content.Context
 import kozyriatskyi.anton.sked.byday.ByDayViewComponent
+import kozyriatskyi.anton.sked.byday.DaggerByDayViewComponent
 import kozyriatskyi.anton.sked.byweek.ByWeekViewComponent
+import kozyriatskyi.anton.sked.byweek.DaggerByWeekViewComponent
+import kozyriatskyi.anton.sked.day.DaggerDayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewModule
-import kozyriatskyi.anton.sked.di.component.*
 import kozyriatskyi.anton.sked.di.module.AppModule
+import kozyriatskyi.anton.sked.login.student.DaggerStudentLoginComponent
 import kozyriatskyi.anton.sked.login.student.StudentLoginComponent
+import kozyriatskyi.anton.sked.login.teacher.DaggerTeacherLoginComponent
 import kozyriatskyi.anton.sked.login.teacher.TeacherLoginComponent
+import kozyriatskyi.anton.sked.main.DaggerMainComponent
 import kozyriatskyi.anton.sked.main.MainComponent
+import kozyriatskyi.anton.sked.settings.DaggerSettingsComponent
 import kozyriatskyi.anton.sked.settings.SettingsComponent
+import kozyriatskyi.anton.sked.updater.DaggerUpdaterComponent
 import kozyriatskyi.anton.sked.updater.UpdaterComponent
+import kozyriatskyi.anton.sked.week.DaggerWeekViewComponent
 import kozyriatskyi.anton.sked.week.WeekViewComponent
 import kozyriatskyi.anton.sked.week.WeekViewModule
 
