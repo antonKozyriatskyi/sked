@@ -12,11 +12,8 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.di.module.StorageModule
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
-import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.updater.UpdaterJobService
 import kozyriatskyi.anton.sked.util.logD
-import kozyriatskyi.anton.sked.util.logE
 
 
 class App : BaseApplication() {
@@ -56,24 +53,6 @@ class App : BaseApplication() {
         } catch (ignore: IllegalStateException) {
             //no user saved - app is launched for the first time
         }
-
-        //update the schedule
-        val updaterJobComponent = Injector.updaterJobComponent()
-
-        val scheduleLoader: ScheduleLoader = updaterJobComponent.scheduleLoader()
-        val userInfoPreferences: UserInfoStorage = updaterJobComponent.userInfoPreferences()
-        val timeLogger: ScheduleUpdateTimeLogger = updaterJobComponent.timeLogger()
-
-        Thread {
-            try {
-                val user = userInfoPreferences.getUser()
-                scheduleLoader.getSchedule(user)
-                timeLogger.saveTime()
-            } catch (t: Throwable) {
-                logE("Error updating schedule: ${t.message}", t, tag = "TAG")
-                FirebaseCrash.report(t)
-            }
-        }.start()
     }
 
     private fun relaunchUpdaterJob() {
