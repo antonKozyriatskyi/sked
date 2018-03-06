@@ -7,7 +7,10 @@ import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
-import kozyriatskyi.anton.sked.di.module.*
+import kozyriatskyi.anton.sked.di.module.AppModule
+import kozyriatskyi.anton.sked.di.module.LoaderModule
+import kozyriatskyi.anton.sked.di.module.MapperModule
+import kozyriatskyi.anton.sked.di.module.StorageModule
 import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.FirebaseLogger
@@ -19,8 +22,7 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
  */
 
 @App
-@Component(modules = [AppModule::class, StorageModule::class, MapperModule::class, LoaderModule::class,
-    FormatterModule::class])
+@Component(modules = [AppModule::class, StorageModule::class, MapperModule::class, LoaderModule::class])
 interface AppComponent {
     fun appContext(): Context
     fun jobManager(): JobManager
