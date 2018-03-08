@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.updater
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -16,8 +17,8 @@ import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.main.MainActivity
+import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.util.logE
 import java.util.*
@@ -36,6 +37,9 @@ class UpdaterJobService : JobService() {
         private const val CHANNEL_ID = "updater_01"
         private const val NOTIFICATION_ID = 1
 
+        private const val START_HOUR = 18
+        private const val END_HOUR = 20
+
         fun start(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
 
@@ -47,12 +51,12 @@ class UpdaterJobService : JobService() {
             val job = dispatcher.newJobBuilder()
                     .setService(UpdaterJobService::class.java)
                     .setTag(TAG)
-                    .setRecurring(true)
+                    .setRecurring(false)
                     .setLifetime(Lifetime.FOREVER)
 //                    .setTrigger(Trigger.executionWindow(30, 60))
                     .setTrigger(Trigger.executionWindow(startTime, endTime))
                     .setReplaceCurrent(true)
-                    .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                    .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                     .setConstraints(Constraint.ON_ANY_NETWORK)
                     .build()
 
@@ -65,7 +69,7 @@ class UpdaterJobService : JobService() {
 
         private fun startTime(calendar: Calendar): Int {
             val sixPm = calendar.let {
-                it.set(Calendar.HOUR_OF_DAY, 18)
+                it.set(Calendar.HOUR_OF_DAY, START_HOUR)
                 it.set(Calendar.MINUTE, 0)
                 it.set(Calendar.SECOND, 0)
 
@@ -84,7 +88,7 @@ class UpdaterJobService : JobService() {
         }
 
         private fun endTime(calendar: Calendar): Int {
-            calendar.set(Calendar.HOUR_OF_DAY, 20)
+            calendar.set(Calendar.HOUR_OF_DAY, END_HOUR)
 
             val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
 
@@ -134,11 +138,14 @@ class UpdaterJobService : JobService() {
 
         if (notifyOnUpdate) sendNotification(isSuccessfullyUpdated, applicationContext)
 
+        start(applicationContext)
+
         jobFinished(job, isSuccessfullyUpdated.not())
 
         return isSuccessfullyUpdated
     }
 
+    @SuppressLint("NewApi")
     private fun sendNotification(successfullyUpdated: Boolean, context: Context) {
         val intent = Intent(context, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
