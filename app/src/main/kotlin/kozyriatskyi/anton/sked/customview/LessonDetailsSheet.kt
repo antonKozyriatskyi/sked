@@ -23,7 +23,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "lds"
 
-        const val USER_TYPE = "type"
+        private const val USER_TYPE = "type"
         const val USER_TYPE_STUDENT = 1L
         const val USER_TYPE_TEACHER = 2L
 
