@@ -23,14 +23,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.BuildConfig
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
-import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.about.AboutActivity
 import kozyriatskyi.anton.sked.byday.ByDayViewFragment
 import kozyriatskyi.anton.sked.byweek.ByWeekViewFragment
-import kozyriatskyi.anton.sked.settings.SettingsActivity
-import kozyriatskyi.anton.sked.about.AboutActivity
+import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
+import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.intro.IntroActivity
+import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.settings.SettingsActivity
 import kozyriatskyi.anton.sked.util.toast
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -143,34 +143,11 @@ class MainActivity : MvpAppCompatActivity(), MainView, BottomNavigationView.OnNa
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        val scheduleRxDatabase = database as ScheduleRxDatabase
         when (item.itemId) {
-        /* R.id.navigation_add_sat -> {
-             Thread {
-                 scheduleRxDatabase.addLessons(arrayListOf(LessonDb(DateUtils.saturdayDate(0), "3", "Лк", "228", "КПЗ", "Конст прогр заб",
-                         "addedOnDate", "addedOnTime", "Yaskevich")))
-             }.start()
-         }
-         R.id.navigation_rem_sat -> {
-             Thread {
-                 scheduleRxDatabase.deleteAllByDate(DateUtils.saturdayDate(0))
-             }.start()
-         }
-         R.id.navigation_add_sun -> {
-             Thread {
-                 scheduleRxDatabase.addLessons(arrayListOf(LessonDb(DateUtils.sundayDate(0),
-                         "${Random().nextInt(9) + 1}", "Лк",
-                         "228", "КПЗ", "Конст прогр заб", "addedOnDate", "addedOnTime", "Yaskevich")))
-             }.start()
-         }
-         R.id.navigation_rem_sun -> {
-             Thread {
-                 scheduleRxDatabase.deleteAllByDate(DateUtils.sundayDate(0))
-             }.start()
-         }*/
-
             R.id.main_relogin -> IntroActivity.start(this)
 
             R.id.main_preferences -> SettingsActivity.start(this)
             33 /*Show notification*/ -> {
+                // only for debugging
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
