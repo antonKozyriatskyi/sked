@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.App
-import kozyriatskyi.anton.sked.util.FirebaseLogger
+import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 
 /**
@@ -23,7 +23,7 @@ class AppModule(private val appContext: Context) {
     fun provideJobManager(): JobManager = JobManager(appContext)
 
     @Provides
-    fun provideFirebaseLogger(): FirebaseLogger = FirebaseLogger(appContext)
+    fun provideFirebaseLogger(): FirebaseAnalyticsLogger = FirebaseAnalyticsLogger(appContext)
 
     @App
     @Provides

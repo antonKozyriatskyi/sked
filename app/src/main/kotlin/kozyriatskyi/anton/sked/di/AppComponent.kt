@@ -13,7 +13,7 @@ import kozyriatskyi.anton.sked.di.module.MapperModule
 import kozyriatskyi.anton.sked.di.module.StorageModule
 import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
-import kozyriatskyi.anton.sked.util.FirebaseLogger
+import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 
@@ -26,7 +26,7 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 interface AppComponent {
     fun appContext(): Context
     fun jobManager(): JobManager
-    fun firebaseLogger(): FirebaseLogger
+    fun firebaseLogger(): FirebaseAnalyticsLogger
     fun resourceManager(): ResourceManager
     fun userInfoStorage(): UserInfoStorage
     fun userSettingsStorage(): UserSettingsStorage

@@ -11,7 +11,7 @@ import kozyriatskyi.anton.sked.di.Login
 import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.StudentInfoLoader
-import kozyriatskyi.anton.sked.util.FirebaseLogger
+import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 
 @Module
@@ -34,7 +34,7 @@ class StudentLoginModule {
                           scheduleRepository: ScheduleStorage,
                           connectionStateProvider: ConnectionStateProvider,
                           mapper: LessonMapper, jobManager: JobManager,
-                          logger: FirebaseLogger): StudentLoginInteractor {
+                          logger: FirebaseAnalyticsLogger): StudentLoginInteractor {
 
         return StudentLoginInteractor(studentInfoProvider, userUserInfoStorage,
                 studentNetworkScheduleLoader, scheduleRepository, connectionStateProvider, mapper,
