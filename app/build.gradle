@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 android {
     signingConfigs {
@@ -93,7 +94,10 @@ dependencies {
 
     compile "com.firebase:firebase-jobdispatcher:$firebase_job_dispatcher"
     compile "com.google.firebase:firebase-core:$firebase"
-    compile "com.google.firebase:firebase-crash:$firebase"
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
 
     compile "org.jsoup:jsoup:$jsoup"
 
