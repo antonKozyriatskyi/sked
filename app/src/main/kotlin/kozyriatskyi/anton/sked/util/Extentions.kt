@@ -39,7 +39,6 @@ fun ViewGroup.inflate(@LayoutRes layout: Int, inflater: LayoutInflater = LayoutI
  *  rootView.find<TextView>(R.id.my_text_view)
  * */
 @Suppress("UNCHECKED_CAST")
-@Deprecated("", ReplaceWith("findViewById<T>(id)"))
 fun <T : View?> View.find(@IdRes id: Int): T = findViewById<T>(id)
 
 /**
