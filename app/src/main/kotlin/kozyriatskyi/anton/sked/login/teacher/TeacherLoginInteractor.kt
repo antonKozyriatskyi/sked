@@ -1,6 +1,6 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import com.google.firebase.crash.FirebaseCrash
+import com.crashlytics.android.Crashlytics
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -12,7 +12,7 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.TeacherInfoLoader
-import kozyriatskyi.anton.sked.util.FirebaseLogger
+import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 import java.util.*
 
@@ -23,7 +23,7 @@ class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoLoader,
                              private val connectionStateProvider: ConnectionStateProvider,
                              private val mapper: LessonMapper,
                              private val jobManager: JobManager,
-                             private val logger: FirebaseLogger) {
+                             private val logger: FirebaseAnalyticsLogger) {
 
     private val departments = PublishRelay.create<Boolean>()
     private val teachers = PublishRelay.create<String>()
@@ -66,7 +66,7 @@ class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoLoader,
                 jobManager.launchUpdaterJob()
                 logger.logTeacher()
             }
-            .doOnError { FirebaseCrash.report(it) }
+            .doOnError { Crashlytics.logException(it) }
 
     fun saveUser(teacher: Teacher) = userInfoStorage.saveUser(teacher)
 }
