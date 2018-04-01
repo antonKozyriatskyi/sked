@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import kozyriatskyi.anton.sked.BuildConfig
 
 /**
  * Created by Anton Kozyriatskyi on 30.07.16.
@@ -29,7 +30,7 @@ import android.widget.Toast
  * */
 fun ViewGroup.inflate(@LayoutRes layout: Int, inflater: LayoutInflater = LayoutInflater.from(context),
                       attachToRoot: Boolean = false): View =
-        // 'this' refers to the ViewGroup this function is called on
+// 'this' refers to the ViewGroup this function is called on
         inflater.inflate(layout, this, attachToRoot)
 
 /**
@@ -86,10 +87,12 @@ fun Any.logE(str: String, t: Throwable? = null, tag: String = this.javaClass.sim
 }
 
 fun Any.logD(str: String, t: Throwable? = null, tag: String = this.javaClass.simpleName) {
-    if (t == null) {
-        Log.d(tag, str)
-    } else {
-        Log.d(tag, str, t)
+    if (BuildConfig.DEBUG) {
+        if (t == null) {
+            Log.d(tag, str)
+        } else {
+            Log.d(tag, str, t)
+        }
     }
 }
 
