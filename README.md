@@ -1,5 +1,5 @@
 # Sked
-Application that displays timetable for all students of State University of Telecommunications
+Application that displays timetable for all students and teachers of State University of Telecommunications
 
 ## LICENSE
 ```
