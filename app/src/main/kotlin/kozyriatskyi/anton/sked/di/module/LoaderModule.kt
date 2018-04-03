@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.data.parser.StudentScheduleParser
 import kozyriatskyi.anton.sked.data.parser.TeacherScheduleParser
-import kozyriatskyi.anton.sked.data.repository.NetworkScheduleLoader
+import kozyriatskyi.anton.sked.data.repository.ParsedScheduleLoader
 import kozyriatskyi.anton.sked.di.App
 import kozyriatskyi.anton.sked.repository.ScheduleLoader
 import kozyriatskyi.anton.sked.repository.StudentScheduleLoader
@@ -38,7 +38,7 @@ class LoaderModule {
     @App
     fun provideScheduleLoader(studentScheduleLoader: StudentScheduleLoader,
                               teacherScheduleLoader: TeacherScheduleLoader): ScheduleLoader {
-        return NetworkScheduleLoader(studentScheduleLoader, teacherScheduleLoader)
+        return ParsedScheduleLoader(studentScheduleLoader, teacherScheduleLoader)
     }
 
 //    @Provides
