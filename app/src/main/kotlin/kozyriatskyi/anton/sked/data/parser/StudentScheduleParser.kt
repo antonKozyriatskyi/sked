@@ -40,7 +40,7 @@ class StudentScheduleParser : StudentScheduleLoader {
     Добавлено: 13.12.2017 12:09<br>        | Добавлено: (.*)\s(.*)<br>\s*   - added on date, added on time
     <a href='#'>Доп. материалы</a          | <a href='#'>Доп\. материалы</a
     */
-    private val generalPattern: Pattern by lazy {
+    private val allInfoPattern: Pattern by lazy {
         Pattern.compile("(.*)\\[(.*)\\]<br>\\s*<br>\\s*ауд\\. (.*)<br>\\s*(.*)<br>\\s*Добавлено: (.*)\\s(.*)<br>\\s*<a href='#'>Доп\\. материалы</a")
     }
 
@@ -88,7 +88,7 @@ class StudentScheduleParser : StudentScheduleLoader {
                         val longLessonData = element.attr("data-content")
 
                         val text = element.child(0).html()
-                        val generalMatcher = generalPattern.matcher(longLessonData)
+                        val generalMatcher = allInfoPattern.matcher(longLessonData)
                         var shortNameMatcher = shortNamePattern.matcher(text)
 
                         val number = lessonNumbers[div_ind]
