@@ -6,9 +6,6 @@ package kozyriatskyi.anton.sked.data.pojo
 
 sealed class User {
     abstract val name: String
-    abstract val type: Type
-
-    enum class Type { STUDENT, TEACHER }
 }
 
 class Student : User() {
@@ -19,8 +16,6 @@ class Student : User() {
     var group = ""
     var groupId = ""
 
-    override val type: Type = Type.STUDENT
-
     override val name: String
         get() = group
 }
@@ -30,8 +25,6 @@ class Teacher : User() {
     var departmentId = ""
     var teacher = ""
     var teacherId = ""
-
-    override val type: Type = Type.TEACHER
 
     override val name: String
         get() = teacher
