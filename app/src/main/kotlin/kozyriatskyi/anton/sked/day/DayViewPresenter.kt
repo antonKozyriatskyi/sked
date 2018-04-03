@@ -6,7 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
-import kozyriatskyi.anton.sked.data.pojo.User
+import kozyriatskyi.anton.sked.data.pojo.Student
+import kozyriatskyi.anton.sked.data.pojo.Teacher
 
 @InjectViewState
 class DayViewPresenter(private val dayNumber: Int, private val nextWeek: Boolean,
@@ -20,10 +21,10 @@ class DayViewPresenter(private val dayNumber: Int, private val nextWeek: Boolean
     }
 
     fun onLessonClick(lesson: LessonUi) {
-        val type = interactor.getUser().type
-        if (type == User.Type.TEACHER) {
+        val user = interactor.getUser()
+        if (user is Teacher) {
             viewState.showTeacherLessonDetails(lesson)
-        } else if (type == User.Type.STUDENT) {
+        } else if (user is Student) {
             viewState.showStudentLessonDetails(lesson)
         }
     }
