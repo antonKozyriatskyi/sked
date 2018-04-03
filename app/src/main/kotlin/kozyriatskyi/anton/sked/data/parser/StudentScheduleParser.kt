@@ -43,9 +43,6 @@ class StudentScheduleParser : StudentScheduleLoader {
     private val generalPattern: Pattern by lazy {
         Pattern.compile("(.*)\\[(.*)\\]<br>\\s*<br>\\s*ауд\\. (.*)<br>\\s*(.*)<br>\\s*Добавлено: (.*)\\s(.*)<br>\\s*<a href='#'>Доп\\. материалы</a")
     }
-//    private val generalPattern: Pattern by lazy {
-//        Pattern.compile("([^\\[]+)\\[([а-яА-ЯіІїЇ'єЄґҐ*\\s]+)\\]\\s+ауд\\.\\s([\\da-zA-Zа-яА-ЯіІїЇєЄґҐ'. -]+)\\n*([а-яА-ЯіІїЇєЄґҐ'.\\s,-]*)\\s+Добавлено:\\s(\\d{0,2}\\.\\d{0,2}\\.\\d{0,4})\\s(\\d{0,2}:\\d{0,2})\\s+Доп\\. материалы")
-//    }
 
     override fun getSchedule(facultyId: String, courseId: String, groupId: String): List<LessonNetwork> {
         return parseSchedule(doc(facultyId, courseId, groupId)
