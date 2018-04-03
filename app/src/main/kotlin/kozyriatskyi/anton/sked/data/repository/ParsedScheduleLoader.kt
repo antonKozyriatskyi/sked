@@ -11,8 +11,8 @@ import kozyriatskyi.anton.sked.repository.TeacherScheduleLoader
 /**
  * Created by Anton on 26.07.2017.
  */
-class NetworkScheduleLoader(private val studentScheduleLoader: StudentScheduleLoader,
-                            private val teacherScheduleLoader: TeacherScheduleLoader) : ScheduleLoader {
+class ParsedScheduleLoader(private val studentScheduleLoader: StudentScheduleLoader,
+                           private val teacherScheduleLoader: TeacherScheduleLoader) : ScheduleLoader {
 
     override fun getSchedule(user: User): List<LessonNetwork> = when (user) {
         is Student -> {
