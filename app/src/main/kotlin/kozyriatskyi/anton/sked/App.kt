@@ -7,7 +7,7 @@ import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.firebase.analytics.FirebaseAnalytics
-import kozyriatskyi.anton.sked.data.pojo.User
+import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
@@ -44,12 +44,12 @@ class App : BaseApplication() {
         val userInfoStorage = UserInfoStorage(preferences)
 
         try {
-            val type = userInfoStorage.getUser().type
+            val user = userInfoStorage.getUser()
 
-            this.logD("USER_TYPE: $type")
-            val typeStr = if (type == User.Type.STUDENT) "student" else "teacher"
+            this.logD("USER_TYPE: $user")
+            val type = if (user is Student) "student" else "teacher"
             FirebaseAnalytics.getInstance(this)
-                    .setUserProperty("user_type", typeStr)
+                    .setUserProperty("user_type", type)
         } catch (ignore: IllegalStateException) {
             //no user saved - app is launched for the first time
         }

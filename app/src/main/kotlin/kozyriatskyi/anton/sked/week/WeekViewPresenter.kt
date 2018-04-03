@@ -7,7 +7,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
-import kozyriatskyi.anton.sked.data.pojo.User
+import kozyriatskyi.anton.sked.data.pojo.Student
+import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.util.logD
 import kozyriatskyi.anton.sked.util.logE
 import java.util.*
@@ -24,10 +25,10 @@ class WeekViewPresenter(private val weekNumber: Int, private val interactor: Wee
     }
 
     fun onLessonClick(lesson: LessonUi) {
-        val type = interactor.getUser().type
-        when (type) {
-            User.Type.TEACHER -> viewState.showTeacherLessonDetails(lesson)
-            User.Type.STUDENT -> viewState.showStudentLessonDetails(lesson)
+        val user = interactor.getUser()
+        when (user) {
+            is Teacher -> viewState.showTeacherLessonDetails(lesson)
+            is Student -> viewState.showStudentLessonDetails(lesson)
         }
     }
 
