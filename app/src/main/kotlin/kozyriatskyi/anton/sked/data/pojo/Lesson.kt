@@ -12,8 +12,6 @@ import kozyriatskyi.anton.sked.data.repository.ResourceManager
  * Created by Anton on 23.02.2017.
  */
 
-sealed class Lesson
-
 data class LessonNetwork(val date: String,
                          val number: String,
                          val type: String,
@@ -23,7 +21,7 @@ data class LessonNetwork(val date: String,
                          val addedOnDate: String,
                          val addedOnTime: String,
                          val who: String,
-                         val whoShort: String) : Lesson()
+                         val whoShort: String)
 
 data class LessonUi(val date: String,
                     val number: String,
@@ -36,7 +34,7 @@ data class LessonUi(val date: String,
                     val addedOnTime: String,
                     val who: String,
                     val whoShort: String,
-                    val time: String) : Lesson()
+                    val time: String)
 
 @Entity(tableName = "lessons")
 data class LessonDb(var date: String,
@@ -48,7 +46,7 @@ data class LessonDb(var date: String,
                     @ColumnInfo(name = "added_on_date") var addedOnDate: String,
                     @ColumnInfo(name = "added_on_time") var addedOnTime: String,
                     var who: String,
-                    @ColumnInfo(name = "who_short") var whoShort: String) : Lesson() {
+                    @ColumnInfo(name = "who_short") var whoShort: String) {
 
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0
