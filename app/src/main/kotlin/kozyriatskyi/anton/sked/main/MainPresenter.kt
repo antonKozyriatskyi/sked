@@ -13,7 +13,7 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
                     private val userSettingsStorage: UserSettingsStorage,
                     private val interactor: MainInteractor) : MvpPresenter<MainView>() {
 
-    private val scheduleUpdateDisposable: Disposable? = null
+    private var scheduleUpdateDisposable: Disposable? = null
 
     override fun onFirstViewAttach() {
         viewState.setSubtitle(userInfoStorage.getUserName())
@@ -43,7 +43,7 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
     }
 
     private fun updateSchedule() {
-        interactor.updateSchedule()
+        scheduleUpdateDisposable = interactor.updateSchedule()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { viewState.switchProgress(false) }
