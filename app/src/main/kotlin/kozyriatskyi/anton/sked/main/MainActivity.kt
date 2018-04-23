@@ -147,6 +147,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, BottomNavigationView.OnNa
 
             R.id.main_preferences -> SettingsActivity.start(this)
             33 /*Show notification*/ -> {
+                throw Exception("crashlytics test")
                 // only for debugging
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
