@@ -18,8 +18,8 @@ android {
         applicationId 'kozyriatskyi.anton.sked'
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 12
-        versionName "1.0.2-2"
+        versionCode 13
+        versionName "1.0.3"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -45,64 +45,64 @@ android {
 }
 
 ext {
-    support = '27.0.2'
-    constratint_layout = '1.0.2'
+    support = '27.1.1'
+    constratint_layout = '1.1.0'
     moxy = '1.5.3'
     dagger = '2.15'
     room = '1.0.0'
     rxjava2 = '2.1.2'
     rxandroid = '2.0.1'
-    firebase = '11.8.0'
+    firebase = '15.0.0'
     firebase_job_dispatcher = '0.8.5'
-    jsoup = '1.11.2'
+    jsoup = '1.11.3'
 
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
 }
-
-kapt {
-    generateStubs = true
-}
+//
+//kapt {
+//    generateStubs = true
+//}
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$support"
-    compile "com.android.support:design:$support"
-    compile "com.android.support:support-v4:$support"
-    compile "com.android.support:recyclerview-v7:$support"
-    compile "com.android.support:cardview-v7:$support"
-    compile "com.android.support:preference-v7:$support"
-    compile "com.android.support:preference-v14:$support"
-    compile "com.android.support:support-vector-drawable:$support"
-    compile "com.android.support.constraint:constraint-layout:$constratint_layout"
+    implementation "com.android.support:appcompat-v7:$support"
+    implementation "com.android.support:design:$support"
+    implementation "com.android.support:support-v4:$support"
+    implementation "com.android.support:recyclerview-v7:$support"
+    implementation "com.android.support:cardview-v7:$support"
+    implementation "com.android.support:preference-v7:$support"
+    implementation "com.android.support:preference-v14:$support"
+    implementation "com.android.support:support-vector-drawable:$support"
+    implementation "com.android.support.constraint:constraint-layout:$constratint_layout"
 
-    compile "android.arch.persistence.room:runtime:$room"
-    compile "android.arch.persistence.room:rxjava2:$room"
+    implementation "android.arch.persistence.room:runtime:$room"
+    implementation "android.arch.persistence.room:rxjava2:$room"
     kapt "android.arch.persistence.room:compiler:$room"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    compile "com.arello-mobile:moxy-app-compat:$moxy"
+    implementation "com.arello-mobile:moxy-app-compat:$moxy"
     kapt "com.arello-mobile:moxy-compiler:$moxy"
 
-    compile "com.google.dagger:dagger:$dagger"
+    implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
-    provided 'javax.annotation:jsr250-api:1.0'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
-    compile "io.reactivex.rxjava2:rxjava:$rxjava2"
-    compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
-    compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
 
-    compile "com.firebase:firebase-jobdispatcher:$firebase_job_dispatcher"
-    compile "com.google.firebase:firebase-core:$firebase"
+    implementation "com.firebase:firebase-jobdispatcher:$firebase_job_dispatcher"
+    implementation "com.google.firebase:firebase-core:$firebase"
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1') {
         transitive = true
     }
 
-    compile "org.jsoup:jsoup:$jsoup"
+    implementation "org.jsoup:jsoup:$jsoup"
 
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-all:$mockitoVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
