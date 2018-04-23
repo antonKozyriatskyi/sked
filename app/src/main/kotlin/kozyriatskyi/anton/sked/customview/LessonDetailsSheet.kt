@@ -24,8 +24,8 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         const val TAG = "lds"
 
         private const val USER_TYPE = "type"
-        const val USER_TYPE_STUDENT = 1L
-        const val USER_TYPE_TEACHER = 2L
+        const val USER_TYPE_STUDENT = 1
+        const val USER_TYPE_TEACHER = 2
 
         @IntDef(USER_TYPE_STUDENT, USER_TYPE_TEACHER)
         @Retention(AnnotationRetention.SOURCE)
@@ -33,7 +33,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
 
         private const val KEY_LESSON = "lesson"
 
-        fun create(lesson: LessonUi, @Type type: Long): LessonDetailsSheet {
+        fun create(lesson: LessonUi, @Type type: Int): LessonDetailsSheet {
             val manager = StorageManager.get()
             val storage = manager.obtainStorage(TAG)
             storage.save(KEY_LESSON, lesson)
@@ -42,7 +42,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private var userType: Long by Delegates.notNull()
+    private var userType: Int by Delegates.notNull()
 
     private lateinit var name: TextView
     private lateinit var type: TextView
@@ -56,7 +56,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val storageManager = StorageManager.get()
         val storage = storageManager.obtainStorage(TAG)
-        userType = storage.getLong(USER_TYPE)
+        userType = storage.getInt(USER_TYPE)
         val layoutId = if (userType == USER_TYPE_STUDENT) R.layout.bottomsheet_lesson_student else R.layout.bottomsheet_lesson_teacher
         val rootView = inflater.inflate(layoutId, container, false)
 
