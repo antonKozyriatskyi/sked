@@ -1,6 +1,7 @@
 package kozyriatskyi.anton.sked.about
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,7 +15,6 @@ import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Library
 import java.util.*
 
-
 class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
@@ -22,6 +22,10 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
         private const val URL_VK = "http://vk.com/kozyriatskyi"
         private const val URL_TG_APP = "tg://resolve?domain=antonKozyriatskyi"
         private const val URL_TG_WEB = "http://www.telegram.me/antonKozyriatskyi"
+
+        fun start(context: Context) {
+            context.startActivity(Intent(context, AboutActivity::class.java))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,20 +87,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """))
-
-        /*libs.add(Library("Android-Job", """Copyright (c) 2007-2017 by Evernote Corporation, All rights reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License."""))*/
 
         libs.add(Library("RxRelay", """Copyright 2014 Netflix, Inc.
 Copyright 2015 Jake Wharton
