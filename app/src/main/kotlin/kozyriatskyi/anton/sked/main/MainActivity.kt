@@ -103,7 +103,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, BottomNavigationView.OnNa
             return
         }
 
-        setTheme(R.style.AppTheme_NoActionBar)
+        setTheme(R.style.AppTheme_NoActionBar_Dark)
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(findViewById(R.id.main_toolbar))

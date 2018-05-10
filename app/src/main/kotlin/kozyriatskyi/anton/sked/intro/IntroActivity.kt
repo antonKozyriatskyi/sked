@@ -18,6 +18,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_DarkActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
     }
