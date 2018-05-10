@@ -1,19 +1,12 @@
 package kozyriatskyi.anton.sked.main
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
@@ -146,52 +139,8 @@ class MainActivity : MvpAppCompatActivity(), MainView, BottomNavigationView.OnNa
             R.id.main_relogin -> IntroActivity.start(this)
 
             R.id.main_preferences -> SettingsActivity.start(this)
-            33 /*Show notification*/ -> {
+            33 /*Show notification*/ -> { // only for debugging
                 throw Exception("crashlytics test")
-                // only for debugging
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-
-                val pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT)
-
-                val notificationManager = NotificationManagerCompat.from(this)
-
-                val contentTextId = if (true) R.string.notification_schedule_updated_successfully
-                else R.string.notification_schedule_updated_unsuccessfully
-
-
-                //TODO remove this
-                val chId = "ch_1"
-                val vibrationPattern = longArrayOf(300L, 300L, 300L, 300L)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    //TODO extract to resources
-                    val chName = "Sked channel"
-                    val description = "Channel for all Sked's notifications"
-                    val importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
-
-                    val channel = NotificationChannel(chId, chName, importance)
-                    channel.description = description
-                    channel.enableLights(true)
-                    channel.lightColor = ContextCompat.getColor(this, R.color.primary)
-                    channel.enableVibration(true)
-                    channel.vibrationPattern = vibrationPattern
-
-                    val notificationManager1 = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager1.createNotificationChannel(channel)
-                }
-
-                val builder = NotificationCompat.Builder(this, chId)
-                        .setContentTitle(getString(R.string.notification_schedule_updated_title))
-                        .setContentText(getString(contentTextId))
-                        .setSmallIcon(R.drawable.ic_notif_update)
-                        .setColor(ContextCompat.getColor(this, R.color.primary))
-                        .setAutoCancel(true)
-                        .setVibrate(vibrationPattern)
-                        .setContentIntent(pendingIntent)
-
-                notificationManager.notify(1, builder.build())
             }
 
             R.id.menu_main_update -> presenter.onUpdateTriggered()
