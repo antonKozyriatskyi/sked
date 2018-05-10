@@ -145,7 +145,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, BottomNavigationView.OnNa
 
             R.id.menu_main_update -> presenter.onUpdateTriggered()
 
-            R.id.main_about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.main_about -> AboutActivity.start(this)
         }
 
         return true
