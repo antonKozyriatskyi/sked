@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.login.student
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.crashlytics.android.Crashlytics
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.Item
@@ -122,24 +123,20 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         disposables.add(interactor.scheduleLoadingStatus()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError {
-                    logE("Error loading student schedule: ${it.message}")
+                    logE("Error loading student schedule: ${it.message}") //TODO
+                    val str = "Error loading student schedule: ${student.faculty}[${student.facultyId}]\n${student.course}[${student.courseId}]\n${student.group}[${student.groupId}]\n"
+                    Crashlytics.logException(it)
+                    Crashlytics.log(str)
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
                         viewState.switchError(StudentLoginFragment.ERROR_SCHEDULE, "${it.message}", true)
                     }
                 }
                 .retry()
-                .subscribe({
+                .subscribe {
                     interactor.saveUser(student)
                     viewState.openScheduleScreen()
-                }, {
-//                    logE("Error loading student schedule: ${it.message}")
-                    if (uiModel.isConnectionAvailable) {
-                        setErrorState()
-                        viewState.switchError(StudentLoginFragment.ERROR_SCHEDULE, "${it.message}", true)
-                    }
-                    subscribeSchedule()
-                }))
+                })
     }
 
     private fun subscribeFaculties() {
