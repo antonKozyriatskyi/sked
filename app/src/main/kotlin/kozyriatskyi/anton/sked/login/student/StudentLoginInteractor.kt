@@ -9,16 +9,16 @@ import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.repository.ConnectionStateProvider
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
-import kozyriatskyi.anton.sked.repository.StudentInfoLoader
+import kozyriatskyi.anton.sked.repository.StudentInfoProvider
 import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 import java.util.*
 
-class StudentLoginInteractor(private val studentInfoProvider: StudentInfoLoader, // to get info from
+class StudentLoginInteractor(private val studentInfoProvider: StudentInfoProvider, // to get info from
                              private val userUserInfoStorage: UserInfoStorage, // to write info into
-                             private val studentScheduleProvider: ScheduleLoader, // to get lessons from
+                             private val scheduleProvider: ScheduleProvider, // to get lessons from
                              private val scheduleRepository: ScheduleStorage, // to write lessons into
                              private val connectionStateProvider: ConnectionStateProvider,
                              private val mapper: LessonMapper,
@@ -61,10 +61,10 @@ class StudentLoginInteractor(private val studentInfoProvider: StudentInfoLoader,
 
     fun scheduleLoadingStatus(): Observable<Boolean> = schedule
             .observeOn(Schedulers.io())
-            .map(studentScheduleProvider::getSchedule)
+            .map(scheduleProvider::getSchedule)
             .map(mapper::networkToDb)
             .map(scheduleRepository::saveLessons)
-            .map { true }
+            .map { true } // ugly, TODO refactor
             .doOnNext {
                 jobManager.launchUpdaterJob()
                 logger.logStudent()

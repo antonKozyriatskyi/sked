@@ -5,7 +5,7 @@ import dagger.Provides
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 
 /**
@@ -17,7 +17,7 @@ class MainModule {
 
     @Provides
     fun provideInteractor(scheduleRepository: ScheduleStorage,
-                          mapper: LessonMapper, scheduleLoader: ScheduleLoader,
+                          mapper: LessonMapper, scheduleLoader: ScheduleProvider,
                           userInfoStorage: UserInfoStorage): MainInteractor =
             MainInteractor(scheduleRepository, mapper, scheduleLoader, userInfoStorage)
 

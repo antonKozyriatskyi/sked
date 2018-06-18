@@ -18,7 +18,7 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.MainActivity
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.util.logE
 import java.util.*
@@ -97,7 +97,7 @@ class UpdaterJobService : JobService() {
     }
 
     @Inject
-    lateinit var scheduleLoader: ScheduleLoader
+    lateinit var scheduleLoader: ScheduleProvider
 
     @Inject
     lateinit var userPreferences: UserSettingsStorage

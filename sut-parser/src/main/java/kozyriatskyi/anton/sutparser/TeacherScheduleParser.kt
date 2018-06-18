@@ -1,8 +1,5 @@
-package kozyriatskyi.anton.sked.data.parser
+package kozyriatskyi.anton.sutparser
 
-import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
-import kozyriatskyi.anton.sked.repository.TeacherScheduleLoader
-import kozyriatskyi.anton.sked.util.DateUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
@@ -11,11 +8,11 @@ import java.util.regex.Pattern
 /**
  * Created by Anton on 01.08.2017.
  */
-
-class TeacherScheduleParser : TeacherScheduleLoader {
+class TeacherScheduleParser {
 
     companion object {
         private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/teacher?"
+        private const val TIMEOUT = 10_000
     }
 
     /*
@@ -41,24 +38,25 @@ class TeacherScheduleParser : TeacherScheduleLoader {
         Pattern.compile("(.*)\\[(.*)\\]<br>\\s*(.*)<br>\\s*ауд\\. (.*)<br>\\s*Добавлено: (.*)\\s(.*)\\s*")
     }
 
-    override fun getSchedule(departmentId: String, teacherId: String): List<LessonNetwork> {
-        val table = doc(departmentId, teacherId)
+    // date in 'dd.MM.yyyy'
+    fun getSchedule(departmentId: String, teacherId: String, dateStart: String, dateEnd: String): List<ParsedLesson> {
+        val table = doc(departmentId, teacherId, dateStart, dateEnd)
                 .getElementById("timeTableGroup")
 
         return parseSchedule(table)
     }
 
-    private fun doc(departmentId: String, teacherId: String) =
-            Jsoup.connect(url(departmentId, teacherId)).timeout(10000).get()
+    private fun doc(departmentId: String, teacherId: String, dateStart: String, dateEnd: String) =
+            Jsoup.connect(url(departmentId, teacherId, dateStart, dateEnd)).timeout(TIMEOUT).get()
 
-    private fun url(departmentId: String, teacherId: String): String {
-        val url = "${BASE_URL}TimeTableForm[chair]=$departmentId&TimeTableForm[teacher]=$teacherId&TimeTableForm[date1]=${DateUtils.mondayDate()}&TimeTableForm[date2]=${DateUtils.saturdayDate(5)}&timeTable=0&TimeTableForm[r11]=5"
-//        println("Teacher URL: $url")
+    private fun url(departmentId: String, teacherId: String, dateStart: String, dateEnd: String): String {
+        @Suppress("UnnecessaryVariable")
+        val url = "${BASE_URL}TimeTableForm[chair]=$departmentId&TimeTableForm[teacher]=$teacherId&TimeTableForm[date1]=$dateStart&TimeTableForm[date2]=$dateEnd&timeTable=0&TimeTableForm[r11]=5"
         return url
     }
 
-    private fun parseSchedule(table: Element): List<LessonNetwork> {
-        val lessons = ArrayList<LessonNetwork>()
+    private fun parseSchedule(table: Element): List<ParsedLesson> {
+        val lessons = ArrayList<ParsedLesson>()
         val rows = table.getElementsByTag("tr")
         val notNumberPattern = Regex("\\D*")
 
@@ -91,13 +89,13 @@ class TeacherScheduleParser : TeacherScheduleLoader {
                         var shortNameMatcher = shortNamePattern.matcher(text)
 
                         val number = lessonNumbers[div_ind]
-                        var shortName = "N/A"
-                        var name = "N/A"
-                        var type = "N/A"
-                        var cabinet = "N/A"
-                        var group = "N/A"
-                        var addedOnDate = "N/A"
-                        var addedOnTime = "N/A"
+                        var shortName = ""
+                        var name = ""
+                        var type = ""
+                        var cabinet = ""
+                        var group = ""
+                        var addedOnDate = ""
+                        var addedOnTime = ""
 
                         if (generalMatcher.find()) {
                             name = generalMatcher.group(1).trim()
@@ -110,9 +108,9 @@ class TeacherScheduleParser : TeacherScheduleLoader {
 
                         if (shortNameMatcher.find()) {
                             shortName = shortNameMatcher.group(1).trim()
-//                            val type2 = shortNameMatcher.group(2).trim()
-//                            group = shortNameMatcher.group(3).trim()
-//                            cabinet = shortNameMatcher.group(4).trim()
+//                            val type2 = shortNameMatcher.group(2).trim() // same as type
+//                            val group2 = shortNameMatcher.group(3).trim() // same as group
+//                            val cabinet2 = shortNameMatcher.group(4).trim() // same as cabinet
                         } else {
                             shortNameMatcher = shortNamePattern2.matcher(text)
                             if (shortNameMatcher.find()) {
@@ -120,7 +118,7 @@ class TeacherScheduleParser : TeacherScheduleLoader {
                             }
                         }
 
-                        val lesson = LessonNetwork(date = date, number = number, shortName = shortName,
+                        val lesson = ParsedLesson(date = date, number = number, shortName = shortName,
                                 type = type, cabinet = cabinet, who = group, name = name,
                                 addedOnDate = addedOnDate, addedOnTime = addedOnTime, whoShort = group)
                         lessons.add(lesson)
