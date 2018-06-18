@@ -9,16 +9,16 @@ import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.data.repository.ConnectionStateProvider
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
-import kozyriatskyi.anton.sked.repository.TeacherInfoLoader
+import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
 import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 import java.util.*
 
-class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoLoader,
+class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoProvider,
                              private val userInfoStorage: UserInfoStorage, // to write info into
-                             private val teacherNetworkScheduleProvider: ScheduleLoader, // to get lessons from
+                             private val scheduleProvider: ScheduleProvider, // to get lessons from
                              private val scheduleRepository: ScheduleStorage, // to write lessons into
                              private val connectionStateProvider: ConnectionStateProvider,
                              private val mapper: LessonMapper,
@@ -58,7 +58,7 @@ class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoLoader,
 
     fun scheduleLoadingStatus(): Observable<Boolean>  = schedule
             .observeOn(Schedulers.io())
-            .map(teacherNetworkScheduleProvider::getSchedule)
+            .map(scheduleProvider::getSchedule)
             .map(mapper::networkToDb)
             .map { scheduleRepository.saveLessons(it) }
             .map { true }
