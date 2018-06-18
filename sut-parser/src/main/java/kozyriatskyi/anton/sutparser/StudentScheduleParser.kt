@@ -1,9 +1,5 @@
-package kozyriatskyi.anton.sked.data.parser
+package kozyriatskyi.anton.sutparser
 
-import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
-import kozyriatskyi.anton.sked.repository.StudentScheduleLoader
-import kozyriatskyi.anton.sked.util.DateUtils
-import kozyriatskyi.anton.sked.util.logD
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
@@ -12,10 +8,11 @@ import java.util.regex.Pattern
 /**
  * Created by Anton on 01.08.2017.
  */
-class StudentScheduleParser : StudentScheduleLoader {
+class StudentScheduleParser {
 
     companion object {
         private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/group?"
+        private const val TIMEOUT = 10_000
     }
 
     /*
@@ -31,8 +28,7 @@ class StudentScheduleParser : StudentScheduleLoader {
         Pattern.compile("<span>(.*)</span>\\s*<br>\\s*ауд\\. (.*)\\s*<br>\\s*(.*)\\s*<span class=\"hidden\"></span>\\s*")
     }
 
-    /* class: cell mh-50
-       attr: data-content
+    /*
     Моделювання та проектування ПЗ[Пз]<br> | (.*)\[(.*)\]<br>\s*            - full name, type
     <br>                                   | <br>\s*
     ауд. 310<br>                           | ауд\. (.*)<br>\s*              - cabinet
@@ -44,22 +40,25 @@ class StudentScheduleParser : StudentScheduleLoader {
         Pattern.compile("(.*)\\[(.*)\\]<br>\\s*<br>\\s*ауд\\. (.*)<br>\\s*(.*)<br>\\s*Добавлено: (.*)\\s(.*)<br>\\s*<a href='#'>Доп\\. материалы</a")
     }
 
-    override fun getSchedule(facultyId: String, courseId: String, groupId: String): List<LessonNetwork> {
-        return parseSchedule(doc(facultyId, courseId, groupId)
-                .getElementById("timeTableGroup"))
+    // date in 'dd.MM.yyyy'
+    fun getSchedule(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String): List<ParsedLesson> {
+        val table = doc(facultyId, courseId, groupId, dateStart, dateEnd)
+                .getElementById("timeTableGroup")
+
+        return parseSchedule(table)
     }
 
-    private fun doc(facultyId: String, courseId: String, groupId: String) =
-            Jsoup.connect(url(facultyId, courseId, groupId)).timeout(10000).get()
+    private fun doc(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String) =
+            Jsoup.connect(url(facultyId, courseId, groupId, dateStart, dateEnd)).timeout(TIMEOUT).get()
 
-    private fun url(facultyId: String, courseId: String, groupId: String): String {
-        val url = "${StudentScheduleParser.BASE_URL}TimeTableForm[faculty]=$facultyId&TimeTableForm[course]=$courseId&TimeTableForm[group]=$groupId&TimeTableForm[date1]=${DateUtils.mondayDate()}&TimeTableForm[date2]=${DateUtils.saturdayDate(5)}&TimeTableForm[r11]=5&timeTable=0"
-        logD("Student URL: $url")
+    private fun url(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String): String {
+        @Suppress("UnnecessaryVariable")
+        val url = "${BASE_URL}TimeTableForm[faculty]=$facultyId&TimeTableForm[course]=$courseId&TimeTableForm[group]=$groupId&TimeTableForm[date1]=$dateStart&TimeTableForm[date2]=$dateEnd&TimeTableForm[r11]=5&timeTable=0"
         return url
     }
 
-    private fun parseSchedule(table: Element): List<LessonNetwork> {
-        val lessons = ArrayList<LessonNetwork>()
+    private fun parseSchedule(table: Element): List<ParsedLesson> {
+        val lessons = ArrayList<ParsedLesson>(80) // guess on average number of lessons
         val rows = table.getElementsByTag("tr")
         val notNumberPattern = Regex("\\D*")
 
@@ -92,14 +91,14 @@ class StudentScheduleParser : StudentScheduleLoader {
                         var shortNameMatcher = shortNamePattern.matcher(text)
 
                         val number = lessonNumbers[div_ind]
-                        var shortName = "N/A"
-                        var name = "N/A"
-                        var type = "N/A"
-                        var cabinet = "N/A"
-                        var teacher = "N/A"
-                        var teacherShort = "N/A"
-                        var addedOnDate = "N/A"
-                        var addedOnTime = "N/A"
+                        var shortName = ""
+                        var name = ""
+                        var type = ""
+                        var cabinet = ""
+                        var teacher = ""
+                        var teacherShort = ""
+                        var addedOnDate = ""
+                        var addedOnTime = ""
 
                         if (generalMatcher.find()) {
                             name = generalMatcher.group(1).trim()
@@ -108,24 +107,22 @@ class StudentScheduleParser : StudentScheduleLoader {
                             teacher = generalMatcher.group(4).trim()
                             addedOnDate = generalMatcher.group(5).trim()
                             addedOnTime = generalMatcher.group(6).trim()
-                        } else {
-                            println(longLessonData)
                         }
 
                         if (shortNameMatcher.find()) {
                             shortName = shortNameMatcher.group(1).trim()
-                            val type2 = shortNameMatcher.group(2).trim()
-                            val cabinet2 = shortNameMatcher.group(3).trim()
+//                            val type2 = shortNameMatcher.group(2).trim() // same as type
+//                            val cabinet2 = shortNameMatcher.group(3).trim() // same as cabinet
                             teacherShort = shortNameMatcher.group(4).trim()
                         } else {
-                            shortNameMatcher = shortNamePattern2.matcher(text)
+                            shortNameMatcher = shortNamePattern2.matcher(text)  // trying with fallback matcher
                             if (shortNameMatcher.find()) {
                                 shortName = shortNameMatcher.group(1).trim()
                                 teacherShort = shortNameMatcher.group(3).trim()
                             }
                         }
 
-                        val lesson = LessonNetwork(date = date, number = number, shortName = shortName, type = type,
+                        val lesson = ParsedLesson(date = date, number = number, shortName = shortName, type = type,
                                 cabinet = cabinet, who = teacher, name = name, addedOnDate = addedOnDate,
                                 addedOnTime = addedOnTime, whoShort = teacherShort)
                         lessons.add(lesson)

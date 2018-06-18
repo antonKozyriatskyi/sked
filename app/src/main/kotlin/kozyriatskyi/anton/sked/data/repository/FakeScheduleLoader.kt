@@ -2,14 +2,14 @@ package kozyriatskyi.anton.sked.data.repository
 
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
 import kozyriatskyi.anton.sked.data.pojo.User
-import kozyriatskyi.anton.sked.repository.ScheduleLoader
+import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by Anton on 10.08.2017.
  */
-class FakeScheduleLoader : ScheduleLoader {
+class FakeScheduleLoader : ScheduleProvider {
 
     private val calendar = Calendar.getInstance().apply {
         set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)

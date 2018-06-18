@@ -54,7 +54,6 @@ ext {
     rxandroid = '2.0.1'
     firebase = '16.0.0'
     firebase_job_dispatcher = '0.8.5'
-    jsoup = '1.11.3'
 
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
@@ -65,6 +64,8 @@ ext {
 //}
 
 dependencies {
+    implementation project(':sut-parser')
+
     implementation "com.android.support:appcompat-v7:$support"
     implementation "com.android.support:design:$support"
     implementation "com.android.support:support-v4:$support"
@@ -98,8 +99,6 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1') {
         transitive = true
     }
-
-    implementation "org.jsoup:jsoup:$jsoup"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-all:$mockitoVersion"
