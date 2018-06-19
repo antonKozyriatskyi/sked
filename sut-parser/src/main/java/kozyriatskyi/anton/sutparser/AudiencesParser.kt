@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 class AudiencesParser {
 
     companion object {
-        private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/freeClassroom?"
+        private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/freeClassroom"
         private const val TIMEOUT = 10_000
     }
 
@@ -18,7 +18,7 @@ class AudiencesParser {
 
     // date in dd.MM.yyyy format
     fun getAudiences(date: String, lessonStart: Int, lessonEnd: Int): List<ParsedAudience> {
-        val url = "${BASE_URL}TimeTableForm[date1]=$date&TimeTableForm[lessonStart]=$lessonStart&TimeTableForm[lessonEnd]=$lessonEnd"
+        val url = "$BASE_URL?TimeTableForm[date1]=$date&TimeTableForm[lessonStart]=$lessonStart&TimeTableForm[lessonEnd]=$lessonEnd"
         val document = Jsoup.connect(url).timeout(TIMEOUT).get()
         val audiencesCells = document.body().getElementsByClass("classrooms-list")
                 .first()
@@ -53,5 +53,21 @@ class AudiencesParser {
         }
 
         return audiences
+    }
+
+    fun getTimes(): Pair<List<ParsedItem>, List<ParsedItem>> {
+        val document = Jsoup.connect(BASE_URL).timeout(TIMEOUT).get()
+
+        val body = document.body()
+
+        val startTimeDropdown = body.getElementById("TimeTableForm_lessonStart")
+        val endTimeDropdown = body.getElementById("TimeTableForm_lessonEnd")
+
+        fun extractItems(e: Elements): List<ParsedItem> = e.drop(1).map(::ParsedItem)
+
+        val startTimes = extractItems(startTimeDropdown.getElementsByTag("option"))
+        val endTimes = extractItems(endTimeDropdown.getElementsByTag("option"))
+
+        return Pair(startTimes, endTimes)
     }
 }
