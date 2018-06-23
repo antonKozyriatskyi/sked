@@ -9,7 +9,6 @@ class AudiencesParser {
 
     companion object {
         private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/freeClassroom"
-        private const val TIMEOUT = 10_000
     }
 
 //    <li data-content="Количество мест: 45<br>Примечание: ТТ" data-rel="popover" class="" data-original-title="" title="">
