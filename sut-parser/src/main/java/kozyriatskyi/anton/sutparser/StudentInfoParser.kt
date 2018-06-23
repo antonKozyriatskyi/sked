@@ -9,7 +9,6 @@ class StudentInfoParser {
 
     companion object {
         private const val BASE_URL = "http://e-rozklad.dut.edu.ua/timeTable/group?"
-        private const val TIMEOUT = 10_000
     }
 
     fun getFaculties(): List<ParsedItem> {
