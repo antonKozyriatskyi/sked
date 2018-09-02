@@ -30,6 +30,8 @@
 
     <color name="dividerColor">@color/grey300</color>
 
+    <color name="audienceFree">@color/green400</color>
+    <color name="audienceBusy">@color/redAс700</color>
 
     <!-- Palette -->
     <color name="black">#000000</color>
