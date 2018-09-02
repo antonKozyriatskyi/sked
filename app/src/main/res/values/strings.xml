@@ -88,6 +88,7 @@
 
     <!-- Other strings -->
     <string name="ok" translatable="false">OK</string>
+    <string name="na" translatable="false">N/A</string>
 
     <string name="intro_title">Choose your side</string>
 
@@ -106,5 +107,11 @@
     <string name="lesson_details_time">Time:</string>
     <string name="lesson_details_date">Date:</string>
     <string name="lesson_details_added_on">Added on:</string>
+
+
+    <string name="audiences_title">Audiences</string>
+    <string name="audience_status_free">Free</string>
+    <string name="audience_status_busy">Busy</string>
+    <string name="audience_status_na">@string/na</string>
 
 </resources>
