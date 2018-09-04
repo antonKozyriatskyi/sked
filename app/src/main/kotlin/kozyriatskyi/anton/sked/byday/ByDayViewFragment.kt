@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.byday
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
@@ -10,11 +11,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.main.MainActivity
+import kozyriatskyi.anton.sked.main.TabsOwner
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
 import javax.inject.Inject
-
 
 
 /**
@@ -33,16 +33,24 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
     private lateinit var adapter: DaysAdapter
     private lateinit var daysViewPager: ViewPager
 
+    private var tabsOwner: TabsOwner? = null
+
     @ProvidePresenter
     fun providePresenter(): ByDayViewPresenter {
         Injector.byDayViewComponent().inject(this)
+
         return presenter
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        tabsOwner = context as TabsOwner
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         if (hidden.not()) {
-            // this code smells
-            (activity as MainActivity).tabs.setupWithViewPager(daysViewPager, true)
+            tabsOwner?.setupWithViewPager(daysViewPager, true)
         }
     }
 
@@ -51,9 +59,9 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
         daysViewPager = rootView.find(R.id.byday_pager_days)
 
         if (isHidden.not()) {
-            // this code smells
-            (activity as MainActivity).tabs.setupWithViewPager(daysViewPager, true)
+            tabsOwner?.setupWithViewPager(daysViewPager, true)
         }
+
         return rootView
     }
 
@@ -73,11 +81,5 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
 
     override fun setTodayPosition(todayPosition: Int) {
         daysViewPager.setCurrentItem(todayPosition, false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        val refWatcher = App.getRefWatcher(activity)
-//        refWatcher.watch(this)
     }
 }
