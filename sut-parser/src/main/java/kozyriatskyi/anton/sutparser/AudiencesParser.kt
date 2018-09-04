@@ -5,8 +5,6 @@ import org.jsoup.select.Elements
 import java.util.*
 import java.util.regex.Pattern
 
-typealias StartEndTimePair = Pair<List<ParsedItem>, List<ParsedItem>>
-
 class AudiencesParser {
 
     companion object {
@@ -59,7 +57,7 @@ class AudiencesParser {
     /**
      * returns start and end times, to be chosen when selecting audience
      * */
-    fun getTimes(): StartEndTimePair {
+    fun getTimes(): Pair<List<ParsedItem>, List<ParsedItem>> {
         val document = Jsoup.connect(BASE_URL).timeout(TIMEOUT).get()
 
         val body = document.body()
