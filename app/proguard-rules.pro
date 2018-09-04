@@ -34,3 +34,7 @@
 -keep public class org.jsoup.** {
 public *;
 }
+
+-keep public class  kozyriatskyi.anton.sked.customview.MoveUpwardBehaviour { *; }
+
+-ignorewarnings
