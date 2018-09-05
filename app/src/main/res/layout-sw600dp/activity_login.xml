@@ -32,7 +32,7 @@
         android:gravity="center_horizontal"
         android:onClick="onLoadScheduleClick"
         android:text="@string/login_load_schedule"
-        app:layout_behavior="kozyriatskyi.anton.sked.ui.custom.MoveUpwardBehavior"
+        app:layout_behavior="kozyriatskyi.anton.sked.customview.MoveUpwardBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
