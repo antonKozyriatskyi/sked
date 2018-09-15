@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.arellomobile.mvp.presenter.ProvidePresenterTag
 import kozyriatskyi.anton.sked.R
+import kozyriatskyi.anton.sked.customview.LessonDetailsSheet
 import kozyriatskyi.anton.sked.data.pojo.DayUi
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.customview.LessonDetailsSheet
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
 import kozyriatskyi.anton.sked.util.toast
@@ -45,6 +46,9 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
     private var weekNumber: Int by Delegates.notNull()
 
     private lateinit var recycler: RecyclerView
+
+    @ProvidePresenterTag(presenterClass = WeekViewPresenter::class)
+    fun provideTag(): String = arguments!!.getInt(EXTRA_WEEK_NUM).toString()
 
     @ProvidePresenter
     fun providePresenter(): WeekViewPresenter {
