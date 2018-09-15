@@ -42,6 +42,10 @@ android {
     dexOptions {
         javaMaxHeapSize "4G"
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 ext {
