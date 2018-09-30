@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import kozyriatskyi.anton.sked.BuildConfig
+import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Library
 import java.util.*
 
