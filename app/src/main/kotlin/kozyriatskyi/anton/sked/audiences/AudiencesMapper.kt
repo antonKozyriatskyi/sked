@@ -6,13 +6,13 @@ import kozyriatskyi.anton.sked.data.repository.ResourceManager
 
 class AudiencesMapper(private val resourceManager: ResourceManager) {
 
-    fun networkToUi(audiences: List<AudienceNetwork>): List<AudienceUi> = audiences.map {
+    fun toUi(audiences: List<AudienceNetwork>): List<AudienceUi> = audiences.map {
         AudienceUi(number = it.number,
                 isFree = it.isFree,
                 status = status(it.isFree),
                 note = it.note,
                 capacity = naIfEmpty(it.capacity),
-                colorId = color(it.isFree)
+                iconId = iconId(it.isFree)
         )
     }
 
@@ -30,8 +30,6 @@ class AudiencesMapper(private val resourceManager: ResourceManager) {
         return resourceManager.getString(id)
     }
 
-    private fun color(isFree: Boolean): Int {
-        val id = if (isFree) R.color.audienceFree else R.color.audienceBusy
-        return resourceManager.getColor(id)
-    }
+    private fun iconId(isFree: Boolean): Int =
+            if (isFree) R.drawable.ic_lock_open_green_24dp else R.drawable.ic_lock_closed_red_24dp
 }
