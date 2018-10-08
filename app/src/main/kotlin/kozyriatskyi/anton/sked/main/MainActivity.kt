@@ -26,7 +26,6 @@ import kozyriatskyi.anton.sked.intro.IntroActivity
 import kozyriatskyi.anton.sked.settings.SettingsActivity
 import kozyriatskyi.anton.sked.util.toast
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 
 class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
@@ -58,7 +57,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     private lateinit var menuProgressItem: MenuItem
 
-    private var showProgressBar by Delegates.notNull<Boolean>()
+    private var showProgressBar = false
 
     private var nightMode = AppCompatDelegate.getDefaultNightMode()
 
@@ -114,9 +113,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-
         menuProgressItem = menu.findItem(R.id.menu_main_update)
-
         switchProgress(showProgressBar)
 
         return super.onCreateOptionsMenu(menu)
@@ -126,7 +123,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         when (item.itemId) {
             R.id.main_relogin -> IntroActivity.start(this)
             R.id.main_preferences -> SettingsActivity.start(this)
-            R.id.main_free_audiences -> AudiencesActivity.start(this)
+            R.id.main_audiences -> AudiencesActivity.start(this)
             R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_about -> AboutActivity.start(this)
         }
@@ -166,7 +163,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         if (savedInstanceState == null && userInfoStorage.isFirstLaunch()) {
             IntroActivity.start(this)
             finish()
-            return
         }
     }
 
