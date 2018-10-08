@@ -13,28 +13,9 @@
         android:id="@+id/main_relogin"
         android:title="@string/nav_relogin" />
 
-    <!--<item
-        android:id="@+id/navigation_add_sun"
-        android:title="Add sun" />
-
     <item
-        android:id="@+id/navigation_rem_sun"
-        android:title="Rem sun" />
-
-    <item
-        android:id="@+id/navigation_add_sat"
-        android:icon="@drawable/nav_day"
-        android:title="Add sat" />
-
-    <item
-        android:id="@+id/navigation_rem_sat"
-        android:icon="@drawable/nav_day"
-        android:title="Rem sat" />
-
-    <item
-        android:id="@+id/navigation_daynight"
-        android:icon="@drawable/nav_settings"
-        android:title="Notif" />-->
+        android:id="@+id/main_audiences"
+        android:title="@string/nav_audiences" />
 
     <item
         android:id="@+id/main_preferences"

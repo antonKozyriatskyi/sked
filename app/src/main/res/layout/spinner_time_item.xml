@@ -5,16 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckedTextView
+    <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/textView"
-        style="?spinnerDropDownItemStyle"
+        style="?android:spinnerItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:ellipsize="marquee"
+        android:gravity="end"
         android:marqueeRepeatLimit="marquee_forever"
         android:padding="16dp"
         android:singleLine="true"
-        android:textSize="16sp"
         tools:text="tfyghutfhyjgnkbjbbhhbjhjbugvfhtgvjhbnhkgjfyjgbhn" />
 
 </FrameLayout>

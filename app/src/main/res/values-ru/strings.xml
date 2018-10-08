@@ -70,6 +70,15 @@
     <string name="lesson_details_who_groups">Группа(ы):</string>
     <string name="lesson_details_who_teacher">Преподаватель:</string>
     <string name="lesson_details_room">Аудитория:</string>
+    <string name="audiences_title">Аудитории</string>
+    <string name="audiences_loading_error">Не удалось загрузить аудитории</string>
+    <string name="audience_status_free">Свободно</string>
+    <string name="audience_status_busy">Занято</string>
+    <string name="audience_sheet_title">Дата и время</string>
+    <string name="audience_sheet_select_btn">Выбрать</string>
+    <string name="audience_sheet_date_title">Дата</string>
+    <string name="audience_sheet_start_time_title">Начало</string>
+    <string name="audience_sheet_end_time_title">Конец</string>
 
     <string name="privacy_policy">Политика конфиденциальности</string>
 

@@ -40,3 +40,7 @@ annotation class Updater
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Login
+
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Audiences

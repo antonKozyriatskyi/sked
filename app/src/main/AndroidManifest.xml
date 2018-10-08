@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="kozyriatskyi.anton.sked">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -44,10 +43,11 @@
         <activity
             android:name=".intro.IntroActivity"
             android:label="@string/intro_title" />
-
         <activity
             android:name=".about.AboutActivity"
             android:label="@string/about_activity_title" />
+        <activity android:name=".audiences.AudiencesActivity"
+            android:label="@string/audiences_title"/>
 
     </application>
 

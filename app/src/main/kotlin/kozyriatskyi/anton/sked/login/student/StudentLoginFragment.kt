@@ -13,9 +13,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.login.SpinnerAdapter
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.di.Injector
+import kozyriatskyi.anton.sked.login.ItemSpinnerAdapter
 import kozyriatskyi.anton.sked.login.LoginActivity
 import kozyriatskyi.anton.sked.login.OnInternetConnectionChangeListener
 import kozyriatskyi.anton.sked.login.OnLoadingStateChangeListener
@@ -82,9 +82,9 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
         coursesSpinner = view.find<Spinner>(R.id.spinner_login_student_courses)
         groupsSpinner = view.find<Spinner>(R.id.spinner_login_student_groups)
 
-        facultiesSpinner.adapter = SpinnerAdapter()
-        coursesSpinner.adapter = SpinnerAdapter()
-        groupsSpinner.adapter = SpinnerAdapter()
+        facultiesSpinner.adapter = ItemSpinnerAdapter()
+        coursesSpinner.adapter = ItemSpinnerAdapter()
+        groupsSpinner.adapter = ItemSpinnerAdapter()
 
         facultiesSpinner.onItemSelectedListener = this
         coursesSpinner.onItemSelectedListener = this
@@ -133,15 +133,15 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
     }
 
     override fun showFaculties(faculties: ArrayList<Item>) {
-        (facultiesSpinner.adapter as SpinnerAdapter).updateData(faculties)
+        (facultiesSpinner.adapter as ItemSpinnerAdapter).updateData(faculties)
     }
 
     override fun showCourses(courses: ArrayList<Item>) {
-        (coursesSpinner.adapter as SpinnerAdapter).updateData(courses)
+        (coursesSpinner.adapter as ItemSpinnerAdapter).updateData(courses)
     }
 
     override fun showGroups(groups: ArrayList<Item>) {
-        (groupsSpinner.adapter as SpinnerAdapter).updateData(groups)
+        (groupsSpinner.adapter as ItemSpinnerAdapter).updateData(groups)
     }
 
     override fun restorePositions(facultyPosition: Int, coursePosition: Int, groupPosition: Int) {
@@ -196,15 +196,15 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
         parent?.let {
             when (it.id) {
                 facultiesSpinner.id -> {
-                    val faculty = (it.adapter as SpinnerAdapter).getSelectedItem(position)
+                    val faculty = (it.adapter as ItemSpinnerAdapter).getSelectedItem(position)
                     presenter.onFacultyChosen(faculty.value, faculty.id, position)
                 }
                 coursesSpinner.id -> {
-                    val course = (it.adapter as SpinnerAdapter).getSelectedItem(position)
+                    val course = (it.adapter as ItemSpinnerAdapter).getSelectedItem(position)
                     presenter.onCourseChosen(course.value, course.id, position)
                 }
                 groupsSpinner.id -> {
-                    val group = (it.adapter as SpinnerAdapter).getSelectedItem(position)
+                    val group = (it.adapter as ItemSpinnerAdapter).getSelectedItem(position)
                     presenter.onGroupChosen(group.value, group.id, position)
                 }
             }

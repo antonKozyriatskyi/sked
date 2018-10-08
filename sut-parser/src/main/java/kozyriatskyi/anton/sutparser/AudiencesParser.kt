@@ -16,7 +16,7 @@ class AudiencesParser {
 //    </li>
 
     // date in dd.MM.yyyy format
-    fun getAudiences(date: String, lessonStart: Int, lessonEnd: Int): List<ParsedAudience> {
+    fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<ParsedAudience> {
         val url = "$BASE_URL?TimeTableForm[date1]=$date&TimeTableForm[lessonStart]=$lessonStart&TimeTableForm[lessonEnd]=$lessonEnd"
         val document = Jsoup.connect(url).timeout(TIMEOUT).get()
         val audiencesCells = document.body().getElementsByClass("classrooms-list")
@@ -54,6 +54,9 @@ class AudiencesParser {
         return audiences
     }
 
+    /**
+     * returns start and end times, to be chosen when selecting audience
+     * */
     fun getTimes(): Pair<List<ParsedItem>, List<ParsedItem>> {
         val document = Jsoup.connect(BASE_URL).timeout(TIMEOUT).get()
 

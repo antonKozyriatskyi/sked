@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.byweek
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
@@ -10,7 +11,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.main.MainActivity
+import kozyriatskyi.anton.sked.main.TabsOwner
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
 import javax.inject.Inject
@@ -31,16 +32,23 @@ class ByWeekViewFragment() : MvpAppCompatFragment(), ByWeekView {
 
     private lateinit var weeksViewPager: ViewPager
 
+    private var tabsOwner: TabsOwner? = null
+
     @ProvidePresenter
     fun providePresenter(): ByWeekViewPresenter {
         Injector.byWeekViewComponent().inject(this)
         return presenter
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        tabsOwner = context as TabsOwner
+    }
+
     override fun onHiddenChanged(hidden: Boolean) {
         if (hidden.not()) {
-            // this code smells
-            (activity as MainActivity).tabs.setupWithViewPager(weeksViewPager, true)
+            tabsOwner?.setupWithViewPager(weeksViewPager, true)
         }
     }
 
@@ -50,9 +58,9 @@ class ByWeekViewFragment() : MvpAppCompatFragment(), ByWeekView {
         weeksViewPager = rootView.find(R.id.byweek_pager_weeks)
 
         if (isHidden.not()) {
-            // this code smells
-            (activity as MainActivity).tabs.setupWithViewPager(weeksViewPager, true)
+            tabsOwner?.setupWithViewPager(weeksViewPager, true)
         }
+
         return rootView
     }
 
@@ -63,11 +71,5 @@ class ByWeekViewFragment() : MvpAppCompatFragment(), ByWeekView {
 
     override fun showNextWeek() {
         weeksViewPager.setCurrentItem(1, false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        val refWatcher = App.getRefWatcher(activity)
-//        refWatcher.watch(this)
     }
 }

@@ -13,7 +13,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId 'kozyriatskyi.anton.sked'
         minSdkVersion 15
@@ -32,6 +32,7 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
         }
@@ -62,10 +63,6 @@ ext {
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
 }
-//
-//kapt {
-//    generateStubs = true
-//}
 
 dependencies {
     implementation project(':sut-parser')

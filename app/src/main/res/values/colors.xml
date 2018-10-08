@@ -30,6 +30,9 @@
 
     <color name="dividerColor">@color/grey300</color>
 
+    <color name="audienceFree">@color/green800</color>
+    <color name="audienceBusy">@color/redAс700</color>
+    <color name="audienceCapacity">@color/black</color>
 
     <!-- Palette -->
     <color name="black">#000000</color>
@@ -68,21 +71,5 @@
     <color name="tealAс700">#00BFA5</color>
 
     <color name="yellowAс700">#ffd600</color>
-
-
-    <!--<typeColor name="colorUnknownType">@typeColor/black</typeColor>-->
-    <!--<typeColor name="colorExam">#ffd000</typeColor>-->
-    <!--<typeColor name="colorExamLight">#df7ae6</typeColor>-->
-    <!--<typeColor name="colorLab">#007ada</typeColor>-->
-    <!--<typeColor name="colorLabLight">#71c0ff</typeColor>-->
-    <!--<typeColor name="colorLecture">#d67b0c</typeColor>-->
-    <!--<typeColor name="colorLectureLight">#ffb255</typeColor>-->
-    <!--<typeColor name="colorPractice">#00a900</typeColor>-->
-    <!--<typeColor name="colorPracticeLight">#70c470</typeColor>-->
-    <!--<typeColor name="colorLessonsDivider">#d2d2d2</typeColor>-->
-    <!--<typeColor name="colorSeminar">#d20007</typeColor>-->
-    <!--<typeColor name="colorSeminarLight">#ff7f83</typeColor>-->
-    <!--<typeColor name="colorTest">#55ff00</typeColor>-->
-    <!--<typeColor name="colorTestLight">#a5ff78</typeColor>-->
 
 </resources>
