@@ -69,5 +69,14 @@
     <string name="lesson_details_who_groups">Група(и):</string>
     <string name="lesson_details_who_teacher">Викладач:</string>
     <string name="lesson_details_room">Аудиторія:</string>
+    <string name="audiences_title">Аудиторії</string>
+    <string name="audiences_loading_error">Не вдалось заантажити аудиторії</string>
+    <string name="audience_status_free">Вілно</string>
+    <string name="audience_status_busy">Зайнято</string>
+    <string name="audience_sheet_title">Дата та час</string>
+    <string name="audience_sheet_select_btn">Вибрати</string>
+    <string name="audience_sheet_date_title">Дата</string>
+    <string name="audience_sheet_start_time_title">Початок</string>
+    <string name="audience_sheet_end_time_title">Кінець</string>
 
 </resources>
