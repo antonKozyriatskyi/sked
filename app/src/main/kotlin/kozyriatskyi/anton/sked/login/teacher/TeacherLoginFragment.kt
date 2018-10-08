@@ -13,9 +13,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.login.SpinnerAdapter
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.di.Injector
+import kozyriatskyi.anton.sked.login.ItemSpinnerAdapter
 import kozyriatskyi.anton.sked.login.LoginActivity
 import kozyriatskyi.anton.sked.login.OnInternetConnectionChangeListener
 import kozyriatskyi.anton.sked.login.OnLoadingStateChangeListener
@@ -80,8 +80,8 @@ class TeacherLoginFragment : MvpAppCompatFragment(), TeacherLoginView, AdapterVi
         departmentsSpinner = view.find<Spinner>(R.id.spinner_login_teacher_departments)
         teachersSpinner = view.find<Spinner>(R.id.spinner_login_teacher_teachers)
 
-        departmentsSpinner.adapter = SpinnerAdapter()
-        teachersSpinner.adapter = SpinnerAdapter()
+        departmentsSpinner.adapter = ItemSpinnerAdapter()
+        teachersSpinner.adapter = ItemSpinnerAdapter()
 
         departmentsSpinner.onItemSelectedListener = this
         teachersSpinner.onItemSelectedListener = this
@@ -128,11 +128,11 @@ class TeacherLoginFragment : MvpAppCompatFragment(), TeacherLoginView, AdapterVi
     }
 
     override fun showDepartments(departments: ArrayList<Item>) {
-        (departmentsSpinner.adapter as SpinnerAdapter).updateData(departments)
+        (departmentsSpinner.adapter as ItemSpinnerAdapter).updateData(departments)
     }
 
     override fun showTeachers(teachers: ArrayList<Item>) {
-        (teachersSpinner.adapter as SpinnerAdapter).updateData(teachers)
+        (teachersSpinner.adapter as ItemSpinnerAdapter).updateData(teachers)
     }
 
     override fun restorePositions(departmentPosition: Int, teacherPosition: Int) {
@@ -182,11 +182,11 @@ class TeacherLoginFragment : MvpAppCompatFragment(), TeacherLoginView, AdapterVi
         parent?.let {
             when (it.id) {
                 departmentsSpinner.id -> {
-                    val department = (it.adapter as SpinnerAdapter).getSelectedItem(position)
+                    val department = (it.adapter as ItemSpinnerAdapter).getSelectedItem(position)
                     presenter.onDepartmentChosen(department.value, department.id, position)
                 }
                 teachersSpinner.id -> {
-                    val teacher = (it.adapter as SpinnerAdapter).getSelectedItem(position)
+                    val teacher = (it.adapter as ItemSpinnerAdapter).getSelectedItem(position)
                     presenter.onTeacherChosen(teacher.value, teacher.id, position)
                 }
             }
