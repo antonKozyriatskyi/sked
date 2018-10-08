@@ -7,14 +7,12 @@
 
     <CheckedTextView
         android:id="@+id/textView"
-        style="?spinnerDropDownItemStyle"
+        style="?android:spinnerItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:padding="16dp"
+        android:duplicateParentState="true"
+        android:padding="8dp"
         android:singleLine="true"
-        android:textSize="16sp"
-        tools:text="tfyghutfhyjgnkbjbbhhbjhjbugvfhtgvjhbnhkgjfyjgbhn" />
+        tools:text="tfyghutfhyjgnkbjbbhhbjhjbugvfhtgvjhbjjkjkjkjkjjkjnhkgjfyjgbhn" />
 
 </FrameLayout>
