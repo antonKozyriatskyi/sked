@@ -1,11 +1,10 @@
 package kozyriatskyi.anton.sked.repository
 
 import kozyriatskyi.anton.sked.data.pojo.AudienceNetwork
-import kozyriatskyi.anton.sked.data.pojo.Item
 
-typealias StartEndTimePair = Pair<List<Item>, List<Item>>
+typealias StartEndTimePair = Pair<List<Time>, List<Time>>
 
 interface AudiencesProvider {
-    fun getAudiences(date: String, lessonStart: Int, lessonEnd: Int): List<AudienceNetwork>
+    fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork>
     fun getTimes(): StartEndTimePair
 }
