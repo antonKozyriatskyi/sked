@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kozyriatskyi.anton.sked.repository.Time
 
 @InjectViewState
 class AudiencesPresenter(private val interactor: AudiencesInteractor,
@@ -13,27 +14,72 @@ class AudiencesPresenter(private val interactor: AudiencesInteractor,
     private var audiencesDisposable: Disposable? = null
     private var timesDisposable: Disposable? = null
 
+    private lateinit var latestDate: String
+    private lateinit var latestTimeStart: Time
+    private lateinit var latestTimeEnd: Time
+
     override fun onFirstViewAttach() {
         loadTimes()
     }
 
-    private fun loadTimes() {
-        timesDisposable = interactor.getTimes()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    viewState.showTimes(it.first, it.second)
-                }, {
-                    viewState.showErrorLoadingTimes()
-                })
+    fun onLoadAudiencesButtonClick(date: String, timeStart: Time, timeEnd: Time) {
+        // saving everything to use while reloading
+        latestDate = date
+        latestTimeStart = timeStart
+        latestTimeEnd = timeEnd
+
+        loadAudiences(date, timeStart, timeEnd)
     }
 
-    fun onLoadButtonClick(date: String, lessonStart: Int, lessonEnd: Int) {
-        audiencesDisposable = interactor.getAudiences(date, lessonStart, lessonEnd)
+    fun onRetryLoadingAudiencesButtonClick() {
+        loadAudiences(latestDate, latestTimeStart, latestTimeEnd)
+    }
+
+    fun onRetryLoadingTimesButtonClick() {
+        loadTimes()
+    }
+
+    private fun loadAudiences(date: String, lessonStart: Time, lessonEnd: Time) {
+        viewState.showAudiencesLoading()
+
+        audiencesDisposable?.dispose()
+        audiencesDisposable = interactor.getAudiences(date, lessonStart.id, lessonEnd.id)
                 .subscribeOn(Schedulers.io())
-                .map(mapper::networkToUi)
+                .map(mapper::toUi)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(viewState::showAudiences, { viewState.showErrorLoadingAudiences() })
+                .subscribe(::onAudiencesLoaded, ::onErrorLoadingAudiences)
+    }
+
+    private fun onAudiencesLoaded(audiences: List<AudienceUi>) {
+        viewState.showAudiences(audiences)
+    }
+
+    private fun onErrorLoadingAudiences(t: Throwable) {
+        viewState.showErrorLoadingAudiences()
+    }
+
+    private fun loadTimes() {
+        viewState.showTimesLoading()
+
+        timesDisposable?.dispose()
+        timesDisposable = interactor.getTimes()
+                .subscribeOn(Schedulers.io())
+                .map {
+                    // sort times
+                    val start = it.first.sortedBy { it.id.toInt() }
+                    val end = it.second.sortedBy { it.id.toInt() }
+                    Pair(start, end)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(::onTimesLoaded, ::onErrorLoadingTimes)
+    }
+
+    private fun onTimesLoaded(times: Pair<List<Time>, List<Time>>) {
+        viewState.showTimes(times.first, times.second)
+    }
+
+    private fun onErrorLoadingTimes(t: Throwable) {
+        viewState.showErrorLoadingTimes()
     }
 
     override fun onDestroy() {
