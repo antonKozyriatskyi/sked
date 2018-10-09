@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED
+import android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED
 import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -235,7 +237,11 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
         val superState = super.onSaveInstanceState()
 
         val state = SheetSavedState(superState)
-        state.sheetState = behavior.state
+        val behaviorState = behavior.state
+
+        // state should be either [STATE_EXPANDED] or [STATE_COLLAPSED]
+        // to prevent crash when restoring state
+        state.sheetState = if (behaviorState == STATE_EXPANDED) STATE_EXPANDED else STATE_COLLAPSED
 
         selectedDateCalendar.also {
             state.year = it.get(Calendar.YEAR)
