@@ -15,7 +15,9 @@
 
     <item
         android:id="@+id/main_audiences"
-        android:title="@string/nav_audiences" />
+        android:icon="@drawable/nav_audiences"
+        android:title="@string/nav_audiences"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/main_preferences"
