@@ -59,7 +59,7 @@ class DayViewFragment : MvpAppCompatFragment(), DayView, DayLessonsAdapter.OnLes
 
         val dayNumber = arguments.getInt(EXTRA_DAY_NUM)
         val isNextWeek = arguments.getBoolean(EXTRA_NEXT_WEEK)
-        Injector.dayViewComponent(dayNumber, isNextWeek).inject(this)
+        Injector.inject(this, dayNumber, isNextWeek)
         return presenter
     }
 

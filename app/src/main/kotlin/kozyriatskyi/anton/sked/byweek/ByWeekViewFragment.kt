@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Created by Anton on 11.08.2017.
  */
 
-class ByWeekViewFragment() : MvpAppCompatFragment(), ByWeekView {
+class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
 
     companion object {
         const val TAG = "ByWeekViewFragment"
@@ -36,7 +36,7 @@ class ByWeekViewFragment() : MvpAppCompatFragment(), ByWeekView {
 
     @ProvidePresenter
     fun providePresenter(): ByWeekViewPresenter {
-        Injector.byWeekViewComponent().inject(this)
+        Injector.inject(this)
         return presenter
     }
 

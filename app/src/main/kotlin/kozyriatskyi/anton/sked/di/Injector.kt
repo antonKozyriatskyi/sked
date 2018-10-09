@@ -3,12 +3,12 @@ package kozyriatskyi.anton.sked.di
 import android.annotation.SuppressLint
 import android.content.Context
 import kozyriatskyi.anton.sked.audiences.AudiencesActivity
-import kozyriatskyi.anton.sked.byday.ByDayViewComponent
+import kozyriatskyi.anton.sked.byday.ByDayViewFragment
 import kozyriatskyi.anton.sked.byday.DaggerByDayViewComponent
-import kozyriatskyi.anton.sked.byweek.ByWeekViewComponent
+import kozyriatskyi.anton.sked.byweek.ByWeekViewFragment
 import kozyriatskyi.anton.sked.byweek.DaggerByWeekViewComponent
 import kozyriatskyi.anton.sked.day.DaggerDayViewComponent
-import kozyriatskyi.anton.sked.day.DayViewComponent
+import kozyriatskyi.anton.sked.day.DayViewFragment
 import kozyriatskyi.anton.sked.day.DayViewModule
 import kozyriatskyi.anton.sked.di.module.AppModule
 import kozyriatskyi.anton.sked.login.DaggerLoginComponent
@@ -16,19 +16,19 @@ import kozyriatskyi.anton.sked.login.LoginActivity
 import kozyriatskyi.anton.sked.login.LoginModule
 import kozyriatskyi.anton.sked.login.LoginView
 import kozyriatskyi.anton.sked.login.student.DaggerStudentLoginComponent
-import kozyriatskyi.anton.sked.login.student.StudentLoginComponent
+import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
 import kozyriatskyi.anton.sked.login.teacher.DaggerTeacherLoginComponent
-import kozyriatskyi.anton.sked.login.teacher.TeacherLoginComponent
+import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
 import kozyriatskyi.anton.sked.main.DaggerMainComponent
-import kozyriatskyi.anton.sked.main.MainComponent
+import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.repository.AudiencesComponent
 import kozyriatskyi.anton.sked.repository.DaggerAudiencesComponent
 import kozyriatskyi.anton.sked.settings.DaggerSettingsComponent
-import kozyriatskyi.anton.sked.settings.SettingsComponent
+import kozyriatskyi.anton.sked.settings.SettingsFragment
 import kozyriatskyi.anton.sked.updater.DaggerUpdaterComponent
-import kozyriatskyi.anton.sked.updater.UpdaterComponent
+import kozyriatskyi.anton.sked.updater.UpdaterJobService
 import kozyriatskyi.anton.sked.week.DaggerWeekViewComponent
-import kozyriatskyi.anton.sked.week.WeekViewComponent
+import kozyriatskyi.anton.sked.week.WeekViewFragment
 import kozyriatskyi.anton.sked.week.WeekViewModule
 
 /**
@@ -59,59 +59,70 @@ object Injector {
         this.appContext = appContext
     }
 
-    fun mainComponent(): MainComponent {
-        return DaggerMainComponent.builder()
+    fun inject(activity: MainActivity) {
+        DaggerMainComponent.builder()
                 .appComponent(appComponent)
                 .build()
+                .inject(activity)
     }
 
-    fun studentComponent(): StudentLoginComponent {
-        return DaggerStudentLoginComponent.builder()
+    fun inject(fragment: StudentLoginFragment) {
+        DaggerStudentLoginComponent.builder()
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun teacherComponent(): TeacherLoginComponent {
-        return DaggerTeacherLoginComponent.builder()
+    fun inject(fragment: TeacherLoginFragment) {
+        DaggerTeacherLoginComponent.builder()
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun dayViewComponent(dayNumber: Int, nextWeek: Boolean): DayViewComponent {
-        return DaggerDayViewComponent.builder()
+    fun inject(fragment: DayViewFragment, dayNumber: Int, nextWeek: Boolean) {
+        DaggerDayViewComponent.builder()
                 .dayViewModule(DayViewModule(dayNumber, nextWeek))
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun weekViewComponent(weekNumber: Int): WeekViewComponent {
-        return DaggerWeekViewComponent.builder()
+    fun inject(fragment: WeekViewFragment, weekNumber: Int) {
+        DaggerWeekViewComponent.builder()
                 .weekViewModule(WeekViewModule(weekNumber))
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun byDayViewComponent(): ByDayViewComponent {
-        return DaggerByDayViewComponent.builder()
+    fun inject(fragment: ByDayViewFragment) {
+        DaggerByDayViewComponent.builder()
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun byWeekViewComponent(): ByWeekViewComponent {
-        return DaggerByWeekViewComponent.builder()
+    fun inject(fragment: ByWeekViewFragment) {
+        DaggerByWeekViewComponent.builder()
                 .appComponent(appComponent)
                 .build()
+                .inject(fragment)
     }
 
-    fun updaterJobComponent(): UpdaterComponent =
-            DaggerUpdaterComponent.builder()
-                    .appComponent(appComponent)
-                    .build()
+    fun inject(service: UpdaterJobService) {
+        DaggerUpdaterComponent.builder()
+                .appComponent(appComponent)
+                .build()
+                .inject(service)
+    }
 
-    fun settingsComponent(): SettingsComponent =
-            DaggerSettingsComponent.builder()
-                    .appComponent(appComponent)
-                    .build()
+    fun inject(fragment: SettingsFragment) {
+        DaggerSettingsComponent.builder()
+                .appComponent(appComponent)
+                .build()
+                .inject(fragment)
+    }
 
     fun inject(activity: AudiencesActivity) {
         audiencesComponent!!.inject(activity)

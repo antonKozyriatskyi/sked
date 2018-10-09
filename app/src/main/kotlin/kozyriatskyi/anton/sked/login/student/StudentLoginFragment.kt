@@ -53,7 +53,7 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
     @Suppress("unused")
     @ProvidePresenter
     fun providePresenter(): StudentLoginPresenter {
-        Injector.studentComponent().inject(this)
+        Injector.inject(this)
         return presenter
     }
 

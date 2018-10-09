@@ -63,7 +63,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
-        Injector.mainComponent().inject(this)
+        Injector.inject(this)
         return presenter
     }
 

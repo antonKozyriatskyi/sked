@@ -109,7 +109,7 @@ class UpdaterJobService : JobService() {
     lateinit var timeLogger: ScheduleUpdateTimeLogger
 
     override fun onCreate() {
-        Injector.updaterJobComponent().inject(this)
+        Injector.inject(this)
     }
 
     override fun onStartJob(job: JobParameters): Boolean {

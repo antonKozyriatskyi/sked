@@ -52,9 +52,10 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
 
     @ProvidePresenter
     fun providePresenter(): WeekViewPresenter {
-        val weekNumber = arguments?.getInt(EXTRA_WEEK_NUM) ?:  throw  IllegalArgumentException("Arguments must not be null " +
-                "and must contain EXTRA_WEEK_NUM")
-        Injector.weekViewComponent(weekNumber).inject(this)
+        val weekNumber = arguments?.getInt(EXTRA_WEEK_NUM)
+                ?: throw  IllegalArgumentException("Arguments must not be null " +
+                        "and must contain EXTRA_WEEK_NUM")
+        Injector.inject(this, weekNumber)
         return presenter
     }
 

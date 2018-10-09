@@ -29,7 +29,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     lateinit var scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        Injector.settingsComponent().inject(this)
+        Injector.inject(this)
         addPreferencesFromResource(R.xml.app_preferences)
 
         val themePreference = findPreference(UserSettingsStorage.KEY_DEFAULT_THEME) as ListPreference

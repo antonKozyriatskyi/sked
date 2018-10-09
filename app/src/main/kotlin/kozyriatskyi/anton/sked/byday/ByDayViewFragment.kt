@@ -37,7 +37,7 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
 
     @ProvidePresenter
     fun providePresenter(): ByDayViewPresenter {
-        Injector.byDayViewComponent().inject(this)
+        Injector.inject(this)
 
         return presenter
     }
