@@ -11,19 +11,20 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.data.repository.ResourceManager
+import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
 import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
+import javax.inject.Inject
 
 class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionChangeListener,
         OnLoadingStateChangeListener {
 
     companion object {
-        const val EXTRA_MODE = "mode"
+        const val EXTRA_USER_TYPE = "mode"
 
-        fun start(context: Context, userType: UserType) {
+        fun start(context: Context, userType: LoginView.UserType) {
             val intent = Intent(context, LoginActivity::class.java)
-            intent.putExtra(EXTRA_MODE, userType)
+            intent.putExtra(EXTRA_USER_TYPE, userType)
             context.startActivity(intent)
         }
     }
@@ -32,24 +33,22 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionCha
         fun onLoadButtonClick()
     }
 
-    enum class UserType { STUDENT, TEACHER }
-
     private lateinit var onLoadButtonClickListener: OnLoadButtonClickListener
 
     private lateinit var loadButton: Button
 
-    private lateinit var toolbarTitle: String
-
     private lateinit var snackBar: Snackbar
 
+    @Inject
     @InjectPresenter
     lateinit var presenter: LoginPresenter
 
     @ProvidePresenter
     fun providePresenter(): LoginPresenter {
-        val userType = intent.getSerializableExtra(EXTRA_MODE) ?: throw NullPointerException("userType must not be null")
-        //TODO use dagger to provide dependency
-        return LoginPresenter(userType as UserType, ResourceManager(this))
+        val userType = intent.getSerializableExtra(EXTRA_USER_TYPE) as? LoginView.UserType
+                ?: throw NullPointerException("userType must not be null")
+        Injector.inject(this, userType)
+        return presenter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

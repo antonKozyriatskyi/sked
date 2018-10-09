@@ -11,6 +11,10 @@ import kozyriatskyi.anton.sked.day.DaggerDayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewModule
 import kozyriatskyi.anton.sked.di.module.AppModule
+import kozyriatskyi.anton.sked.login.DaggerLoginComponent
+import kozyriatskyi.anton.sked.login.LoginActivity
+import kozyriatskyi.anton.sked.login.LoginModule
+import kozyriatskyi.anton.sked.login.LoginView
 import kozyriatskyi.anton.sked.login.student.DaggerStudentLoginComponent
 import kozyriatskyi.anton.sked.login.student.StudentLoginComponent
 import kozyriatskyi.anton.sked.login.teacher.DaggerTeacherLoginComponent
@@ -115,5 +119,13 @@ object Injector {
 
     fun release(activity: AudiencesActivity) {
         audiencesComponent = null
+    }
+
+    fun inject(activity: LoginActivity, userType: LoginView.UserType) {
+        DaggerLoginComponent.builder()
+                .appComponent(appComponent)
+                .loginModule(LoginModule(userType))
+                .build()
+                .inject(activity)
     }
 }

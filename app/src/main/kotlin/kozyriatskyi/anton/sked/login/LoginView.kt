@@ -18,4 +18,6 @@ interface LoginView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setTitle(title: String)
+
+    enum class UserType { STUDENT, TEACHER }
 }

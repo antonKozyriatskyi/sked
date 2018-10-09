@@ -10,18 +10,18 @@ import kozyriatskyi.anton.sked.data.repository.ResourceManager
  */
 
 @InjectViewState
-class LoginPresenter(private val userType: LoginActivity.UserType,
+class LoginPresenter(private val userType: LoginView.UserType,
                      private val resourceManager: ResourceManager) : MvpPresenter<LoginView>() {
 
     private val uiModel = LoginStateModel()
 
     override fun onFirstViewAttach() {
         when (userType) {
-            LoginActivity.UserType.STUDENT -> {
+            LoginView.UserType.STUDENT -> {
                 viewState.setTitle(resourceManager.getString(R.string.login_student))
                 viewState.showStudentLayout()
             }
-            LoginActivity.UserType.TEACHER -> {
+            LoginView.UserType.TEACHER -> {
                 viewState.setTitle(resourceManager.getString(R.string.login_teacher))
                 viewState.showTeacherLayout()
             }

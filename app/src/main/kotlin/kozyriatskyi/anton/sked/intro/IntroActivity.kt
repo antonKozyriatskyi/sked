@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.login.LoginActivity
+import kozyriatskyi.anton.sked.login.LoginView
 
 @Suppress("UNUSED_PARAMETER")
 class IntroActivity : AppCompatActivity() {
@@ -23,7 +24,7 @@ class IntroActivity : AppCompatActivity() {
         setContentView(R.layout.activity_intro)
     }
 
-    fun onStudentClick(view: View) = LoginActivity.start(this, LoginActivity.UserType.STUDENT)
+    fun onStudentClick(view: View) = LoginActivity.start(this, LoginView.UserType.STUDENT)
 
-    fun onTeacherClick(view: View) = LoginActivity.start(this, LoginActivity.UserType.TEACHER)
+    fun onTeacherClick(view: View) = LoginActivity.start(this, LoginView.UserType.TEACHER)
 }
