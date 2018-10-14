@@ -30,7 +30,6 @@
 
     <color name="dividerColor">@color/grey600A120</color>
 
-    <color name="audienceFree">@color/green400</color>
     <color name="audienceBusy">@color/redAс100</color>
     <color name="audienceCapacity">@color/white</color>
 
