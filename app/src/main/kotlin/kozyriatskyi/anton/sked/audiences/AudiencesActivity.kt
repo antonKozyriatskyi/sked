@@ -129,6 +129,11 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
     }
 
     override fun showTimesLoading() {
+        audiencesList.setGone()
+        errorView.setGone()
+        timesErrorView.setGone()
+        loadingView.setGone()
+
         with(timeSheet) {
             showLoading()
             unlock()
@@ -142,6 +147,7 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
         timesErrorView.setVisible()
         loadingView.setGone()
 
+        timeSheet.unlock()
         timeSheet.collapseAndLock()
     }
 
