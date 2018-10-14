@@ -128,7 +128,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
             }
             R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_audiences -> AudiencesActivity.start(this)
-            R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_about -> AboutActivity.start(this)
         }
 
