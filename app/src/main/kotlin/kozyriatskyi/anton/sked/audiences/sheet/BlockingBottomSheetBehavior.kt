@@ -11,7 +11,7 @@ class BlockingBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSe
 
     var isLocked = true
 
-    override fun onInterceptTouchEvent(parent: CoordinatorLayout?, child: V, event: MotionEvent?): Boolean {
+    override fun onInterceptTouchEvent(parent: CoordinatorLayout, child: V, event: MotionEvent): Boolean {
         var handled = false
 
         if (!isLocked) handled = super.onInterceptTouchEvent(parent, child, event)
@@ -19,7 +19,7 @@ class BlockingBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSe
         return handled
     }
 
-    override fun onTouchEvent(parent: CoordinatorLayout?, child: V, event: MotionEvent?): Boolean {
+    override fun onTouchEvent(parent: CoordinatorLayout, child: V, event: MotionEvent): Boolean {
         var handled = false
 
         if (!isLocked) handled = super.onTouchEvent(parent, child, event)

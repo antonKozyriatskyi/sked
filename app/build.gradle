@@ -50,14 +50,15 @@ android {
 }
 
 ext {
-    support = '27.1.1'
-    constratint_layout = '1.1.2'
-    moxy = '1.5.3'
-    dagger = '2.15'
-    room = '1.1.0'
-    rxjava2 = '2.1.2'
-    rxandroid = '2.0.1'
-    firebase = '16.0.0'
+    support = '28.0.0'
+    constratint_layout = '1.1.3'
+    moxy = '1.5.5'
+    dagger = '2.17'
+    room = '1.1.1'
+    rxjava2 = '2.2.2'
+    rxandroid = '2.1.0'
+    rxrelay = '2.1.0'
+    firebase = '16.0.4'
     firebase_job_dispatcher = '0.8.5'
 
     junitVersion = '4.12'
@@ -92,12 +93,12 @@ dependencies {
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay"
 
     implementation "com.firebase:firebase-jobdispatcher:$firebase_job_dispatcher"
     implementation "com.google.firebase:firebase-core:$firebase"
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5') {
         transitive = true
     }
 
