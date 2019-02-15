@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ProgressBar
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -53,8 +52,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     private lateinit var byDayViewFragment: Fragment
     private lateinit var byWeekViewFragment: Fragment
 
-    private lateinit var progress: ProgressBar
-
     private lateinit var menuProgressItem: MenuItem
 
     private var showProgressBar = false
@@ -78,7 +75,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
         checkForFirstLaunch(savedInstanceState)
 
-        setTheme(R.style.AppTheme_NoActionBar_Dark)
+        setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(findViewById(R.id.main_toolbar))
@@ -97,8 +94,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
                     .add(R.id.main_layout_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
                     .commit()
         }
-
-        progress = findViewById(R.id.main_progress)
     }
 
     override fun onResume() {

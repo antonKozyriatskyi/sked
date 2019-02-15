@@ -52,7 +52,7 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionCha
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_DarkActionBar)
+        setTheme(R.style.AppTheme_ActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 

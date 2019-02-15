@@ -1,15 +1,23 @@
 <resources>
 
-    <style name="AppTheme.NoActionBar.TranslucentStatus" parent="AppTheme.NoActionBar">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:spinnerMode">dialog</item>
+        <item name="preferenceTheme">@style/AppTheme.Preference</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+        <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>
+        <item name="actionBarTheme">@style/AppTheme.AppBarOverlay</item>
+        <item name="android:navigationBarColor">?colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.Splash" parent="AppTheme.NoActionBar.TranslucentStatus">
-        <item name="android:windowTranslucentNavigation">true</item>
+    <style name="AppTheme.Splash" parent="AppTheme">
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">@color/primary</item>
-        <item name="android:navigationBarColor">@color/primary</item>
     </style>
 
 </resources>
