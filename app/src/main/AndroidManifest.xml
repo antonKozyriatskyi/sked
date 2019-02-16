@@ -30,7 +30,6 @@
 
         <activity
             android:name=".main.MainActivity"
-            android:label="@string/main_activity_title"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -79,6 +79,6 @@
     <string name="audience_sheet_start_time_title">Початок</string>
     <string name="audience_sheet_end_time_title">Кінець</string>
 
-    <string name="privacy_policy">Політика конфіденційності</string>
+    <string name="about_privacy_policy">Політика конфіденційності</string>
 
 </resources>

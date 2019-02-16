@@ -1,33 +1,30 @@
 <resources>
 
     <string name="app_name" translatable="false">Sked</string>
-    <string name="main_title_for_igor" translatable="false">SUT Timetable</string>
+    <!--<string name="main_activity_title" translatable="false">@string/app_name</string>-->
 
 
     <!-- Login screen -->
-    <string name="login_error_departments">Error fetching departments</string>
-    <string name="login_error_teachers">Error fetching teachers</string>
-
-    <string name="login_error_faculties">Error fetching faculties</string>
-    <string name="login_error_courses">Error fetching courses</string>
-    <string name="login_error_groups">Error fetching groups</string>
-    <string name="login_error_students">Error fetching students</string>
     <string name="login_error_schedule">Error fetching schedule</string>
 
     <string name="login_no_connection">Waiting for connection…</string>
     <string name="login_load_schedule">Load schedule</string>
 
-
-    <!-- Login teacher screen -->
+    <!-- Login student screen -->
     <string name="login_faculty">Faculty</string>
     <string name="login_course">Course</string>
     <string name="login_group">Group</string>
     <string name="login_student">Student</string>
-
+    <string name="login_error_faculties">Error fetching faculties</string>
+    <string name="login_error_courses">Error fetching courses</string>
+    <string name="login_error_groups">Error fetching groups</string>
+    <string name="login_error_students">Error fetching students</string>
 
     <!-- Login teacher screen -->
     <string name="login_department">Department</string>
     <string name="login_teacher">Teacher</string>
+    <string name="login_error_departments">Error fetching departments</string>
+    <string name="login_error_teachers">Error fetching teachers</string>
 
 
     <!-- Notification -->
@@ -39,10 +36,6 @@
     <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
-
-    <!-- DayLessons layout -->
-    <string name="no_lessons">No lessons</string>
 
 
     <!-- By day TabLayout -->
@@ -67,6 +60,7 @@
     <string name="pref_notifications_schedule_updates_summary">Notify when schedule updates</string>
 
     <string name="pref_theme_header">Theme</string>
+    <string name="settings_schedule_update_time">Schedule was updated at</string>
 
     <string-array name="pref_theme_themes">
         <item>Auto</item>
@@ -79,8 +73,6 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-
-    <string name="settings_schedule_update_time">Schedule was updated at</string>
 
 
     <!-- Navigation -->
@@ -95,6 +87,7 @@
 
     <!-- About screen -->
     <string name="about_activity_title">About</string>
+    <string name="about_privacy_policy">Privacy policy</string>
     <string name="about_version_name" translatable="false">Sked v%1$s.</string>
     <string name="about_developed_by">Developed by Anton Kozyriatskyi</string>
 
@@ -113,17 +106,7 @@
     <string name="audience_sheet_end_time_title">End</string>
 
 
-    <!-- Other strings -->
-    <string name="ok" translatable="false">OK</string>
-    <string name="na" translatable="false">N/A</string>
-
-    <string name="intro_title">Choose your side</string>
-
-    <string name="exit">Exit</string>
-    <string name="retry">Retry</string>
-
-    <string name="main_activity_title" translatable="false">@string/app_name</string>
-
+    <!-- Lesson details sheet -->
     <string name="lesson_details_name">Name:</string>
     <string name="lesson_details_type">Type:</string>
     <string name="lesson_details_number">Number:</string>
@@ -134,6 +117,15 @@
     <string name="lesson_details_date">Date:</string>
     <string name="lesson_details_added_on">Added on:</string>
 
-    <string name="privacy_policy">Privacy policy</string>
+
+    <!-- Other strings -->
+    <string name="ok" translatable="false">OK</string>
+    <string name="na" translatable="false">N/A</string>
+
+    <string name="intro_title">Choose your side</string>
+    <string name="no_lessons">No lessons</string>
+
+    <string name="exit">Exit</string>
+    <string name="retry">Retry</string>
 
 </resources>
