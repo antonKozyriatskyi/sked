@@ -5,6 +5,7 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
@@ -12,20 +13,21 @@
 
     <FrameLayout
         android:id="@+id/login_layout_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="@dimen/login_container_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/button_login_next"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/login_container_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:enabled="false"
         android:onClick="onLoadScheduleClick"
         android:text="@string/login_load_schedule"
