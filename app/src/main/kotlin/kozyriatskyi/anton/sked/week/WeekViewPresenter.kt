@@ -2,7 +2,6 @@ package kozyriatskyi.anton.sked.week
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
@@ -34,9 +33,7 @@ class WeekViewPresenter(private val weekNumber: Int, private val interactor: Wee
 
     private fun subscribeLessons() {
         val disposable = interactor.lessons(weekNumber)
-                .flatMap { Observable.fromIterable(it) }
-                .map { dayMapper.dbToUi(it) }
-                .buffer(7)
+                .map(dayMapper::dbToUi)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError {
                     logD("Error: $it")
