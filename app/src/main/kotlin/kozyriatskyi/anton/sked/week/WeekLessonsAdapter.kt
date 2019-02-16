@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.week
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -26,484 +27,149 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
 
     private val items = ArrayList<DayUi>(5)
 
-    override fun getItemViewType(position: Int): Int = items[position].lessons.size
+    override fun getItemViewType(position: Int): Int = items[position].type
 
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             when (viewType) {
-                TYPE_LESSONS_ONE -> OneLessonHolder(parent.inflate(R.layout.item_lessons_one))
-                TYPE_LESSONS_TWO -> TwoLessonsHolder(parent.inflate(R.layout.item_lessons_two))
-                TYPE_LESSONS_THREE -> ThreeLessonsHolder(parent.inflate(R.layout.item_lessons_three))
-                TYPE_LESSONS_FOUR -> FourLessonsHolder(parent.inflate(R.layout.item_lessons_four))
-                TYPE_LESSONS_FIVE -> FiveLessonsHolder(parent.inflate(R.layout.item_lessons_five))
-                TYPE_LESSONS_SIX -> SixLessonsHolder(parent.inflate(R.layout.item_lessons_six))
+                TYPE_HEADER -> HeaderHolder(parent.inflate(R.layout.item_week_day_header))
+                TYPE_LESSON -> LessonHolder(parent.inflate(R.layout.item_lesson))
                 TYPE_EMPTY -> EmptyHolder(parent.inflate(R.layout.item_lessons_empty))
-                else /*TYPE_ERROR*/ -> ErrorHolder(parent.inflate(R.layout.item_lessons_error))
+                else -> throw IllegalStateException("no view holder found for type $viewType")
             }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is BindableHolder) {
-            holder.bind(items[position])
-        }
+        @Suppress("UNCHECKED_CAST")
+        (holder as BindableHolder<Item>).bind(items[position])
     }
 
     fun update(days: List<DayUi>) {
-        items.clear()
-        items.addAll(days)
-        items.trimToSize()
+//        val days = days.shuffled() //TODO remove
+        val newItems = ArrayList<Item>(7)
 
-        notifyDataSetChanged()
+        for (day in days) {
+            newItems.add(HeaderItem(day = day.day, date = day.shortDate))
+
+            if (day.lessons.isNotEmpty()) {
+                for (lesson in day.lessons) {
+                    newItems.add(LessonItem(lesson = lesson))
+                }
+            } else {
+                newItems.add(EmptyItem(day = day.day, date = day.shortDate))
+            }
+        }
+
+        val result = DiffUtil.calculateDiff(LessonsDiffCallback(items, newItems), false)
+        items = newItems
+        result.dispatchUpdatesTo(this)
     }
 
-    private inner class OneLessonHolder(view: View) : BindableHolder(view) {
+    private abstract inner class BindableHolder<T : Item>(view: View) : RecyclerView.ViewHolder(view) {
+        abstract fun bind(item: T)
+    }
+
+    private inner class HeaderHolder(view: View) : BindableHolder<HeaderItem>(view) {
 
         private val day = view.find<TextView>(R.id.lessons_tv_day)
         private val date = view.find<TextView>(R.id.lessons_tv_date)
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
-
-        override fun bind(dayUi: DayUi) {
-
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-
-            val lesson = dayUi.lessons[0]
-
-            firstLessonName.text = lesson.name
-            firstLessonWho.text = lesson.who
-            firstLessonType.text = lesson.type
-            firstLessonType.setTextColor(lesson.typeColor)
-            firstLessonNumber.text = lesson.number
-            firstLessonCabinet.text = lesson.cabinet
-            firstLessonTime.text = lesson.time
+        override fun bind(item: HeaderItem) {
+            this.day.text = item.day
+            this.date.text = item.date
         }
     }
 
-    private inner class TwoLessonsHolder(view: View) : BindableHolder(view) {
+    private inner class LessonHolder(view: View) : BindableHolder<LessonItem>(view) {
 
-        private val day = view.find<TextView>(R.id.lessons_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_tv_date)
+        private val lessonName: TextView = view.find(R.id.lesson_name)
+        private val lessonWho: TextView = view.find(R.id.lesson_who)
+        private val lessonType: TextView = view.find(R.id.lesson_type)
+        private val lessonNumber: TextView = view.find(R.id.lesson_number)
+        private val lessonCabinet: TextView = view.find(R.id.lesson_cabinet)
+        private val lessonTime: TextView = view.find(R.id.lesson_time)
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
+        init {
+            view.setOnClickListener {
+                onLessonClickListener.onLessonClick((items[adapterPosition] as LessonItem).lesson)
+            }
+        }
 
-        private val secondLessonName: TextView = view.find(R.id.lesson_two_name)
-        private val secondLessonWho: TextView = view.find(R.id.lesson_two_who)
-        private val secondLessonType: TextView = view.find(R.id.lesson_two_type)
-        private val secondLessonNumber: TextView = view.find(R.id.lesson_two_number)
-        private val secondLessonCabinet: TextView = view.find(R.id.lesson_two_cabinet)
-        private val secondLessonTime: TextView = view.find(R.id.lesson_two_time)
+        override fun bind(item: LessonItem) {
+            val lesson = item.lesson
 
-        override fun bind(dayUi: DayUi) {
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-
-            val lesson1 = dayUi.lessons[0]
-
-            firstLessonName.text = lesson1.name
-            firstLessonWho.text = lesson1.who
-            firstLessonType.text = lesson1.type
-            firstLessonType.setTextColor(lesson1.typeColor)
-            firstLessonNumber.text = lesson1.number
-            firstLessonCabinet.text = lesson1.cabinet
-            firstLessonTime.text = lesson1.time
-
-            val lesson2 = dayUi.lessons[1]
-
-            secondLessonName.text = lesson2.name
-            secondLessonWho.text = lesson2.who
-            secondLessonType.text = lesson2.type
-            secondLessonType.setTextColor(lesson2.typeColor)
-            secondLessonNumber.text = lesson2.number
-            secondLessonCabinet.text = lesson2.cabinet
-            secondLessonTime.text = lesson2.time
+            lessonName.text = lesson.name
+            lessonWho.text = lesson.who
+            lessonType.text = lesson.type
+            lessonType.setTextColor(lesson.typeColor)
+            lessonNumber.text = lesson.number
+            lessonCabinet.text = lesson.cabinet
+            lessonTime.text = lesson.time
         }
     }
 
-    private inner class ThreeLessonsHolder(view: View) : BindableHolder(view) {
+    private inner class EmptyHolder(view: View) : BindableHolder<EmptyItem>(view) {
+        override fun bind(item: EmptyItem) {}
+    }
 
-        private val day = view.find<TextView>(R.id.lessons_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_tv_date)
+    private interface Item {
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
+        val type: Int
 
-        private val secondLessonName: TextView = view.find(R.id.lesson_two_name)
-        private val secondLessonWho: TextView = view.find(R.id.lesson_two_who)
-        private val secondLessonType: TextView = view.find(R.id.lesson_two_type)
-        private val secondLessonNumber: TextView = view.find(R.id.lesson_two_number)
-        private val secondLessonCabinet: TextView = view.find(R.id.lesson_two_cabinet)
-        private val secondLessonTime: TextView = view.find(R.id.lesson_two_time)
+        override fun equals(other: Any?): Boolean
+    }
 
-        private val thirdLessonName: TextView = view.find(R.id.lesson_three_name)
-        private val thirdLessonWho: TextView = view.find(R.id.lesson_three_who)
-        private val thirdLessonType: TextView = view.find(R.id.lesson_three_type)
-        private val thirdLessonNumber: TextView = view.find(R.id.lesson_three_number)
-        private val thirdLessonCabinet: TextView = view.find(R.id.lesson_three_cabinet)
-        private val thirdLessonTime: TextView = view.find(R.id.lesson_three_time)
+    private inner class HeaderItem(val day: String, val date: String) : Item {
 
-        override fun bind(dayUi: DayUi) {
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
+        override val type: Int = TYPE_HEADER
 
-            val lesson1 = dayUi.lessons[0]
+        override fun equals(other: Any?): Boolean {
+            if (other !is HeaderItem) return false
 
-            firstLessonName.text = lesson1.name
-            firstLessonWho.text = lesson1.who
-            firstLessonType.text = lesson1.type
-            firstLessonType.setTextColor(lesson1.typeColor)
-            firstLessonNumber.text = lesson1.number
-            firstLessonCabinet.text = lesson1.cabinet
-            firstLessonTime.text = lesson1.time
-
-            val lesson2 = dayUi.lessons[1]
-
-            secondLessonName.text = lesson2.name
-            secondLessonWho.text = lesson2.who
-            secondLessonType.text = lesson2.type
-            secondLessonType.setTextColor(lesson2.typeColor)
-            secondLessonNumber.text = lesson2.number
-            secondLessonCabinet.text = lesson2.cabinet
-            secondLessonTime.text = lesson2.time
-
-            val lesson3 = dayUi.lessons[2]
-
-            thirdLessonName.text = lesson3.name
-            thirdLessonWho.text = lesson3.who
-            thirdLessonType.text = lesson3.type
-            thirdLessonType.setTextColor(lesson3.typeColor)
-            thirdLessonNumber.text = lesson3.number
-            thirdLessonCabinet.text = lesson3.cabinet
-            thirdLessonTime.text = lesson3.time
+            return this.date == other.date
         }
     }
 
-    private inner class FourLessonsHolder(view: View) : BindableHolder(view) {
+    private inner class LessonItem(val lesson: LessonUi) : Item {
 
-        private val day = view.find<TextView>(R.id.lessons_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_tv_date)
+        override val type: Int = TYPE_LESSON
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
+        override fun equals(other: Any?): Boolean {
+            if (other !is LessonItem) return false
 
-        private val secondLessonName: TextView = view.find(R.id.lesson_two_name)
-        private val secondLessonWho: TextView = view.find(R.id.lesson_two_who)
-        private val secondLessonType: TextView = view.find(R.id.lesson_two_type)
-        private val secondLessonNumber: TextView = view.find(R.id.lesson_two_number)
-        private val secondLessonCabinet: TextView = view.find(R.id.lesson_two_cabinet)
-        private val secondLessonTime: TextView = view.find(R.id.lesson_two_time)
-
-        private val thirdLessonName: TextView = view.find(R.id.lesson_three_name)
-        private val thirdLessonWho: TextView = view.find(R.id.lesson_three_who)
-        private val thirdLessonType: TextView = view.find(R.id.lesson_three_type)
-        private val thirdLessonNumber: TextView = view.find(R.id.lesson_three_number)
-        private val thirdLessonCabinet: TextView = view.find(R.id.lesson_three_cabinet)
-        private val thirdLessonTime: TextView = view.find(R.id.lesson_three_time)
-
-        private val fourthLessonName: TextView = view.find(R.id.lesson_four_name)
-        private val fourthLessonWho: TextView = view.find(R.id.lesson_four_who)
-        private val fourthLessonType: TextView = view.find(R.id.lesson_four_type)
-        private val fourthLessonNumber: TextView = view.find(R.id.lesson_four_number)
-        private val fourthLessonCabinet: TextView = view.find(R.id.lesson_four_cabinet)
-        private val fourthLessonTime: TextView = view.find(R.id.lesson_four_time)
-
-        override fun bind(dayUi: DayUi) {
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-
-            val lesson1 = dayUi.lessons[0]
-
-            firstLessonName.text = lesson1.name
-            firstLessonWho.text = lesson1.who
-            firstLessonType.text = lesson1.type
-            firstLessonType.setTextColor(lesson1.typeColor)
-            firstLessonNumber.text = lesson1.number
-            firstLessonCabinet.text = lesson1.cabinet
-            firstLessonTime.text = lesson1.time
-
-            val lesson2 = dayUi.lessons[1]
-
-            secondLessonName.text = lesson2.name
-            secondLessonWho.text = lesson2.who
-            secondLessonType.text = lesson2.type
-            secondLessonType.setTextColor(lesson2.typeColor)
-            secondLessonNumber.text = lesson2.number
-            secondLessonCabinet.text = lesson2.cabinet
-            secondLessonTime.text = lesson2.time
-
-            val lesson3 = dayUi.lessons[2]
-
-            thirdLessonName.text = lesson3.name
-            thirdLessonWho.text = lesson3.who
-            thirdLessonType.text = lesson3.type
-            thirdLessonType.setTextColor(lesson3.typeColor)
-            thirdLessonNumber.text = lesson3.number
-            thirdLessonCabinet.text = lesson3.cabinet
-            thirdLessonTime.text = lesson3.time
-
-            val lesson4 = dayUi.lessons[3]
-
-            fourthLessonName.text = lesson4.name
-            fourthLessonWho.text = lesson4.who
-            fourthLessonType.text = lesson4.type
-            fourthLessonType.setTextColor(lesson4.typeColor)
-            fourthLessonNumber.text = lesson4.number
-            fourthLessonCabinet.text = lesson4.cabinet
-            fourthLessonTime.text = lesson4.time
+            return this.lesson.name == other.lesson.name
+                    && this.lesson.number == other.lesson.number
+                    && this.lesson.date == other.lesson.date
         }
     }
 
-    private inner class FiveLessonsHolder(view: View) : BindableHolder(view) {
+    private inner class EmptyItem(val day: String, val date: String) : Item {
 
-        private val day = view.find<TextView>(R.id.lessons_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_tv_date)
+        override val type: Int = TYPE_EMPTY
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
+        override fun equals(other: Any?): Boolean {
+            if (other !is EmptyItem) return false
 
-        private val secondLessonName: TextView = view.find(R.id.lesson_two_name)
-        private val secondLessonWho: TextView = view.find(R.id.lesson_two_who)
-        private val secondLessonType: TextView = view.find(R.id.lesson_two_type)
-        private val secondLessonNumber: TextView = view.find(R.id.lesson_two_number)
-        private val secondLessonCabinet: TextView = view.find(R.id.lesson_two_cabinet)
-        private val secondLessonTime: TextView = view.find(R.id.lesson_two_time)
-
-        private val thirdLessonName: TextView = view.find(R.id.lesson_three_name)
-        private val thirdLessonWho: TextView = view.find(R.id.lesson_three_who)
-        private val thirdLessonType: TextView = view.find(R.id.lesson_three_type)
-        private val thirdLessonNumber: TextView = view.find(R.id.lesson_three_number)
-        private val thirdLessonCabinet: TextView = view.find(R.id.lesson_three_cabinet)
-        private val thirdLessonTime: TextView = view.find(R.id.lesson_three_time)
-
-        private val fourthLessonName: TextView = view.find(R.id.lesson_four_name)
-        private val fourthLessonWho: TextView = view.find(R.id.lesson_four_who)
-        private val fourthLessonType: TextView = view.find(R.id.lesson_four_type)
-        private val fourthLessonNumber: TextView = view.find(R.id.lesson_four_number)
-        private val fourthLessonCabinet: TextView = view.find(R.id.lesson_four_cabinet)
-        private val fourthLessonTime: TextView = view.find(R.id.lesson_four_time)
-
-        private val fifthLessonName: TextView = view.find(R.id.lesson_five_name)
-        private val fifthLessonWho: TextView = view.find(R.id.lesson_five_who)
-        private val fifthLessonType: TextView = view.find(R.id.lesson_five_type)
-        private val fifthLessonNumber: TextView = view.find(R.id.lesson_five_number)
-        private val fifthLessonCabinet: TextView = view.find(R.id.lesson_five_cabinet)
-        private val fifthLessonTime: TextView = view.find(R.id.lesson_five_time)
-
-        override fun bind(dayUi: DayUi) {
-
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-
-            val lesson1 = dayUi.lessons[0]
-
-            firstLessonName.text = lesson1.name
-            firstLessonWho.text = lesson1.who
-            firstLessonType.text = lesson1.type
-            firstLessonType.setTextColor(lesson1.typeColor)
-            firstLessonNumber.text = lesson1.number
-            firstLessonCabinet.text = lesson1.cabinet
-            firstLessonTime.text = lesson1.time
-
-            val lesson2 = dayUi.lessons[1]
-
-            secondLessonName.text = lesson2.name
-            secondLessonWho.text = lesson2.who
-            secondLessonType.text = lesson2.type
-            secondLessonType.setTextColor(lesson2.typeColor)
-            secondLessonNumber.text = lesson2.number
-            secondLessonCabinet.text = lesson2.cabinet
-            secondLessonTime.text = lesson2.time
-
-            val lesson3 = dayUi.lessons[2]
-
-            thirdLessonName.text = lesson3.name
-            thirdLessonWho.text = lesson3.who
-            thirdLessonType.text = lesson3.type
-            thirdLessonType.setTextColor(lesson3.typeColor)
-            thirdLessonNumber.text = lesson3.number
-            thirdLessonCabinet.text = lesson3.cabinet
-            thirdLessonTime.text = lesson3.time
-
-            val lesson4 = dayUi.lessons[3]
-
-            fourthLessonName.text = lesson4.name
-            fourthLessonWho.text = lesson4.who
-            fourthLessonType.text = lesson4.type
-            fourthLessonType.setTextColor(lesson4.typeColor)
-            fourthLessonNumber.text = lesson4.number
-            fourthLessonCabinet.text = lesson4.cabinet
-            fourthLessonTime.text = lesson4.time
-
-            val lesson5 = dayUi.lessons[4]
-
-            fifthLessonName.text = lesson5.name
-            fifthLessonWho.text = lesson5.who
-            fifthLessonType.text = lesson5.type
-            fifthLessonType.setTextColor(lesson5.typeColor)
-            fifthLessonNumber.text = lesson5.number
-            fifthLessonCabinet.text = lesson5.cabinet
-            fifthLessonTime.text = lesson5.time
+            return this.date == other.date
         }
     }
 
-    private inner class SixLessonsHolder(view: View) : BindableHolder(view) {
+    private class LessonsDiffCallback(private val oldList: List<Item>,
+                                      private val newList: List<Item>) : DiffUtil.Callback() {
 
-        private val day = view.find<TextView>(R.id.lessons_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_tv_date)
+        override fun getOldListSize(): Int = oldList.size
 
-        private val firstLessonName: TextView = view.find(R.id.lesson_one_name)
-        private val firstLessonWho: TextView = view.find(R.id.lesson_one_who)
-        private val firstLessonType: TextView = view.find(R.id.lesson_one_type)
-        private val firstLessonNumber: TextView = view.find(R.id.lesson_one_number)
-        private val firstLessonCabinet: TextView = view.find(R.id.lesson_one_cabinet)
-        private val firstLessonTime: TextView = view.find(R.id.lesson_one_time)
+        override fun getNewListSize(): Int = newList.size
 
-        private val secondLessonName: TextView = view.find(R.id.lesson_two_name)
-        private val secondLessonWho: TextView = view.find(R.id.lesson_two_who)
-        private val secondLessonType: TextView = view.find(R.id.lesson_two_type)
-        private val secondLessonNumber: TextView = view.find(R.id.lesson_two_number)
-        private val secondLessonCabinet: TextView = view.find(R.id.lesson_two_cabinet)
-        private val secondLessonTime: TextView = view.find(R.id.lesson_two_time)
+        override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
+            val old = oldList[oldPosition]
+            val new = newList[newPosition]
 
-        private val thirdLessonName: TextView = view.find(R.id.lesson_three_name)
-        private val thirdLessonWho: TextView = view.find(R.id.lesson_three_who)
-        private val thirdLessonType: TextView = view.find(R.id.lesson_three_type)
-        private val thirdLessonNumber: TextView = view.find(R.id.lesson_three_number)
-        private val thirdLessonCabinet: TextView = view.find(R.id.lesson_three_cabinet)
-        private val thirdLessonTime: TextView = view.find(R.id.lesson_three_time)
-
-        private val fourthLessonName: TextView = view.find(R.id.lesson_four_name)
-        private val fourthLessonWho: TextView = view.find(R.id.lesson_four_who)
-        private val fourthLessonType: TextView = view.find(R.id.lesson_four_type)
-        private val fourthLessonNumber: TextView = view.find(R.id.lesson_four_number)
-        private val fourthLessonCabinet: TextView = view.find(R.id.lesson_four_cabinet)
-        private val fourthLessonTime: TextView = view.find(R.id.lesson_four_time)
-
-        private val fifthLessonName: TextView = view.find(R.id.lesson_five_name)
-        private val fifthLessonWho: TextView = view.find(R.id.lesson_five_who)
-        private val fifthLessonType: TextView = view.find(R.id.lesson_five_type)
-        private val fifthLessonNumber: TextView = view.find(R.id.lesson_five_number)
-        private val fifthLessonCabinet: TextView = view.find(R.id.lesson_five_cabinet)
-        private val fifthLessonTime: TextView = view.find(R.id.lesson_five_time)
-
-        private val sixLessonName: TextView = view.find(R.id.lesson_five_name)
-        private val sixLessonWho: TextView = view.find(R.id.lesson_five_who)
-        private val sixLessonType: TextView = view.find(R.id.lesson_five_type)
-        private val sixLessonNumber: TextView = view.find(R.id.lesson_five_number)
-        private val sixLessonCabinet: TextView = view.find(R.id.lesson_five_cabinet)
-        private val sixLessonTime: TextView = view.find(R.id.lesson_five_time)
-
-        override fun bind(dayUi: DayUi) {
-
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-
-            val lesson1 = dayUi.lessons[0]
-
-            firstLessonName.text = lesson1.name
-            firstLessonWho.text = lesson1.who
-            firstLessonType.text = lesson1.type
-            firstLessonType.setTextColor(lesson1.typeColor)
-            firstLessonNumber.text = lesson1.number
-            firstLessonCabinet.text = lesson1.cabinet
-            firstLessonTime.text = lesson1.time
-
-            val lesson2 = dayUi.lessons[1]
-
-            secondLessonName.text = lesson2.name
-            secondLessonWho.text = lesson2.who
-            secondLessonType.text = lesson2.type
-            secondLessonType.setTextColor(lesson2.typeColor)
-            secondLessonNumber.text = lesson2.number
-            secondLessonCabinet.text = lesson2.cabinet
-            secondLessonTime.text = lesson2.time
-
-            val lesson3 = dayUi.lessons[2]
-
-            thirdLessonName.text = lesson3.name
-            thirdLessonWho.text = lesson3.who
-            thirdLessonType.text = lesson3.type
-            thirdLessonType.setTextColor(lesson3.typeColor)
-            thirdLessonNumber.text = lesson3.number
-            thirdLessonCabinet.text = lesson3.cabinet
-            thirdLessonTime.text = lesson3.time
-
-            val lesson4 = dayUi.lessons[3]
-
-            fourthLessonName.text = lesson4.name
-            fourthLessonWho.text = lesson4.who
-            fourthLessonType.text = lesson4.type
-            fourthLessonType.setTextColor(lesson4.typeColor)
-            fourthLessonNumber.text = lesson4.number
-            fourthLessonCabinet.text = lesson4.cabinet
-            fourthLessonTime.text = lesson4.time
-
-            val lesson5 = dayUi.lessons[4]
-
-            fifthLessonName.text = lesson5.name
-            fifthLessonWho.text = lesson5.who
-            fifthLessonType.text = lesson5.type
-            fifthLessonType.setTextColor(lesson5.typeColor)
-            fifthLessonNumber.text = lesson5.number
-            fifthLessonCabinet.text = lesson5.cabinet
-            fifthLessonTime.text = lesson5.time
-
-            val lesson6 = dayUi.lessons[5]
-
-            sixLessonName.text = lesson6.name
-            sixLessonWho.text = lesson6.who
-            sixLessonType.text = lesson6.type
-            sixLessonType.setTextColor(lesson6.typeColor)
-            sixLessonNumber.text = lesson6.number
-            sixLessonCabinet.text = lesson6.cabinet
-            sixLessonTime.text = lesson6.time
+            return old == new
         }
-    }
 
-    private inner class EmptyHolder(view: View) : BindableHolder(view) {
-        val day = view.find<TextView>(R.id.lessons_empty_tv_day)
-        val date = view.find<TextView>(R.id.lessons_empty_tv_date)
-
-        override fun bind(dayUi: DayUi) {
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-        }
-    }
-
-    private inner class ErrorHolder(view: View) : BindableHolder(view) {
-        private val day = view.find<TextView>(R.id.lessons_error_tv_day)
-        private val date = view.find<TextView>(R.id.lessons_error_tv_date)
-
-        override fun bind(dayUi: DayUi) {
-            day.text = dayUi.day
-            date.text = dayUi.shortDate
-        }
-    }
-
-    private abstract inner class BindableHolder(view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun bind(dayUi: DayUi)
+        override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean =
+                areItemsTheSame(oldPosition, newPosition)
     }
 
     interface OnLessonClickListener {

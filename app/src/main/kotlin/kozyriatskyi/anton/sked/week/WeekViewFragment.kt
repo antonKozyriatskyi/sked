@@ -69,9 +69,9 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = container!!.inflate(R.layout.fragment_week_lessons)
+        val rootView = container!!.inflate(R.layout.fragment_lessons)
 
-        recycler = rootView.find(R.id.week_recycler_lessons)
+        recycler = rootView.find(R.id.lessons_recycler)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = WeekLessonsAdapter(this)
 
@@ -103,11 +103,4 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
         val sheet = LessonDetailsSheet.create(lesson, LessonDetailsSheet.USER_TYPE_TEACHER)
         sheet.show(activity!!.supportFragmentManager, LessonDetailsSheet.TAG)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        val refWatcher = App.getRefWatcher(activity)
-//        refWatcher.watch(this)
-    }
 }
-

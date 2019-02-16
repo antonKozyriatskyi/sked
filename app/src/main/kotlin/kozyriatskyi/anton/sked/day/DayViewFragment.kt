@@ -64,9 +64,9 @@ class DayViewFragment : MvpAppCompatFragment(), DayView, DayLessonsAdapter.OnLes
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = container!!.inflate(R.layout.fragment_day_lessons)
+        val rootView = container!!.inflate(R.layout.fragment_lessons)
 
-        val recycler = rootView.find<RecyclerView>(R.id.day_recycler_lessons)
+        val recycler = rootView.find<RecyclerView>(R.id.lessons_recycler)
         recycler.layoutManager = LinearLayoutManager(context)
         adapter = DayLessonsAdapter(this)
         recycler.adapter = adapter

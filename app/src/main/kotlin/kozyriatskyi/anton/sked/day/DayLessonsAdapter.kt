@@ -18,10 +18,10 @@ import java.util.*
 class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    companion object {
-        private const val TYPE_LESSON = 1
-        private const val TYPE_EMPTY = 2
-        private const val TYPE_HEADER = 4
+    private companion object {
+        const val TYPE_LESSON = 1
+        const val TYPE_EMPTY = 2
+        const val TYPE_HEADER = 3
     }
 
     private var items = ArrayList<LessonUi>(4)
@@ -33,33 +33,20 @@ class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is LessonHolder -> with(holder) {
-                val lesson = items[position - 1]
-                name.text = lesson.name
-                who.text = lesson.whoShort
-                type.text = lesson.type
-                type.setTextColor(lesson.typeColor)
-                number.text = lesson.number
-                cabinet.text = lesson.cabinet
-                time.text = lesson.time
-            }
-
+            is LessonHolder -> holder.bind(items[position - 1])
             is HeaderHolder -> holder.shortDate.text = shortDate
-
             is EmptyHolder -> holder.noLessonsDate.text = shortDate
         }
-
     }
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
     override fun onCreateViewHolder(container: ViewGroup, type: Int): RecyclerView.ViewHolder =
             when (type) {
-                TYPE_LESSON ->
-                    LessonHolder(container.inflate(R.layout.item_day_lesson))
-                TYPE_HEADER ->
-                    HeaderHolder(container.inflate(R.layout.item_day_header))
-                else /*TYPE_EMPTY*/ -> EmptyHolder(container.inflate(R.layout.item_empty))
+                TYPE_LESSON -> LessonHolder(container.inflate(R.layout.item_lesson))
+                TYPE_HEADER -> HeaderHolder(container.inflate(R.layout.item_day_header))
+                TYPE_EMPTY -> EmptyHolder(container.inflate(R.layout.item_empty))
+                else -> throw IllegalStateException("no view holder found for type $type")
             }
 
     fun updateData(dayUi: DayUi) {
@@ -75,25 +62,36 @@ class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener
         }
 
         items.addAll(dayUi.lessons)
+        viewTypes.ensureCapacity(items.size + 1)
         viewTypes.add(TYPE_HEADER)
         viewTypes.addAll(items.map { TYPE_LESSON })
-        viewTypes.trimToSize()
 
         notifyDataSetChanged()
     }
 
     private inner class LessonHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.find(R.id.lesson_name)
-        val who: TextView = view.find(R.id.lesson_who)
-        val type: TextView = view.find(R.id.lesson_type)
-        val number: TextView = view.find(R.id.lesson_number)
-        val cabinet: TextView = view.find(R.id.lesson_cabinet)
-        val time: TextView = view.find(R.id.lesson_time)
+
+        private val name: TextView = view.find(R.id.lesson_name)
+        private val who: TextView = view.find(R.id.lesson_who)
+        private val type: TextView = view.find(R.id.lesson_type)
+        private val number: TextView = view.find(R.id.lesson_number)
+        private val cabinet: TextView = view.find(R.id.lesson_cabinet)
+        private val time: TextView = view.find(R.id.lesson_time)
 
         init {
             view.find<View>(R.id.lesson_card).setOnClickListener {
-                onLessonClickListener.onLessonClick(items[adapterPosition - 1]) // Counting from the second position, because first position is a header view
+                onLessonClickListener.onLessonClick(items[adapterPosition - 1]) // Subtracting 1, because first position is a header view
             }
+        }
+
+        fun bind(lesson: LessonUi) {
+            name.text = lesson.name
+            who.text = lesson.whoShort
+            type.text = lesson.type
+            type.setTextColor(lesson.typeColor)
+            number.text = lesson.number
+            cabinet.text = lesson.cabinet
+            time.text = lesson.time
         }
     }
 
