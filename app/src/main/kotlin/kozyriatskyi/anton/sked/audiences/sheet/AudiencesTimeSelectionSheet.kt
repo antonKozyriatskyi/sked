@@ -1,16 +1,20 @@
 package kozyriatskyi.anton.sked.audiences.sheet
 
+import android.animation.ArgbEvaluator
 import android.annotation.TargetApi
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.AttrRes
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED
 import android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,6 +34,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
     private lateinit var behavior: BlockingBottomSheetBehavior<AudiencesTimeSelectionSheet>
     private lateinit var overlayView: OverlayView
 
+    private lateinit var headerView: View
     private lateinit var timeStartSpinner: Spinner
     private lateinit var timeEndSpinner: Spinner
     private lateinit var dateText: Button
@@ -161,6 +166,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
     override fun onFinishInflate() {
         super.onFinishInflate()
 
+        headerView = findViewById<View>(R.id.audiences_sheet_header)
         timeStartSpinner = findViewById(R.id.audiences_time_start_spinner)
         timeEndSpinner = findViewById(R.id.audiences_time_end_spinner)
         dateText = findViewById(R.id.audiences_time_date_edittext)
@@ -173,7 +179,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
 
         chooseText.setOnClickListener(this)
         dateText.setOnClickListener(this)
-        findViewById<View>(R.id.audiences_sheet_header).setOnClickListener(this)
+        headerView.setOnClickListener(this)
     }
 
     override fun onAttachedToWindow() {
@@ -186,10 +192,22 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
             it.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        val typedValue = TypedValue()
+
+        fun resolveColor(@AttrRes id: Int): Int {
+            context.theme.resolveAttribute(id, typedValue, true)
+            return ContextCompat.getColor(context, typedValue.resourceId)
+        }
+
+        val startColor = resolveColor(R.attr.colorPrimaryDark)
+        val endColor = resolveColor(R.attr.colorAccent)
+
+        val colorEvaluator = ArgbEvaluator()
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (slideOffset in 0f..1f) {
+                    headerView.setBackgroundColor(colorEvaluator.evaluate(slideOffset, startColor, endColor) as Int)
                     overlayView.alpha = slideOffset * 0.6f
                     upIcon.alpha = 1 - slideOffset
                     chooseText.alpha = slideOffset
