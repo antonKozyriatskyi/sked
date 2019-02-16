@@ -6,26 +6,49 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kozyriatskyi.anton.sked.R
+import kozyriatskyi.anton.sked.customview.stickyheaders.StickyHeaderAdapter
 import kozyriatskyi.anton.sked.data.pojo.DayUi
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
-import java.util.*
 
-class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+@Suppress("EqualsOrHashCode")
+class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListener) : StickyHeaderAdapter<RecyclerView.ViewHolder>() {
 
-    companion object {
-        private const val TYPE_EMPTY = 0
-        private const val TYPE_LESSONS_ONE = 1
-        private const val TYPE_LESSONS_TWO = 2
-        private const val TYPE_LESSONS_THREE = 3
-        private const val TYPE_LESSONS_FOUR = 4
-        private const val TYPE_LESSONS_FIVE = 5
-        private const val TYPE_LESSONS_SIX = 6
-        private const val TYPE_ERROR = 6
+    private companion object {
+        const val TYPE_HEADER = 1
+        const val TYPE_LESSON = 2
+        const val TYPE_EMPTY = 3
     }
 
-    private val items = ArrayList<DayUi>(5)
+    private var items: List<Item> = ArrayList()
+
+    override fun getHeaderPosition(itemPosition: Int): Int {
+        var itemPosition = itemPosition
+        var headerPosition = itemPosition
+        do {
+            if (this.isHeader(itemPosition)) {
+                headerPosition = itemPosition
+                break
+            }
+
+            itemPosition -= 1
+        } while (itemPosition >= 0)
+
+        return headerPosition
+    }
+
+    override fun getHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        return HeaderHolder(parent.inflate(R.layout.item_week_day_sticky_header))
+    }
+
+    override fun bindHeaderViewHolder(holder: RecyclerView.ViewHolder, headerPosition: Int) {
+        (holder as HeaderHolder).bind(items[headerPosition] as HeaderItem)
+    }
+
+    override fun isHeader(itemPosition: Int): Boolean {
+        return itemPosition != RecyclerView.NO_POSITION && items[itemPosition] is HeaderItem
+    }
 
     override fun getItemViewType(position: Int): Int = items[position].type
 
@@ -45,7 +68,6 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
     }
 
     fun update(days: List<DayUi>) {
-//        val days = days.shuffled() //TODO remove
         val newItems = ArrayList<Item>(7)
 
         for (day in days) {

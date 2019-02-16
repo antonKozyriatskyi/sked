@@ -12,6 +12,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.arellomobile.mvp.presenter.ProvidePresenterTag
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.customview.LessonDetailsSheet
+import kozyriatskyi.anton.sked.customview.stickyheaders.StickyHeaderItemDecoration
 import kozyriatskyi.anton.sked.data.pojo.DayUi
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.di.Injector
@@ -73,7 +74,9 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
 
         recycler = rootView.find(R.id.lessons_recycler)
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = WeekLessonsAdapter(this)
+        val adapter = WeekLessonsAdapter(this)
+        recycler.adapter = adapter
+        recycler.addItemDecoration(StickyHeaderItemDecoration(recycler))
 
         return rootView
     }
