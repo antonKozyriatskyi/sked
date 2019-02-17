@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.annotation.IntDef
 import android.support.design.widget.BottomSheetDialogFragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,7 +82,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
     private fun showLesson(lesson: LessonUi) {
         name.text = "${lesson.name} (${lesson.shortName})"
         type.text = lesson.type
-        type.setTextColor(lesson.typeColor)
+        type.setTextColor(ContextCompat.getColor(context!!, lesson.typeColorRes))
         number.text = lesson.number
         cabinet.text = lesson.cabinet
         who.text = lesson.who

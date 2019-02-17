@@ -3,7 +3,7 @@ package kozyriatskyi.anton.sked.data.pojo
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import android.support.annotation.ColorInt
+import android.support.annotation.ColorRes
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 
@@ -27,7 +27,7 @@ data class LessonUi(val date: String,
                     val number: String,
                     val type: String,
                     val cabinet: String,
-                    @ColorInt val typeColor: Int,
+                    @ColorRes val typeColorRes: Int,
                     val shortName: String,
                     val name: String,
                     val addedOnDate: String,
@@ -99,13 +99,14 @@ class LessonMapper(private val resourceManager: ResourceManager) {
         else -> "N/A"
     }
 
+    @ColorRes
     private fun color(type: String): Int = when (type) {
-        "Лк" -> resourceManager.getColor(R.color.lessonTypeLecture)
-        "Пз" -> resourceManager.getColor(R.color.lessonTypePractice)
-        "Лб" -> resourceManager.getColor(R.color.lessonTypeLab)
-        "Екз", "Экз" -> resourceManager.getColor(R.color.lessonTypeExamLight)
-        "Зал", "Зач" -> resourceManager.getColor(R.color.lessonTypeTest)
-        "Сем" -> resourceManager.getColor(R.color.lessonTypeSeminar)
-        else -> resourceManager.getColor(R.color.lessonTypeUnknown)
+        "Лк" -> R.color.lessonTypeLecture
+        "Пз" -> R.color.lessonTypePractice
+        "Лб" -> R.color.lessonTypeLab
+        "Екз", "Экз" -> R.color.lessonTypeExamLight
+        "Зал", "Зач" -> R.color.lessonTypeTest
+        "Сем" -> R.color.lessonTypeSeminar
+        else -> R.color.lessonTypeUnknown
     }
 }

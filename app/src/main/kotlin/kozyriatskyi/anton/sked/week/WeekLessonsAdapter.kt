@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.week
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -123,7 +124,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
             lessonName.text = lesson.name
             lessonWho.text = lesson.who
             lessonType.text = lesson.type
-            lessonType.setTextColor(lesson.typeColor)
+            lessonType.setTextColor(ContextCompat.getColor(itemView.context, lesson.typeColorRes))
             lessonNumber.text = lesson.number
             lessonCabinet.text = lesson.cabinet
             lessonTime.text = lesson.time

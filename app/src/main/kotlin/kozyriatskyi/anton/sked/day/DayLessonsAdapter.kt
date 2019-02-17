@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.day
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +89,7 @@ class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener
             name.text = lesson.name
             who.text = lesson.who
             type.text = lesson.type
-            type.setTextColor(lesson.typeColor)
+            type.setTextColor(ContextCompat.getColor(itemView.context, lesson.typeColorRes))
             number.text = lesson.number
             cabinet.text = lesson.cabinet
             time.text = lesson.time
