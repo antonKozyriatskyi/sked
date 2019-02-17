@@ -82,7 +82,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
         tabs = findViewById(R.id.main_tabs)
 
-        findViewById<BottomNavigationView>(R.id.navigationview_main_viewmodes)
+        findViewById<BottomNavigationView>(R.id.main_bottomnavigation_viewmodes)
                 .setOnNavigationItemSelectedListener(this)
 
         byDayViewFragment = supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
@@ -90,8 +90,8 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.main_layout_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
-                    .add(R.id.main_layout_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
+                    .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
+                    .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
                     .commit()
         }
     }
