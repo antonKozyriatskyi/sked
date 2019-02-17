@@ -86,7 +86,7 @@ class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener
 
         fun bind(lesson: LessonUi) {
             name.text = lesson.name
-            who.text = lesson.whoShort
+            who.text = lesson.who
             type.text = lesson.type
             type.setTextColor(lesson.typeColor)
             number.text = lesson.number
