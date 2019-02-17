@@ -12,7 +12,8 @@ class DayViewInteractor(private val scheduleStorage: ScheduleStorage,
 
     fun lessons(dayNumber: Int, weekNum: Int): Observable<Day> {
         val date = DateUtils.longDateForDayNum(dayNumber, weekNum)
-        return scheduleStorage.getLessonsByDate(dayNumber, weekNum, date)
+        return scheduleStorage.getLessonsByDate(date)
+                .map { Day(dayNumber, weekNum, date, it) }
     }
 
     fun getUser(): User = userInfoStorage.getUser()

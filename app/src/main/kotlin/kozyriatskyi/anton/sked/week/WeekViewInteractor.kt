@@ -1,6 +1,7 @@
 package kozyriatskyi.anton.sked.week
 
 import io.reactivex.Observable
+import io.reactivex.functions.Function7
 import io.reactivex.schedulers.Schedulers
 import kozyriatskyi.anton.sked.data.pojo.Day
 import kozyriatskyi.anton.sked.data.pojo.User
@@ -20,19 +21,22 @@ class WeekViewInteractor(private val scheduleStorage: ScheduleStorage,
         val fridayDate = DateUtils.fridayDate(weekNumber)
         val saturdayDate = DateUtils.saturdayDate(weekNumber)
         val sundayDate = DateUtils.sundayDate(weekNumber)
-        return Observable.mergeArray(
-                scheduleStorage.getLessonsByDate(0, weekNumber, mondayDate),
-                scheduleStorage.getLessonsByDate(1, weekNumber, tuesdayDate),
-                scheduleStorage.getLessonsByDate(2, weekNumber, wednesdayDate),
-                scheduleStorage.getLessonsByDate(3, weekNumber, thursdayDate),
-                scheduleStorage.getLessonsByDate(4, weekNumber, fridayDate),
-                scheduleStorage.getLessonsByDate(5, weekNumber, saturdayDate),
-                scheduleStorage.getLessonsByDate(6, weekNumber, sundayDate)
+
+        fun observeDay(dayNumber: Int, date: String): Observable<Day> =
+                scheduleStorage.getLessonsByDate(date)
+                        .map { Day(dayNumber, weekNumber, date, it) }
+                        .subscribeOn(Schedulers.io())
+
+        return Observable.zip<Day, Day, Day, Day, Day, Day, Day, List<Day>>(
+                observeDay(0, mondayDate),
+                observeDay(1, tuesdayDate),
+                observeDay(2, wednesdayDate),
+                observeDay(3, thursdayDate),
+                observeDay(4, fridayDate),
+                observeDay(5, saturdayDate),
+                observeDay(6, sundayDate),
+                Function7 { d1, d2, d3, d4, d5, d6, d7 -> listOf(d1, d2, d3, d4, d5, d6, d7) }
         )
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
-                .buffer(7)
-                .map { it.sortedBy { it.dayNumber } }
     }
 
     fun getUser(): User = userInfoStorage.getUser()
