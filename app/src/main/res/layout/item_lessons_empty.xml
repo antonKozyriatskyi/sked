@@ -13,7 +13,7 @@
         app:contentPadding="16dp">
 
         <TextView
-            android:id="@+id/lessons_more_than_five_lessons_error"
+            android:id="@+id/lesson_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
