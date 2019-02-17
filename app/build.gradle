@@ -58,7 +58,7 @@ ext {
     rxjava2 = '2.2.2'
     rxandroid = '2.1.0'
     rxrelay = '2.1.0'
-    firebase = '16.0.4'
+    firebase = '16.0.7'
     firebase_job_dispatcher = '0.8.5'
 
     junitVersion = '4.12'
