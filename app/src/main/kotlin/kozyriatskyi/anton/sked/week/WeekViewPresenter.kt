@@ -4,23 +4,20 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kozyriatskyi.anton.sked.data.pojo.DayMapper
-import kozyriatskyi.anton.sked.data.pojo.LessonUi
-import kozyriatskyi.anton.sked.data.pojo.Student
-import kozyriatskyi.anton.sked.data.pojo.Teacher
+import kozyriatskyi.anton.sked.data.pojo.*
 import kozyriatskyi.anton.sked.util.logD
-import kozyriatskyi.anton.sked.util.logE
 import java.util.*
 
 @InjectViewState
-class WeekViewPresenter(private val weekNumber: Int, private val interactor: WeekViewInteractor,
-                        private val dayMapper: DayMapper) :
-        MvpPresenter<WeekView>() {
+class WeekViewPresenter(private val weekNumber: Int,
+                        private val interactor: WeekViewInteractor,
+                        private val dayMapper: DayMapper)
+    : MvpPresenter<WeekView>() {
 
     private val disposables = CompositeDisposable()
 
     override fun onFirstViewAttach() {
-        subscribeLessons()
+        observeLessons()
     }
 
     fun onLessonClick(lesson: LessonUi) {
@@ -31,8 +28,9 @@ class WeekViewPresenter(private val weekNumber: Int, private val interactor: Wee
         }
     }
 
-    private fun subscribeLessons() {
+    private fun observeLessons() {
         val disposable = interactor.lessons(weekNumber)
+                .map(::removeWeekendsIfNoLessons)
                 .map(dayMapper::dbToUi)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError {
@@ -40,16 +38,27 @@ class WeekViewPresenter(private val weekNumber: Int, private val interactor: Wee
                     viewState.showError(it.message ?: "Error")
                 }
                 .retry()
-                .subscribe({
-                    viewState.showLessons(it)
-                }, {
-                    viewState.showError(it.message ?: "Error")
-                    logE("Week lessons error ${it.message}", it)
-                }, {
-                    logE("Week lessons complete")
-                })
+                .subscribe(viewState::showLessons)
 
         disposables.add(disposable)
+    }
+
+    @Suppress("NAME_SHADOWING")
+    private fun removeWeekendsIfNoLessons(days: List<Day>): List<Day> {
+        val days = days.toMutableList()
+
+        val sunday = days[days.lastIndex]
+        val saturday = days[days.lastIndex - 1]
+
+        if (sunday.lessons.isEmpty()) {
+            days.remove(sunday)
+        }
+
+        if (saturday.lessons.isEmpty()) {
+            days.remove(saturday)
+        }
+
+        return days
     }
 
     //TODO
