@@ -39,12 +39,14 @@
         <item>Авто</item>
         <item>Светлая</item>
         <item>Темная</item>
+        <item>Системная</item>
     </string-array>
 
     <string-array name="pref_theme_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>-1</item>
     </string-array>
 
     <string-array name="days_of_week">
