@@ -21,6 +21,7 @@ import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.util.logE
+import java.lang.Math.random
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -70,7 +71,7 @@ class UpdaterJobService : JobService() {
         private fun startTime(calendar: Calendar): Int {
             val sixPm = calendar.let {
                 it.set(Calendar.HOUR_OF_DAY, START_HOUR)
-                it.set(Calendar.MINUTE, 0)
+                it.set(Calendar.MINUTE, (random() * 60).toInt())
                 it.set(Calendar.SECOND, 0)
 
                 it.timeInMillis
@@ -89,6 +90,7 @@ class UpdaterJobService : JobService() {
 
         private fun endTime(calendar: Calendar): Int {
             calendar.set(Calendar.HOUR_OF_DAY, END_HOUR)
+            calendar.set(Calendar.MINUTE, 0)
 
             val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
 
@@ -157,18 +159,15 @@ class UpdaterJobService : JobService() {
         val contentTextId = if (successfullyUpdated) R.string.notification_schedule_updated_successfully
         else R.string.notification_schedule_updated_unsuccessfully
 
-        val vibrationPattern = longArrayOf(300L, 300L, 300L, 300L)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chName = "Sked channel"
             val description = "Channel for all notifications"
-            val importance = NotificationManagerCompat.IMPORTANCE_DEFAULT
+            val importance = NotificationManagerCompat.IMPORTANCE_LOW
 
             val channel = NotificationChannel(CHANNEL_ID, chName, importance)
             channel.description = description
             channel.enableLights(true)
             channel.lightColor = Color.GREEN
-            channel.vibrationPattern = vibrationPattern
 
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -180,8 +179,8 @@ class UpdaterJobService : JobService() {
                 .setSmallIcon(R.drawable.ic_notif_update)
                 .setColor(ContextCompat.getColor(context, R.color.primary))
                 .setAutoCancel(true)
-                .setVibrate(vibrationPattern)
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
 
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build())
     }
