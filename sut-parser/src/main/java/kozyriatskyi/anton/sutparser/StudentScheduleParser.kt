@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sutparser
 
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 import java.util.regex.Pattern
@@ -48,39 +47,37 @@ class StudentScheduleParser {
     }
 
     private fun doc(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String) =
-            Jsoup.connect(url(facultyId, courseId, groupId, dateStart, dateEnd)).timeout(TIMEOUT).get()
+            loadDocument(url(facultyId, courseId, groupId, dateStart, dateEnd))
 
-    private fun url(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String): String {
-        @Suppress("UnnecessaryVariable")
-        val url = "${BASE_URL}TimeTableForm[faculty]=$facultyId&TimeTableForm[course]=$courseId&TimeTableForm[group]=$groupId&TimeTableForm[date1]=$dateStart&TimeTableForm[date2]=$dateEnd&TimeTableForm[r11]=5&timeTable=0"
-        return url
-    }
+    private fun url(facultyId: String, courseId: String, groupId: String, dateStart: String, dateEnd: String): String =
+            "${BASE_URL}TimeTableForm[faculty]=$facultyId&TimeTableForm[course]=$courseId&TimeTableForm[group]=$groupId&TimeTableForm[date1]=$dateStart&TimeTableForm[date2]=$dateEnd&TimeTableForm[r11]=5&timeTable=0"
 
     private fun parseSchedule(table: Element): List<ParsedLesson> {
-        val lessons = ArrayList<ParsedLesson>(80) // guess on average number of lessons
+        val lessons = ArrayList<ParsedLesson>(100) // guess on average number of lessons
         val rows = table.getElementsByTag("tr")
         val notNumberPattern = Regex("\\D*")
 
-        for (row_i in rows.indices) {
-            val row = rows[row_i]
+        for (rowInd in rows.indices) {
+            val row = rows[rowInd]
             val columns = row.getElementsByTag("td")
             val lessonNumbers = ArrayList<String>(4)
-            for (column_i in columns.indices) {
-                if (column_i == 0) {
-                    val divs = columns[column_i].getElementsByClass("mh-50 cell cell-vertical")
+
+            for (columnInd in columns.indices) {
+                val column = columns[columnInd]
+                if (columnInd == 0) {
+                    val divs = column.getElementsByClass("mh-50 cell cell-vertical")
                     divs.forEach {
                         val lessonNumber = it.getElementsByClass("lesson").text()
                                 .replace(notNumberPattern, "")
                         lessonNumbers.add(lessonNumber)
                     }
-                } else if (columns[column_i].hasClass("closed").not()) {
-                    val column = columns[column_i]
+                } else if (column.hasClass("closed").not()) {
                     val date = column.child(0).text()
 
                     val divInfoTexts = column.getElementsByClass("cell mh-50")
 
-                    for (div_ind in divInfoTexts.indices) {
-                        val element = divInfoTexts[div_ind]
+                    for (divInd in divInfoTexts.indices) {
+                        val element = divInfoTexts[divInd]
                         if (element.childNodeSize() == 0) continue
 
                         val longLessonData = element.attr("data-content")
@@ -89,41 +86,63 @@ class StudentScheduleParser {
                         val generalMatcher = allInfoPattern.matcher(longLessonData)
                         var shortNameMatcher = shortNamePattern.matcher(text)
 
-                        val number = lessonNumbers[div_ind]
-                        var shortName = ""
-                        var name = ""
-                        var type = ""
-                        var cabinet = ""
-                        var teacher = ""
-                        var teacherShort = ""
-                        var addedOnDate = ""
-                        var addedOnTime = ""
+                        val number = lessonNumbers[divInd]
+                        var shortName: String? = null
+                        var name: String? = null
+                        var type: String? = null
+                        var cabinet: String? = null
+                        var teacher: String? = null
+                        var teacherShort: String? = null
+                        var addedOnDate: String? = null
+                        var addedOnTime: String? = null
 
                         if (generalMatcher.find()) {
-                            name = generalMatcher.group(1).trim()
-                            type = generalMatcher.group(2).trim()
-                            cabinet = generalMatcher.group(3).trim()
-                            teacher = generalMatcher.group(4).trim()
-                            addedOnDate = generalMatcher.group(5).trim()
-                            addedOnTime = generalMatcher.group(6).trim()
+                            name = generalMatcher.group(1)?.trim()
+                            type = generalMatcher.group(2)?.trim()
+                            cabinet = generalMatcher.group(3)?.trim()
+                            teacher = generalMatcher.group(4)?.trim()
+                            addedOnDate = generalMatcher.group(5)?.trim()
+                            addedOnTime = generalMatcher.group(6)?.trim()
                         }
 
                         if (shortNameMatcher.find()) {
-                            shortName = shortNameMatcher.group(1).trim()
-//                            val type2 = shortNameMatcher.group(2).trim() // same as type
-//                            val cabinet2 = shortNameMatcher.group(3).trim() // same as cabinet
-                            teacherShort = shortNameMatcher.group(4).trim()
+                            shortName = shortNameMatcher.group(1)?.trim()
+//                            val type2 = shortNameMatcher.group(2)?.trim() // same as type
+//                            val cabinet2 = shortNameMatcher.group(3)?.trim() // same as cabinet
+                            teacherShort = shortNameMatcher.group(4)?.trim()
                         } else {
                             shortNameMatcher = shortNamePattern2.matcher(text)  // trying with fallback matcher
                             if (shortNameMatcher.find()) {
-                                shortName = shortNameMatcher.group(1).trim()
-                                teacherShort = shortNameMatcher.group(3).trim()
+                                shortName = shortNameMatcher.group(1)?.trim()
+                                teacherShort = shortNameMatcher.group(3)?.trim()
                             }
                         }
 
-                        val lesson = ParsedLesson(date = date, number = number, shortName = shortName, type = type,
-                                cabinet = cabinet, who = teacher, name = name, addedOnDate = addedOnDate,
-                                addedOnTime = addedOnTime, whoShort = teacherShort)
+                        verifyAllPresentOrThrow("couldn't parse student's schedule",
+                                shortName,
+                                name,
+                                type,
+                                cabinet,
+                                teacher,
+                                teacherShort,
+                                addedOnDate,
+                                addedOnTime
+                        )
+
+                        // ugly force-unwraps but I couldn't find a better solution
+                        val lesson = ParsedLesson(
+                                date = date,
+                                number = number,
+                                shortName = shortName!!,
+                                type = type!!,
+                                cabinet = cabinet!!,
+                                who = teacher!!,
+                                name = name!!,
+                                addedOnDate = addedOnDate!!,
+                                addedOnTime = addedOnTime!!,
+                                whoShort = teacherShort!!
+                        )
+
                         lessons.add(lesson)
                     }
                 }

@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sutparser
 
-import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.util.*
 import java.util.regex.Pattern
@@ -15,11 +14,20 @@ class AudiencesParser {
 //        <a target="_blank" href="/timeTable/classroom?TimeTableForm%5Bclassroom%5D=47">507</a>
 //    </li>
 
-    // date in dd.MM.yyyy format
+    /**
+     * Downloads a list of audiences that contains all audiences for the [date] including
+     * that are free from [lessonStart] till [lessonEnd].
+     *
+     * @param lessonStart number of lesson to look for free audiences
+     * @param lessonEnd number of lesson to look for free audiences
+     * @param date date to look for audiences. Should be in dd.MM.yyyy format
+     * @returns list of audiences for specified [date], [lessonStart] and [lessonEnd]
+     * */
     fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<ParsedAudience> {
         val url = "$BASE_URL?TimeTableForm[date1]=$date&TimeTableForm[lessonStart]=$lessonStart&TimeTableForm[lessonEnd]=$lessonEnd"
-        val document = Jsoup.connect(url).timeout(TIMEOUT).get()
-        val audiencesCells = document.body().getElementsByClass("classrooms-list")
+        val document = loadDocument(url)
+        val audiencesCells = document.body()
+                .getElementsByClass("classrooms-list")
                 .first()
                 .getElementsByTag("li")
 
@@ -27,7 +35,6 @@ class AudiencesParser {
     }
 
     private fun extractAudiencesInfo(audiencesCells: Elements): List<ParsedAudience> {
-
         val audiences = ArrayList<ParsedAudience>(audiencesCells.size)
 
         val capacityAndNotePattern = Pattern.compile("Количество мест: (.*)<br>Примечание: (.*)")
@@ -36,13 +43,15 @@ class AudiencesParser {
             val cell = audiencesCells[i]
 
             val capacityAndNote = cell.attr("data-content")
-            var capacity = ""
-            var note = ""
+            var capacity: String
+            var note: String
 
             val matcher = capacityAndNotePattern.matcher(capacityAndNote)
             if (matcher.find()) {
                 capacity = matcher.group(1)
                 note = matcher.group(2)
+            } else {
+                throw ParseException("couldn't parse audiences")
             }
 
             val isFree = cell.className() != "btn-danger"
@@ -55,20 +64,22 @@ class AudiencesParser {
     }
 
     /**
-     * returns start and end times, to be chosen when selecting audience
+     * Downloads available times to choose when selecting a free audiences
+     *
+     * @returns pair of start as [Pair.first] and end times as [Pair.second],
+     * to be chosen when selecting audience
      * */
     fun getTimes(): Pair<List<ParsedItem>, List<ParsedItem>> {
-        val document = Jsoup.connect(BASE_URL).timeout(TIMEOUT).get()
-
+        val document = loadDocument(BASE_URL)
         val body = document.body()
 
-        val startTimeDropdown = body.getElementById("TimeTableForm_lessonStart")
-        val endTimeDropdown = body.getElementById("TimeTableForm_lessonEnd")
+        fun extractTimes(elementId: String): List<ParsedItem> = body.getElementById(elementId)
+                .getElementsByTag("option")
+                .drop(1)
+                .map(::ParsedItem)
 
-        fun extractItems(e: Elements): List<ParsedItem> = e.drop(1).map(::ParsedItem)
-
-        val startTimes = extractItems(startTimeDropdown.getElementsByTag("option"))
-        val endTimes = extractItems(endTimeDropdown.getElementsByTag("option"))
+        val startTimes = extractTimes("TimeTableForm_lessonStart")
+        val endTimes = extractTimes("TimeTableForm_lessonEnd")
 
         return Pair(startTimes, endTimes)
     }

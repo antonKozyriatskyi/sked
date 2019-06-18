@@ -7,9 +7,9 @@ import org.jsoup.nodes.Element
  */
 
 /**
- * Represents a single faculty, course, group or student
+ * Represents a single faculty, course, group, student, department or teacher
  */
-data class ParsedItem(val id: String = "", val value: String = "") {
+data class ParsedItem(val id: String, val value: String) {
     constructor(element: Element) : this(element.`val`(), element.text())
 
     override fun toString(): String = "id: $id | value: $value"

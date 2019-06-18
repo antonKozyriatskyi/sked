@@ -14,25 +14,15 @@ import kozyriatskyi.anton.sked.data.pojo.LessonDb
 @Dao
 interface LessonsDao {
 
-    @Query("SELECT * FROM lessons")
-    fun getAll(): List<LessonDb>
-
-    @Query("SELECT * FROM lessons WHERE date = :date ORDER BY number")
     // dd-MM-yyyy
-    fun getAllByDate(date: String): Flowable<List<LessonDb>>
-
     @Query("SELECT * FROM lessons WHERE date = :date ORDER BY number")
-    // dd-MM-yyyy
-    fun getAllByDateList(date: String): List<LessonDb>
+    fun observeAllByDate(date: String): Flowable<List<LessonDb>>
 
     @Insert
-    fun insertAll(lessons: List<LessonDb>): List<Long>
+    fun insertAll(lessons: List<LessonDb>)
 
     @Query("DELETE FROM lessons")
     fun deleteAll()
-
-    @Query("DELETE FROM lessons WHERE date = :date")
-    fun deleteAllByDate(date: String)
 
     @Query("SELECT count(*) FROM lessons WHERE date = :date")
     fun amountOfLessonsByDate(date: String): Flowable<Int>

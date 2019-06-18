@@ -15,55 +15,66 @@ object DateUtils {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("mondayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun tuesdayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("tuesdayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun wednesdayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("wednesdayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun thursdayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("thursdayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun fridayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("fridayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun saturdayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("saturdayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}," +
-//                "$calendar", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun sundayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
@@ -72,10 +83,11 @@ object DateUtils {
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
         calendar.add(Calendar.DAY_OF_WEEK, 1)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
-//        logD("sundayDate ($numberOfWeek): ${longDateFormatter.format(calendar.time)}," +
-//                "$calendar", tag = "TAG")
-        return if (inShortFormat) shortDateFormatter.format(calendar.time)
-        else longDateFormatter.format(calendar.time)
+
+        return if (inShortFormat)
+            shortDateFormatter.format(calendar.time)
+        else
+            longDateFormatter.format(calendar.time)
     }
 
     fun longDateForDayNum(dayNum: Int, weekNum: Int = 0) = when (dayNum) {
@@ -86,6 +98,11 @@ object DateUtils {
         4 -> fridayDate(weekNum)
         5 -> saturdayDate(weekNum)
         else -> sundayDate(weekNum)
+    }
+
+    fun todayDate(): String {
+        val day = getCalendar()[Calendar.DAY_OF_WEEK]
+        return longDateForDayNum(dayNum = day)
     }
 
     private fun getCalendar(): Calendar = Calendar.getInstance()

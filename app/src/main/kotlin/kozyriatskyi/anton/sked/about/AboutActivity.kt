@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sked.about
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -46,26 +45,18 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.about_tv_telegram -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(URL_TG_APP))
-
-                try {
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    tryOpenBrowser(URL_TG_WEB)
-                }
-
-            }
-            R.id.about_tv_vk -> tryOpenBrowser(URL_VK)
-            R.id.about_tv_privacy_policy -> tryOpenBrowser(URL_PRIVACY_POLICY)
+            R.id.about_tv_telegram -> if (tryOpenUri(URL_TG_APP).not()) tryOpenUri(URL_TG_WEB)
+            R.id.about_tv_vk -> tryOpenUri(URL_VK)
+            R.id.about_tv_privacy_policy -> tryOpenUri(URL_PRIVACY_POLICY)
         }
     }
 
-    private fun tryOpenBrowser(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        }
+    private fun tryOpenUri(uri: String): Boolean {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        val canOpen = intent.resolveActivity(packageManager) != null
+        if (canOpen) startActivity(intent)
+
+        return canOpen
     }
 
     private fun getLibraries(): ArrayList<Library> {

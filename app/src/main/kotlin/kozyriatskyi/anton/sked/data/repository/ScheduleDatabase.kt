@@ -14,7 +14,7 @@ class ScheduleDatabase(private val database: LessonsDatabase,
 
     override fun getLessonsByDate(date: String): Observable<List<LessonDb>> =
             database.scheduleDao()
-                    .getAllByDate(date)
+                    .observeAllByDate(date)
                     .toObservable()
 
     override fun saveLessons(lessons: List<LessonDb>) {

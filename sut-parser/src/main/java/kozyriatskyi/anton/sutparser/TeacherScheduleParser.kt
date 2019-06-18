@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sutparser
 
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.*
 import java.util.regex.Pattern
@@ -46,7 +45,7 @@ class TeacherScheduleParser {
     }
 
     private fun doc(departmentId: String, teacherId: String, dateStart: String, dateEnd: String) =
-            Jsoup.connect(url(departmentId, teacherId, dateStart, dateEnd)).timeout(TIMEOUT).get()
+            loadDocument(url(departmentId, teacherId, dateStart, dateEnd))
 
     private fun url(departmentId: String, teacherId: String, dateStart: String, dateEnd: String): String {
         @Suppress("UnnecessaryVariable")
@@ -55,30 +54,31 @@ class TeacherScheduleParser {
     }
 
     private fun parseSchedule(table: Element): List<ParsedLesson> {
-        val lessons = ArrayList<ParsedLesson>()
+        val lessons = ArrayList<ParsedLesson>(100) // guess on average number of lessons
         val rows = table.getElementsByTag("tr")
         val notNumberPattern = Regex("\\D*")
 
-        for (row_i in rows.indices) {
-            val row = rows[row_i]
+        for (rowInd in rows.indices) {
+            val row = rows[rowInd]
             val columns = row.getElementsByTag("td")
             val lessonNumbers = ArrayList<String>(4)
-            for (column_i in columns.indices) {
-                if (column_i == 0) {
-                    val divs = columns[column_i].getElementsByClass("mh-50 cell cell-vertical")
+
+            for (columnInd in columns.indices) {
+                if (columnInd == 0) {
+                    val divs = columns[columnInd].getElementsByClass("mh-50 cell cell-vertical")
                     divs.forEach {
                         val lessonNumber = it.getElementsByClass("lesson").text()
                                 .replace(notNumberPattern, "")
                         lessonNumbers.add(lessonNumber)
                     }
-                } else if (columns[column_i].hasClass("closed").not()) {
-                    val column = columns[column_i]
+                } else if (columns[columnInd].hasClass("closed").not()) {
+                    val column = columns[columnInd]
                     val date = column.child(0).text()
 
                     val divInfoTexts = column.getElementsByClass("cell mh-50")
 
-                    for (div_ind in divInfoTexts.indices) {
-                        val element = divInfoTexts[div_ind]
+                    for (divInd in divInfoTexts.indices) {
+                        val element = divInfoTexts[divInd]
                         if (element.childNodeSize() == 0) continue
 
                         val longLessonData = element.attr("data-content")
@@ -87,39 +87,60 @@ class TeacherScheduleParser {
                         val generalMatcher = generalPattern.matcher(longLessonData)
                         var shortNameMatcher = shortNamePattern.matcher(text)
 
-                        val number = lessonNumbers[div_ind]
-                        var shortName = ""
-                        var name = ""
-                        var type = ""
-                        var cabinet = ""
-                        var group = ""
-                        var addedOnDate = ""
-                        var addedOnTime = ""
+                        val number = lessonNumbers[divInd]
+                        var shortName: String? = null
+                        var name: String? = null
+                        var type: String? = null
+                        var cabinet: String? = null
+                        var group: String? = null
+                        var addedOnDate: String? = null
+                        var addedOnTime: String? = null
 
                         if (generalMatcher.find()) {
-                            name = generalMatcher.group(1).trim()
-                            type = generalMatcher.group(2).trim()
-                            group = generalMatcher.group(3).trim()
-                            cabinet = generalMatcher.group(4).trim()
-                            addedOnDate = generalMatcher.group(5).trim()
-                            addedOnTime = generalMatcher.group(6).trim()
+                            name = generalMatcher.group(1)?.trim()
+                            type = generalMatcher.group(2)?.trim()
+                            group = generalMatcher.group(3)?.trim()
+                            cabinet = generalMatcher.group(4)?.trim()
+                            addedOnDate = generalMatcher.group(5)?.trim()
+                            addedOnTime = generalMatcher.group(6)?.trim()
                         }
 
                         if (shortNameMatcher.find()) {
-                            shortName = shortNameMatcher.group(1).trim()
-//                            val type2 = shortNameMatcher.group(2).trim() // same as type
-//                            val group2 = shortNameMatcher.group(3).trim() // same as group
-//                            val cabinet2 = shortNameMatcher.group(4).trim() // same as cabinet
+                            shortName = shortNameMatcher.group(1)?.trim()
+//                            val type2 = shortNameMatcher.group(2)?.trim() // same as type
+//                            val group2 = shortNameMatcher.group(3)?.trim() // same as group
+//                            val cabinet2 = shortNameMatcher.group(4)?.trim() // same as cabinet
                         } else {
                             shortNameMatcher = shortNamePattern2.matcher(text)
                             if (shortNameMatcher.find()) {
-                                shortName = shortNameMatcher.group(1).trim()
+                                shortName = shortNameMatcher.group(1)?.trim()
                             }
                         }
 
-                        val lesson = ParsedLesson(date = date, number = number, shortName = shortName,
-                                type = type, cabinet = cabinet, who = group, name = name,
-                                addedOnDate = addedOnDate, addedOnTime = addedOnTime, whoShort = group)
+                        verifyAllPresentOrThrow("couldn't parse teacher's schedule",
+                                shortName,
+                                name,
+                                type,
+                                cabinet,
+                                group,
+                                addedOnDate,
+                                addedOnTime
+                        )
+
+                        // ugly force-unwraps but I couldn't find a better solution
+                        val lesson = ParsedLesson(
+                                date = date,
+                                number = number,
+                                shortName = shortName!!,
+                                type = type!!,
+                                cabinet = cabinet!!,
+                                who = group!!,
+                                name = name!!,
+                                addedOnDate = addedOnDate!!,
+                                addedOnTime = addedOnTime!!,
+                                whoShort = group
+                        )
+
                         lessons.add(lesson)
                     }
                 }

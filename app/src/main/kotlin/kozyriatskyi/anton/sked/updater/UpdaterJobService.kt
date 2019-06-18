@@ -30,16 +30,48 @@ import javax.inject.Inject
 /**
  * Created by Anton on 06.09.2017.
  */
+
+private const val START_HOUR = 18
+private const val END_HOUR = 20
+
+private fun startTime(calendar: Calendar): Int {
+    val startTime = calendar.let {
+        it.set(Calendar.HOUR_OF_DAY, START_HOUR)
+        it.set(Calendar.MINUTE, (random() * 60).toInt())
+        it.set(Calendar.SECOND, 0)
+
+        it.timeInMillis
+    }
+
+    val todayIsTooLate = System.currentTimeMillis() >= startTime
+
+    if (todayIsTooLate) {
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+    }
+
+    val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
+
+    return TimeUnit.MILLISECONDS.toSeconds(millisFromNow).toInt()
+}
+
+private fun endTime(calendar: Calendar): Int {
+    calendar.set(Calendar.HOUR_OF_DAY, END_HOUR)
+    calendar.set(Calendar.MINUTE, 0)
+
+    val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
+
+    return TimeUnit.MILLISECONDS.toSeconds(millisFromNow).toInt()
+}
+
+
 class UpdaterJobService : JobService() {
 
     companion object {
         private const val TAG = "UpdaterJobService"
 
-        private const val CHANNEL_ID = "updater_01"
+        private const val OLD_CHANNEL_ID = "updater_01"
+        private const val CHANNEL_ID = "updater_02"
         private const val NOTIFICATION_ID = 1
-
-        private const val START_HOUR = 18
-        private const val END_HOUR = 20
 
         fun start(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
@@ -67,35 +99,6 @@ class UpdaterJobService : JobService() {
                 Crashlytics.logException(e)
             }
         }
-
-        private fun startTime(calendar: Calendar): Int {
-            val sixPm = calendar.let {
-                it.set(Calendar.HOUR_OF_DAY, START_HOUR)
-                it.set(Calendar.MINUTE, (random() * 60).toInt())
-                it.set(Calendar.SECOND, 0)
-
-                it.timeInMillis
-            }
-
-            val todayIsTooLate = System.currentTimeMillis() >= sixPm
-
-            if (todayIsTooLate) {
-                calendar.add(Calendar.DAY_OF_YEAR, 1)
-            }
-
-            val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
-
-            return TimeUnit.MILLISECONDS.toSeconds(millisFromNow).toInt()
-        }
-
-        private fun endTime(calendar: Calendar): Int {
-            calendar.set(Calendar.HOUR_OF_DAY, END_HOUR)
-            calendar.set(Calendar.MINUTE, 0)
-
-            val millisFromNow = calendar.timeInMillis - System.currentTimeMillis()
-
-            return TimeUnit.MILLISECONDS.toSeconds(millisFromNow).toInt()
-        }
     }
 
     @Inject
@@ -115,13 +118,17 @@ class UpdaterJobService : JobService() {
     }
 
     override fun onStartJob(job: JobParameters): Boolean {
-        Thread { update(job) }.start()
+        Thread {
+            try {
+                update(job)
+            } catch (ignore: Exception) {
+            }
+        }.start()
+
         return true
     }
 
-    override fun onStopJob(job: JobParameters): Boolean {
-        return true
-    }
+    override fun onStopJob(job: JobParameters): Boolean = true
 
     private fun update(job: JobParameters): Boolean {
         var isSuccessfullyUpdated = true
@@ -162,7 +169,7 @@ class UpdaterJobService : JobService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chName = "Sked channel"
             val description = "Channel for all notifications"
-            val importance = NotificationManagerCompat.IMPORTANCE_LOW
+            val importance = NotificationManagerCompat.IMPORTANCE_MIN
 
             val channel = NotificationChannel(CHANNEL_ID, chName, importance)
             channel.description = description
@@ -170,6 +177,7 @@ class UpdaterJobService : JobService() {
             channel.lightColor = Color.GREEN
 
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.deleteNotificationChannel(OLD_CHANNEL_ID)
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -180,7 +188,7 @@ class UpdaterJobService : JobService() {
                 .setColor(ContextCompat.getColor(context, R.color.primary))
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_MIN)
 
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build())
     }

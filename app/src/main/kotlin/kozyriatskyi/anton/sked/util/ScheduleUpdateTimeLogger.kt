@@ -14,13 +14,8 @@ class ScheduleUpdateTimeLogger(private val sharedPreferences: SharedPreferences)
         val formatter = SimpleDateFormat("HH:mm | dd.MM.yyyy", Locale.getDefault())
         val formattedTime = formatter.format(Date())
 
-        sharedPreferences.edit {
-            putString(UPDATE_TIME, formattedTime)
-        }
+        sharedPreferences.edit { putString(UPDATE_TIME, formattedTime) }
     }
 
-    fun getTime(): String? {
-        val time = sharedPreferences.getString(UPDATE_TIME, "")
-        return if (time == "") null else time
-    }
+    fun getTime(): String? = sharedPreferences.getString(UPDATE_TIME, null)
 }

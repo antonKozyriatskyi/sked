@@ -1,25 +1,25 @@
 package kozyriatskyi.anton.sutparser
 
-import org.jsoup.Jsoup
-
 sealed class DepartmentsParser(val value: String,
                                val baseUrl: String,
                                val departmentsUrl: String,
                                val departmentDefinitions: Set<String>) {
 
     companion object {
-        @JvmStatic
         fun getForLanguage(language: Language): DepartmentsParser = language.getParser()
     }
+
+    abstract fun getDepartments(): List<ParsedDepartment>
 
     internal class UADepartmentsParser : DepartmentsParser(
             value = "ua",
             baseUrl = "http://www.dut.edu.ua",
             departmentsUrl = "http://www.dut.edu.ua/ua/18-kafedri-struktura-universitetu",
-            departmentDefinitions = setOf("Викладацький склад", "Науково-педагогічний склад", "Науково-педагогічний персонал", "Викладацький і допоміжний склад")) {
+            departmentDefinitions = setOf("Викладацький склад", "Науково-педагогічний склад",
+                    "Науково-педагогічний персонал", "Викладацький і допоміжний склад")) {
 
         override fun getDepartments(): List<ParsedDepartment> {
-            val document = Jsoup.connect(departmentsUrl).timeout(TIMEOUT).get()
+            val document = loadDocument(departmentsUrl)
             val content = document.body().getElementsByClass("content")[1]
 
             val lists = content.getElementsByClass("sub_pages_full_list_ul col-xs-12  col-sm-12  col-md-6 col-lg-6")
@@ -34,7 +34,11 @@ sealed class DepartmentsParser(val value: String,
 
                         val a = element.getElementsByTag("a").first()
 
-                        ParsedDepartment(title = a.ownText(), url = a.attr("href"), teachersListUrl = teachersUrl)
+                        return@mapIndexed ParsedDepartment(
+                                title = a.ownText(),
+                                url = a.attr("href"),
+                                teachersListUrl = teachersUrl
+                        )
                     }
 
             return departments
@@ -45,10 +49,11 @@ sealed class DepartmentsParser(val value: String,
             value = "ru",
             baseUrl = "http://www.dut.edu.ua",
             departmentsUrl = "http://www.dut.edu.ua/ru/18-kafedri-struktura-universitetu",
-            departmentDefinitions = setOf("Преподавательский состав", "Научно-педагогический состав", "Научно-педагогический персонал", "Преподавательский и вспомогательный состав")) {
+            departmentDefinitions = setOf("Преподавательский состав", "Научно-педагогический состав",
+                    "Научно-педагогический персонал", "Преподавательский и вспомогательный состав")) {
 
         override fun getDepartments(): List<ParsedDepartment> {
-            val document = Jsoup.connect(departmentsUrl).timeout(TIMEOUT).get()
+            val document = loadDocument(departmentsUrl)
             val content = document.body().getElementsByClass("content")[1]
 
             val lists = content.getElementsByClass("sub_pages_full_list_ul col-xs-12  col-sm-12  col-md-6 col-lg-6")
@@ -63,7 +68,10 @@ sealed class DepartmentsParser(val value: String,
 
                         val a = element.getElementsByTag("a").first()
 
-                        ParsedDepartment(title = a.ownText(), url = a.attr("href"), teachersListUrl = teachersUrl)
+                        return@mapIndexed ParsedDepartment(
+                                title = a.ownText(),
+                                url = a.attr("href"),
+                                teachersListUrl = teachersUrl)
                     }
 
             return departments
@@ -77,7 +85,7 @@ sealed class DepartmentsParser(val value: String,
             departmentDefinitions = setOf("Teaching staff", "Department staff")) {
 
         override fun getDepartments(): List<ParsedDepartment> {
-            val document = Jsoup.connect(departmentsUrl).timeout(TIMEOUT).get()
+            val document = loadDocument(departmentsUrl)
             val content = document.body().getElementsByClass("content_container")[1]
 
             val lists = content.getElementsByClass("list")
@@ -90,30 +98,26 @@ sealed class DepartmentsParser(val value: String,
                                 ?.attr("href") ?: ""
 
                         val a = element.getElementsByTag("a").first()
-                        ParsedDepartment(title = a.ownText(), url = a.attr("href"), teachersListUrl = teachersUrl)
+
+                        return@mapIndexed ParsedDepartment(
+                                title = a.ownText(),
+                                url = a.attr("href"),
+                                teachersListUrl = teachersUrl)
                     }
 
             return departments
         }
     }
 
-    abstract fun getDepartments(): List<ParsedDepartment>
-
 
     enum class Language {
-        UA {
-            override fun getParser(): DepartmentsParser = DepartmentsParser.UADepartmentsParser()
-        },
+        UA, RU, EN;
 
-        RU {
-            override fun getParser(): DepartmentsParser = DepartmentsParser.RUDepartmentsParser()
-        },
-
-        EN {
-            override fun getParser(): DepartmentsParser = DepartmentsParser.ENDepartmentsParser()
-        };
-
-        internal abstract fun getParser(): DepartmentsParser
+        internal fun getParser(): DepartmentsParser = when (this) {
+            UA -> UADepartmentsParser()
+            RU -> RUDepartmentsParser()
+            EN -> ENDepartmentsParser()
+        }
     }
 }
 

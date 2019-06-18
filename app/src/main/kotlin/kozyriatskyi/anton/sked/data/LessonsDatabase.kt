@@ -14,7 +14,10 @@ import kozyriatskyi.anton.sked.util.logI
  * Created by Anton on 27.07.2017.
  */
 
-@Database(entities = arrayOf(LessonDb::class), version = 4)
+private const val DB_VERSION = 4
+private const val DB_NAME = "lessons.db"
+
+@Database(entities = [LessonDb::class], version = DB_VERSION)
 abstract class LessonsDatabase : RoomDatabase() {
 
     companion object {
@@ -22,23 +25,22 @@ abstract class LessonsDatabase : RoomDatabase() {
         private var INSTANCE: LessonsDatabase? = null
 
         fun getInstance(context: Context): LessonsDatabase {
-            if (LessonsDatabase.INSTANCE == null) {
+            if (INSTANCE == null) {
                 synchronized(LessonsDatabase::class.java) {
-                    if (LessonsDatabase.INSTANCE == null) {
-                        LessonsDatabase.INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                LessonsDatabase::class.java, "lessons.db")
-                                .addMigrations(MIGRATION_1_2)
-                                .addMigrations(MIGRATION_2_3)
-                                .addMigrations(MIGRATION_3_4)
+                    if (INSTANCE == null) {
+                        INSTANCE = Room.databaseBuilder(
+                                context.applicationContext,
+                                LessonsDatabase::class.java, DB_NAME)
+                                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                                 .build()
                     }
                 }
             }
 
-            return LessonsDatabase.INSTANCE!!
+            return INSTANCE!!
         }
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
 
             override fun migrate(database: SupportSQLiteDatabase) {
                 this.logI("Migrating from $startVersion to $endVersion")
@@ -89,7 +91,7 @@ abstract class LessonsDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE lessons_old;")
             }
         }
-        val MIGRATION_2_3 = object : Migration(2, 3) {
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE lessons RENAME TO lessons_old;")
                 database.execSQL("CREATE TABLE lessons (" +
@@ -133,22 +135,24 @@ abstract class LessonsDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE lessons_old;")
             }
         }
-        val MIGRATION_3_4 = object : Migration(3, 4) {
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE lessons RENAME TO lessons_old;")
-                database.execSQL("CREATE TABLE lessons (" +
-                        "`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "`date` TEXT NOT NULL, " +
-                        "`number` TEXT NOT NULL, " +
-                        "`type` TEXT NOT NULL, " +
-                        "`cabinet` TEXT NOT NULL, " +
-                        "`short_name` TEXT NOT NULL, " +
-                        "`name` TEXT NOT NULL, " +
-                        "`added_on_date` TEXT NOT NULL, " +
-                        "`added_on_time` TEXT NOT NULL, " +
-                        "`who` TEXT NOT NULL, " +
-                        "`who_short` TEXT NOT NULL" +
-                        ");")
+                database.execSQL("""
+                    CREATE TABLE lessons (
+                        `uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `date` TEXT NOT NULL,
+                        `number` TEXT NOT NULL,
+                        `type` TEXT NOT NULL,
+                        `cabinet` TEXT NOT NULL,
+                        `short_name` TEXT NOT NULL,
+                        `name` TEXT NOT NULL,
+                        `added_on_date` TEXT NOT NULL,
+                        `added_on_time` TEXT NOT NULL,
+                        `who` TEXT NOT NULL,
+                        `who_short` TEXT NOT NULL
+                        );
+                        """)
 
                 database.execSQL("INSERT INTO lessons (" +
                         "`date`, " +
