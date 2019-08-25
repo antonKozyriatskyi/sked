@@ -31,9 +31,8 @@
     </style>
 
     <!-- Custom Style for PreferenceFragmentCompat -->
-    <style name="AppTheme.PreferenceFragment" parent="@style/PreferenceFragment.Material">
+    <style name="AppTheme.PreferenceFragment" parent="PreferenceFragment.Material">
         <item name="android:layout">@layout/fragment_settings</item>
-        <item name="android:windowAnimationStyle">@style/WindowTransition.Fade</item>
     </style>
 
     <style name="WindowTransition.Fade" parent="">

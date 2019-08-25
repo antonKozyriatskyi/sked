@@ -73,7 +73,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
                 if (previousThemeValue != intValue) {
                     previousThemeValue = intValue
-                    activity!!.recreate()
+
+                    with(requireActivity()) {
+                        window.setWindowAnimations(R.style.WindowTransition_Fade)
+                        recreate()
+                    }
                 }
             }
         }
