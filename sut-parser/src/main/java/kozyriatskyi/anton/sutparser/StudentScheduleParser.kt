@@ -17,25 +17,23 @@ class StudentScheduleParser {
     <span>МП ПЗ-2017[Пз]</span><br> | <span>(.*)\[?(.*)\]?</span>\s*<br>\s* - short name, type | sometimes there's no square brackets
     ауд. 310<br>                    | ауд\. (.*)\s*<br>\s*                  - cabinet
     Гаманюк І.М.                    | (.*)\s*                               - short teacher
-    <span class="hidden"></span>    | <span class="hidden"></span>\s*
     */
     private val shortNamePattern: Pattern by lazy {
-        Pattern.compile("<span>(.*)\\[(.*)\\]</span>\\s*<br>\\s*ауд\\. (.*)\\s*<br>\\s*(.*)\\s*<span class=\"hidden\"></span>\\s*")
+        Pattern.compile("<span>(.*)\\[(.*)\\]</span>\\s*<br>\\s*ауд\\. (.*)\\s*<br>\\s*(.*)\\s*")
     }
     private val shortNamePattern2: Pattern by lazy {
-        Pattern.compile("<span>(.*)</span>\\s*<br>\\s*ауд\\. (.*)\\s*<br>\\s*(.*)\\s*<span class=\"hidden\"></span>\\s*")
+        Pattern.compile("<span>(.*)</span>\\s*<br>\\s*ауд\\. (.*)\\s*<br>\\s*(.*)\\s*")
     }
 
     /*
-    Моделювання та проектування ПЗ[Пз]<br> | (.*)\[(.*)\]<br>\s*            - full name, type
-    <br>                                   | <br>\s*
-    ауд. 310<br>                           | ауд\. (.*)<br>\s*              - cabinet
-    Гаманюк Ігор Михайлович<br>            | (.*)<br>                       - full teacher
-    Добавлено: 13.12.2017 12:09<br>        | Добавлено: (.*)\s(.*)<br>\s*   - added on date, added on time
-    <a href='#'>Доп. материалы</a          | <a href='#'>Доп\. материалы</a
+    <br>DevOps[Пз]<br>                     | <br>(.*)\[(.*)\]<br>\s*        - full name (1), type (2)
+     ПДМ-51<br>                            | (.*)<br>\s*                    - group name (3)
+    ауд. 302<br>                           | ауд\. (.*)<br>\s*              - cabinet (4)
+    Онищенко Вікторія Валеріївна<br>       | (.*)<br>/s*                    - full teacher name (5)
+    Добавлено: 19.08.2019 09:23<br>        | Добавлено: (.*)\s(.*)<br>\s*   - added on date (6), added on time (7)
     */
     private val allInfoPattern: Pattern by lazy {
-        Pattern.compile("(.*)\\[(.*)\\]<br>\\s*<br>\\s*ауд\\. (.*)<br>\\s*(.*)<br>\\s*Добавлено: (.*)\\s(.*)<br>\\s*<a href='#'>Доп\\. материалы</a")
+        Pattern.compile("<br>(.*)\\[(.*)\\]<br>\\s*(.*)<br>\\s*ауд\\. (.*)<br>\\s*(.*)<br>\\s*Добавлено: (.*)\\s(.*)<br>\\s*")
     }
 
     // date in 'dd.MM.yyyy'
@@ -99,10 +97,10 @@ class StudentScheduleParser {
                         if (generalMatcher.find()) {
                             name = generalMatcher.group(1)?.trim()
                             type = generalMatcher.group(2)?.trim()
-                            cabinet = generalMatcher.group(3)?.trim()
-                            teacher = generalMatcher.group(4)?.trim()
-                            addedOnDate = generalMatcher.group(5)?.trim()
-                            addedOnTime = generalMatcher.group(6)?.trim()
+                            cabinet = generalMatcher.group(4)?.trim()
+                            teacher = generalMatcher.group(5)?.trim()
+                            addedOnDate = generalMatcher.group(6)?.trim()
+                            addedOnTime = generalMatcher.group(7)?.trim()
                         }
 
                         if (shortNameMatcher.find()) {
