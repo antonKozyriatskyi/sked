@@ -16,7 +16,7 @@ internal inline fun Document.getElements(elementId: String): List<ParsedItem> =
                 .toList()
 
 internal inline fun verifyAllPresentOrThrow(errorMessage: String, vararg values: String?) {
-    val allPresent = values.all { it != null && it.isNotEmpty() }
+    val allPresent = values.all { it != null }
 
     if (allPresent.not()) throw ParseException(errorMessage)
 }
