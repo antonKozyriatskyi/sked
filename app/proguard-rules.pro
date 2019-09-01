@@ -26,11 +26,10 @@
 
 #Rxjava2 doesn't have rules
 
-#Evernote android job
--dontwarn com.evernote.android.job.gcm.**
--dontwarn com.evernote.android.job.util.GcmAvailableHelper
-
 #Jsoup
--keep public class org.jsoup.** {
-public *;
-}
+-keeppackagenames org.jsoup.nodes
+
+# Allows Crashlytics to upload mapping file
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
