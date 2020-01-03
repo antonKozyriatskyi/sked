@@ -1,9 +1,9 @@
 package kozyriatskyi.anton.sked.audiences
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import kozyriatskyi.anton.sked.repository.Time
 import kozyriatskyi.anton.sked.util.AddToEndSingleByTagStateStrategy
+import moxy.MvpView
+import moxy.viewstate.strategy.StateStrategyType
 
 private const val TAG_AUDIENCES = "audiences"
 private const val TAG_TIMES = "times"

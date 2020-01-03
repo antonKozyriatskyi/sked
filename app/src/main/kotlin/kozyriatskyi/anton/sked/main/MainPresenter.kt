@@ -1,12 +1,12 @@
 package kozyriatskyi.anton.sked.main
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class MainPresenter(private val userInfoStorage: UserInfoStorage,

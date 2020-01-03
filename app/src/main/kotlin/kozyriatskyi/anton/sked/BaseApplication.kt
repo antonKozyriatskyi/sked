@@ -23,7 +23,7 @@ open class BaseApplication : Application() {
 
         if (previousVersionCode != currentVersionCode) {
             val currentVersionName = BuildConfig.VERSION_NAME
-            val previousVersionName = preferences.getString("version_name", currentVersionName + " old")
+            val previousVersionName = preferences.getString("version_name", "$currentVersionName old")!!
 
             preferences.edit {
                 putString("version_name", currentVersionName)

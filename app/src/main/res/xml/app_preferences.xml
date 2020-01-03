@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_notifications_header">
+    <androidx.preference.PreferenceCategory android:title="@string/pref_notifications_header">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="notify_on_update"
             android:summary="@string/pref_notifications_schedule_updates_summary"
             android:title="@string/pref_notifications_schedule_updates_title" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="@string/pref_appearance_header">
+    <androidx.preference.PreferenceCategory android:title="@string/pref_appearance_header">
 
-        <android.support.v7.preference.ListPreference
+        <ListPreference
             android:defaultValue="0"
             android:entries="@array/pref_theme_themes"
             android:entryValues="@array/pref_theme_values"
@@ -21,6 +21,6 @@
             android:summary="%s"
             android:title="@string/pref_theme_header" />
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -1,9 +1,9 @@
 package kozyriatskyi.anton.sked.login
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 /**
  * Created by Anton on 13.07.2017.

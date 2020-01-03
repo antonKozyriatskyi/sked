@@ -1,9 +1,9 @@
 package kozyriatskyi.anton.sked.data.pojo
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 

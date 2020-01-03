@@ -2,11 +2,11 @@ package kozyriatskyi.anton.sked.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.ListPreference
+import androidx.preference.PreferenceFragmentCompat
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector

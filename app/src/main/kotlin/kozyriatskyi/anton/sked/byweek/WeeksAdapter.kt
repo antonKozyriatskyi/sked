@@ -1,13 +1,12 @@
 package kozyriatskyi.anton.sked.byweek
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.PagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import kozyriatskyi.anton.sked.week.WeekViewFragment
 
-class WeeksAdapter(childFragmentManager: FragmentManager, private val titles: Array<String>/*,
-                   private val nextWeek: Boolean*/)
+class WeeksAdapter(childFragmentManager: FragmentManager, private val titles: Array<String>)
     : FragmentStatePagerAdapter(childFragmentManager) {
 
     companion object {

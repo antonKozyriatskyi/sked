@@ -1,12 +1,12 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.util.logD
+import moxy.InjectViewState
+import moxy.MvpPresenter
 import java.util.*
 
 /**

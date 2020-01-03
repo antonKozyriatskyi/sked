@@ -59,18 +59,18 @@ class UserInfoStorage(private val preferences: SharedPreferences) {
     @Throws(IllegalStateException::class)
     fun getUser(): User = when (preferences.getString(KEY_USER_TYPE, "")) {
         TYPE_STUDENT -> Student().apply {
-            this.faculty = preferences.getString(KEY_FACULTY, "")
-            this.facultyId = preferences.getString(KEY_FACULTY_ID, "")
-            this.course = preferences.getString(KEY_COURSE, "")
-            this.courseId = preferences.getString(KEY_COURSE_ID, "")
-            this.group = preferences.getString(KEY_GROUP, "")
-            this.groupId = preferences.getString(KEY_GROUP_ID, "")
+            this.faculty = preferences.getString(KEY_FACULTY, "")!!
+            this.facultyId = preferences.getString(KEY_FACULTY_ID, "")!!
+            this.course = preferences.getString(KEY_COURSE, "")!!
+            this.courseId = preferences.getString(KEY_COURSE_ID, "")!!
+            this.group = preferences.getString(KEY_GROUP, "")!!
+            this.groupId = preferences.getString(KEY_GROUP_ID, "")!!
         }
         TYPE_TEACHER -> Teacher().apply {
-            this.department = preferences.getString(KEY_DEPARTMENT, "")
-            this.departmentId = preferences.getString(KEY_DEPARTMENT_ID, "")
-            this.teacher = preferences.getString(KEY_TEACHER, "")
-            this.teacherId = preferences.getString(KEY_TEACHER_ID, "")
+            this.department = preferences.getString(KEY_DEPARTMENT, "")!!
+            this.departmentId = preferences.getString(KEY_DEPARTMENT_ID, "")!!
+            this.teacher = preferences.getString(KEY_TEACHER, "")!!
+            this.teacherId = preferences.getString(KEY_TEACHER_ID, "")!!
         }
         else -> throw IllegalStateException("Wrong user type. Must be either TYPE_STUDENT or TYPE_TEACHER!")
     }

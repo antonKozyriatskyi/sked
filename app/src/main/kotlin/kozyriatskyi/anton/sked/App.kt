@@ -2,8 +2,8 @@ package kozyriatskyi.anton.sked
 
 import android.content.Context
 import android.os.Looper
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.preference.PreferenceManager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver

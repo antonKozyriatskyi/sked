@@ -1,11 +1,11 @@
 package kozyriatskyi.anton.sked.data
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.migration.Migration
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
 import kozyriatskyi.anton.sked.util.logI
 
@@ -91,6 +91,7 @@ abstract class LessonsDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE lessons_old;")
             }
         }
+
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE lessons RENAME TO lessons_old;")
@@ -135,6 +136,7 @@ abstract class LessonsDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE lessons_old;")
             }
         }
+
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE lessons RENAME TO lessons_old;")

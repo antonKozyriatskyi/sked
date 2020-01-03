@@ -7,18 +7,18 @@ import android.content.Context
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.AttrRes
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED
-import android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import androidx.annotation.AttrRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.repository.Time
 import kozyriatskyi.anton.sked.util.setDisabled
@@ -309,7 +309,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
         var month: Int = 0
         var year: Int = 0
 
-        constructor(superState: Parcelable) : super(superState)
+        constructor(superState: Parcelable?) : super(superState)
 
         private constructor(parcel: Parcel) : super(parcel) {
             sheetState = parcel.readInt()

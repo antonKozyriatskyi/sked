@@ -46,6 +46,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     dexOptions {
         javaMaxHeapSize "4G"
     }
@@ -53,18 +54,22 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 ext {
-    support = '28.0.0'
-    constratint_layout = '1.1.3'
-    moxy = '1.5.5'
-    dagger = '2.17'
-    room = '1.1.1'
-    rxjava2 = '2.2.2'
-    rxandroid = '2.1.0'
+    constratint_layout = '1.1.2'
+    moxy = '2.0.2'
+    dagger = '2.15'
+    room = '1.1.0'
+    rxjava2 = '2.1.2'
+    rxandroid = '2.0.1'
     rxrelay = '2.1.0'
-    firebase = '16.0.9'
+    firebase = '16.0.0'
     firebase_job_dispatcher = '0.8.5'
 
     junitVersion = '4.12'
@@ -74,24 +79,25 @@ ext {
 dependencies {
     implementation project(':sut-parser')
 
-    implementation "com.android.support:appcompat-v7:$support"
-    implementation "com.android.support:design:$support"
-    implementation "com.android.support:support-v4:$support"
-    implementation "com.android.support:recyclerview-v7:$support"
-    implementation "com.android.support:cardview-v7:$support"
-    implementation "com.android.support:preference-v7:$support"
-    implementation "com.android.support:preference-v14:$support"
-    implementation "com.android.support:support-vector-drawable:$support"
-    implementation "com.android.support.constraint:constraint-layout:$constratint_layout"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
-    implementation "android.arch.persistence.room:runtime:$room"
-    implementation "android.arch.persistence.room:rxjava2:$room"
-    kapt "android.arch.persistence.room:compiler:$room"
+    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation "com.arello-mobile:moxy-app-compat:$moxy"
-    kapt "com.arello-mobile:moxy-compiler:$moxy"
+    implementation "com.github.moxy-community:moxy:$moxy"
+    implementation "com.github.moxy-community:moxy-androidx:$moxy"
+    kapt "com.github.moxy-community:moxy-compiler:$moxy"
 
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"

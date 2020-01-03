@@ -2,18 +2,18 @@ package kozyriatskyi.anton.sked.byday
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import androidx.viewpager.widget.ViewPager
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.TabsOwner
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 

@@ -1,6 +1,6 @@
 package kozyriatskyi.anton.sked.audiences
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 
 data class AudienceUi(val number: String,
                       val isFree: Boolean,

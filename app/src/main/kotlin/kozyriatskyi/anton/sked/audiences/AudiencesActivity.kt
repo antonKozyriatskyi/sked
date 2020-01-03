@@ -4,14 +4,11 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.audiences.sheet.AudiencesTimeSelectionSheet
 import kozyriatskyi.anton.sked.audiences.sheet.OverlayView
@@ -19,6 +16,9 @@ import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.repository.Time
 import kozyriatskyi.anton.sked.util.setGone
 import kozyriatskyi.anton.sked.util.setVisible
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSelectionSheet.OnTimeSelectListener,

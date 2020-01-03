@@ -63,7 +63,7 @@
 
     </FrameLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:colorBackground">
@@ -157,6 +157,6 @@
             app:layout_constraintStart_toEndOf="@id/audiences_time_start_text"
             app:layout_constraintTop_toTopOf="@id/audiences_time_start_text" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

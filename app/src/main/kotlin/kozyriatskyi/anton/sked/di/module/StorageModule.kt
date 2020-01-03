@@ -2,7 +2,7 @@ package kozyriatskyi.anton.sked.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.data.LessonsDatabase

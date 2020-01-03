@@ -3,17 +3,15 @@ package kozyriatskyi.anton.sked.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.about.AboutActivity
 import kozyriatskyi.anton.sked.audiences.AudiencesActivity
@@ -24,6 +22,9 @@ import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.intro.IntroActivity
 import kozyriatskyi.anton.sked.settings.SettingsActivity
 import kozyriatskyi.anton.sked.util.toast
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 

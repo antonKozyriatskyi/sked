@@ -1,9 +1,9 @@
 package kozyriatskyi.anton.sked.login.student
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import kozyriatskyi.anton.sked.data.pojo.Item
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.StateStrategyType
 import java.util.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)

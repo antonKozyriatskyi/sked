@@ -2,13 +2,13 @@ package kozyriatskyi.anton.sked.customview
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.IntDef
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.IntDef
+import androidx.core.content.ContextCompat
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.storage.StorageManager
@@ -91,7 +91,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         addedOn.text = "${lesson.addedOnDate} ${lesson.addedOnTime}"
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         StorageManager.get().releaseStorage(TAG) // User closed the sheet, so can release the storage
         super.onCancel(dialog)
     }

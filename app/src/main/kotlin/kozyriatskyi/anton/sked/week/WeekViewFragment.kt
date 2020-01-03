@@ -1,15 +1,11 @@
 package kozyriatskyi.anton.sked.week
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.arellomobile.mvp.presenter.ProvidePresenterTag
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.customview.LessonDetailsSheet
 import kozyriatskyi.anton.sked.customview.stickyheaders.StickyHeaderItemDecoration
@@ -19,6 +15,10 @@ import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
 import kozyriatskyi.anton.sked.util.toast
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+import moxy.presenter.ProvidePresenterTag
 import javax.inject.Inject
 import kotlin.properties.Delegates
 

@@ -1,7 +1,7 @@
 package kozyriatskyi.anton.sked.data.repository
 
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 
 class UserSettingsStorage(private val preferences: SharedPreferences) {
 
@@ -19,7 +19,7 @@ class UserSettingsStorage(private val preferences: SharedPreferences) {
         const val THEME_DARK = AppCompatDelegate.MODE_NIGHT_YES
     }
 
-    fun getString(key: String, default: String): String = preferences.getString(key, default)
+    fun getString(key: String, default: String): String = preferences.getString(key, default)!!
 
     fun getInt(key: String, default: Int): Int = preferences.getInt(key, default)
 

@@ -1,13 +1,13 @@
 package kozyriatskyi.anton.sked.day
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.pojo.Teacher
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class DayViewPresenter(private val dayNumber: Int, private val nextWeek: Boolean,

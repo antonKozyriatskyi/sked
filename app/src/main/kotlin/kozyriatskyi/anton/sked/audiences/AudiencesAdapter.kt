@@ -1,10 +1,10 @@
 package kozyriatskyi.anton.sked.audiences
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.util.inflate
 import java.util.*

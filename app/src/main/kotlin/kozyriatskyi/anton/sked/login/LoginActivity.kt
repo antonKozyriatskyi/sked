@@ -3,17 +3,17 @@ package kozyriatskyi.anton.sked.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.Button
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
 import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionChangeListener,

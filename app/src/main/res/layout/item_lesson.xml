@@ -7,7 +7,7 @@
     android:layout_marginBottom="8dp"
     android:clipChildren="false">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/lesson_card"
         android:layout_width="@dimen/lesson_card_width"
         android:layout_height="wrap_content"
@@ -97,6 +97,6 @@
 
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </FrameLayout>

@@ -1,10 +1,10 @@
 package kozyriatskyi.anton.sked.login
 
-import android.support.annotation.LayoutRes
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.util.inflate

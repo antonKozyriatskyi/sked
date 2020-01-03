@@ -2,16 +2,13 @@ package kozyriatskyi.anton.sked.login.student
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ProgressBar
 import android.widget.Spinner
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import androidx.appcompat.app.AlertDialog
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.di.Injector
@@ -21,6 +18,9 @@ import kozyriatskyi.anton.sked.login.OnInternetConnectionChangeListener
 import kozyriatskyi.anton.sked.login.OnLoadingStateChangeListener
 import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.util.*
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import java.util.*
 import javax.inject.Inject
 

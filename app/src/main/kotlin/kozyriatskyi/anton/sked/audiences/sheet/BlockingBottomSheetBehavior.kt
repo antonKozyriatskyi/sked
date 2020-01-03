@@ -1,11 +1,11 @@
 package kozyriatskyi.anton.sked.audiences.sheet
 
 import android.content.Context
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class BlockingBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSet?) : BottomSheetBehavior<V>(context, attrs) {
 
@@ -33,6 +33,5 @@ class BlockingBottomSheetBehavior<V : View>(context: Context, attrs: AttributeSe
         if (!isLocked) handled = super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY)
 
         return handled
-
     }
 }

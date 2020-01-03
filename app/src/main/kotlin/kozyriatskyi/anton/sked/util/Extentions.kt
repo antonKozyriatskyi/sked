@@ -3,15 +3,15 @@ package kozyriatskyi.anton.sked.util
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import kozyriatskyi.anton.sked.BuildConfig
 
 /**

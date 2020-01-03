@@ -1,11 +1,11 @@
 package kozyriatskyi.anton.sked.byweek
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kozyriatskyi.anton.sked.util.DateUtils
+import moxy.InjectViewState
+import moxy.MvpPresenter
 import java.util.*
 
 @InjectViewState
