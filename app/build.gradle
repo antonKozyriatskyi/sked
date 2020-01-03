@@ -21,6 +21,12 @@ android {
         versionCode 20
         versionName "1.2.2"
         vectorDrawables.useSupportLibrary = true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/db_schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
