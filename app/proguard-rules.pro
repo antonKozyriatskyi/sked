@@ -26,9 +26,6 @@
 
 #Rxjava2 doesn't have rules
 
-#Jsoup
--keeppackagenames org.jsoup.nodes
-
 # Allows Crashlytics to upload mapping file
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
