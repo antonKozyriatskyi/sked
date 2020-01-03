@@ -12,12 +12,12 @@ android {
             keyPassword RELEASE_KEY_PASSWORD
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId 'kozyriatskyi.anton.sked'
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 20
         versionName "1.2.2"
         vectorDrawables.useSupportLibrary = true
