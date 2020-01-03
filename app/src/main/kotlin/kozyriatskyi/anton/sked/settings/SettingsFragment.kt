@@ -32,7 +32,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         Injector.inject(this)
         addPreferencesFromResource(R.xml.app_preferences)
 
-        val themePreference = findPreference(UserSettingsStorage.KEY_DEFAULT_THEME) as ListPreference
+        val themePreference = findPreference<ListPreference>(UserSettingsStorage.KEY_DEFAULT_THEME)!!
         previousThemeValue = themePreference.value.toInt()
     }
 
@@ -62,22 +62,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        val pref = findPreference(key)
+        val pref = findPreference<ListPreference>(key)!!
 
-        if (pref is ListPreference) {
-            pref.setSummary(pref.entry)
+        pref.setSummary(pref.entry)
 
-            if (key == UserSettingsStorage.KEY_DEFAULT_THEME) {
-                val intValue = pref.value.toInt()
-                AppCompatDelegate.setDefaultNightMode(intValue)
+        if (key == UserSettingsStorage.KEY_DEFAULT_THEME) {
+            val intValue = pref.value.toInt()
+            AppCompatDelegate.setDefaultNightMode(intValue)
 
-                if (previousThemeValue != intValue) {
-                    previousThemeValue = intValue
+            if (previousThemeValue != intValue) {
+                previousThemeValue = intValue
 
-                    with(requireActivity()) {
-                        window.setWindowAnimations(R.style.WindowTransition_Fade)
-                        recreate()
-                    }
+                with(requireActivity()) {
+                    window.setWindowAnimations(R.style.WindowTransition_Fade)
+                    recreate()
                 }
             }
         }

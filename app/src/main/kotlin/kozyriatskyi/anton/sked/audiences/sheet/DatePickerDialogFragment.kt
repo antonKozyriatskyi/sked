@@ -23,7 +23,7 @@ class DatePickerDialogFragment : DialogFragment() {
     private lateinit var onDateSetListener: DatePickerDialog.OnDateSetListener
     private var date: Calendar = Calendar.getInstance()
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         onDateSetListener = context as DatePickerDialog.OnDateSetListener

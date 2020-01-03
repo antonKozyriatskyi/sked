@@ -40,7 +40,7 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
         return presenter
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         tabsOwner = context as TabsOwner
