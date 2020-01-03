@@ -32,6 +32,7 @@ public class Storage {
         objects.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public <T> T get(String key) {
         ensureState();
@@ -43,7 +44,6 @@ public class Storage {
         return (T) object;
     }
 
-    @NotNull
     public int getInt(String key) {
         ensureState();
 
@@ -54,7 +54,6 @@ public class Storage {
         return (int) object;
     }
 
-    @NotNull
     public long getLong(String key) {
         ensureState();
 
@@ -76,7 +75,6 @@ public class Storage {
         return (String) object;
     }
 
-    @NotNull
     public double getDouble(String key) {
         ensureState();
 
@@ -87,7 +85,6 @@ public class Storage {
         return (int) object;
     }
 
-    @NotNull
     public float getFloat(String key) {
         ensureState();
 
@@ -98,7 +95,6 @@ public class Storage {
         return (float) object;
     }
 
-    @NotNull
     public boolean contains(String key) {
         ensureState();
 
