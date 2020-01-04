@@ -5,11 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.transition.AutoTransition
+import androidx.transition.Fade
+import androidx.transition.TransitionSet
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import kozyriatskyi.anton.sked.R
@@ -84,6 +87,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         tabs = findViewById(R.id.main_tabs)
 
         findViewById<BottomNavigationView>(R.id.main_bottomnavigation_viewmodes)
+                .apply { tryFixBlinking() }
                 .setOnNavigationItemSelectedListener(this)
 
         byDayViewFragment = supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
@@ -94,6 +98,27 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
                     .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
                     .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
                     .commit()
+        }
+    }
+
+    // When targeting api 29 bottom navigation view has weird issue with text flickering
+    // when switching tabs
+    private fun BottomNavigationView.tryFixBlinking() {
+        runCatching {
+            val menuView = getChildAt(0) as BottomNavigationMenuView
+            val declaredFields = menuView::class.java.declaredFields
+            val setField =  declaredFields.find { it.type == TransitionSet::class.java } ?: return
+
+            with(setField) {
+                isAccessible = true
+                val transitionSet = (get(menuView) as AutoTransition).apply {
+                    for (i in transitionCount downTo 0) {
+                        val transition = getTransitionAt(i) as? Fade ?: continue
+                        removeTransition(transition)
+                    }
+                }
+                set(menuView, transitionSet)
+            }
         }
     }
 
