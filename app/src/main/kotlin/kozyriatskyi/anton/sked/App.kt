@@ -1,15 +1,12 @@
 package kozyriatskyi.anton.sked
 
 import android.content.Context
-import android.os.Looper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.firebase.analytics.FirebaseAnalytics
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
@@ -20,14 +17,6 @@ import kozyriatskyi.anton.sked.util.logD
 
 
 class App : BaseApplication() {
-
-    companion object {
-        init {
-            RxAndroidPlugins.setInitMainThreadSchedulerHandler {
-                AndroidSchedulers.from(Looper.getMainLooper(), true)
-            }
-        }
-    }
 
     override fun onCreate() {
         Injector.init(this)
