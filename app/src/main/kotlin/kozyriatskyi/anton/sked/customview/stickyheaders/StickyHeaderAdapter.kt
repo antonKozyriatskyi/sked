@@ -1,8 +1,7 @@
 package kozyriatskyi.anton.sked.customview.stickyheaders
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class StickyHeaderAdapter<T : RecyclerView.ViewHolder> : RecyclerView.Adapter<T>() {
 
