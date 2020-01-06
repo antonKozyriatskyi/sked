@@ -5,7 +5,7 @@ package kozyriatskyi.anton.sutparser
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-private const val TIMEOUT = 10_000
+private const val TIMEOUT = 60_000
 
 internal fun loadDocument(url: String): Document = Jsoup.connect(url).timeout(TIMEOUT).get()
 
