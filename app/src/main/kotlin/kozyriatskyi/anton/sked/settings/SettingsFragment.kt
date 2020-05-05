@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
-        const val TAG = "settfr"
+        val TAG = SettingsFragment::class.qualifiedName
     }
 
     private var previousThemeValue = 0
@@ -38,6 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val timeTitle = view.findViewById<TextView>(R.id.settings_tv_update_time_title)
         val timeValue = view.findViewById<TextView>(R.id.settings_tv_update_time)
 
@@ -62,20 +64,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        val pref = findPreference<ListPreference>(key)!!
+        val preference = findPreference<Preference>(key)
 
-        pref.setSummary(pref.entry)
+        if (preference is ListPreference) {
+            preference.summary = preference.entry
 
-        if (key == UserSettingsStorage.KEY_DEFAULT_THEME) {
-            val intValue = pref.value.toInt()
-            AppCompatDelegate.setDefaultNightMode(intValue)
+            if (key == UserSettingsStorage.KEY_DEFAULT_THEME) {
+                val intValue = preference.value.toInt()
+                AppCompatDelegate.setDefaultNightMode(intValue)
 
-            if (previousThemeValue != intValue) {
-                previousThemeValue = intValue
+                if (previousThemeValue != intValue) {
+                    previousThemeValue = intValue
 
-                with(requireActivity()) {
-                    window.setWindowAnimations(R.style.WindowTransition_Fade)
-                    recreate()
+                    with(requireActivity()) {
+                        window.setWindowAnimations(R.style.WindowTransition_Fade)
+                        recreate()
+                    }
                 }
             }
         }

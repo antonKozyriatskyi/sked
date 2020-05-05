@@ -73,6 +73,7 @@ ext {
     rxandroid = '2.0.1'
     firebase = '17.2.1'
     rxrelay = '2.1.0'
+    preferences = '1.1.1'
     firebase_job_dispatcher = '0.8.5'
 
     junitVersion = '4.12'
@@ -86,7 +87,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation "androidx.preference:preference:$preferences"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout"
 
     implementation "androidx.room:room-runtime:$room"
