@@ -21,10 +21,8 @@ import javax.inject.Inject
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     companion object {
-        val TAG = SettingsFragment::class.qualifiedName
+        val TAG = SettingsFragment::class.java.canonicalName
     }
-
-    private var previousThemeValue = 0
 
     @Inject
     lateinit var scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger
@@ -32,13 +30,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Injector.inject(this)
         addPreferencesFromResource(R.xml.app_preferences)
-
-        val themePreference = findPreference<ListPreference>(UserSettingsStorage.KEY_DEFAULT_THEME)!!
-        previousThemeValue = themePreference.value.toInt()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().window.setWindowAnimations(R.style.WindowTransition_Fade)
 
         val timeTitle = view.findViewById<TextView>(R.id.settings_tv_update_time_title)
         val timeValue = view.findViewById<TextView>(R.id.settings_tv_update_time)
@@ -72,15 +69,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             if (key == UserSettingsStorage.KEY_DEFAULT_THEME) {
                 val intValue = preference.value.toInt()
                 AppCompatDelegate.setDefaultNightMode(intValue)
-
-                if (previousThemeValue != intValue) {
-                    previousThemeValue = intValue
-
-                    with(requireActivity()) {
-                        window.setWindowAnimations(R.style.WindowTransition_Fade)
-                        recreate()
-                    }
-                }
             }
         }
     }
