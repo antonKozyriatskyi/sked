@@ -21,7 +21,6 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
         when (userSettingsStorage.getInt(UserSettingsStorage.KEY_DEFAULT_VIEW_MODE, UserSettingsStorage.VIEW_BY_DAY)) {
             UserSettingsStorage.VIEW_BY_DAY -> viewState.setDayView()
             UserSettingsStorage.VIEW_BY_WEEK -> viewState.setWeekView()
-            UserSettingsStorage.VIEW_TABLE -> viewState.setTableView()
         }
     }
 
@@ -33,12 +32,7 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
         viewState.setWeekView()
     }
 
-    fun onSetTableViewClick() {
-        viewState.setTableView()
-    }
-
     fun onUpdateTriggered() {
-        viewState.switchProgress(true)
         updateSchedule()
     }
 
@@ -46,6 +40,7 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
         scheduleUpdateDisposable = interactor.updateSchedule()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { viewState.switchProgress(true) }
                 .doFinally { viewState.switchProgress(false) }
                 .subscribe({ viewState.onUpdateSucceeded() },
                         { viewState.onUpdateFailed() })

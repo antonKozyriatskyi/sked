@@ -12,7 +12,6 @@ class UserSettingsStorage(private val preferences: SharedPreferences) {
 
         const val VIEW_BY_DAY = 0
         const val VIEW_BY_WEEK = 1
-        const val VIEW_TABLE = 2
 
         const val THEME_AUTO = AppCompatDelegate.MODE_NIGHT_AUTO
         const val THEME_LIGHT = AppCompatDelegate.MODE_NIGHT_NO

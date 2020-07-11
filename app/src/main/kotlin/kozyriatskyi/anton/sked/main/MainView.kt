@@ -19,7 +19,7 @@ interface MainView : MvpView {
 
     fun setDayView()
     fun setWeekView()
-    fun setTableView()
+
     fun onUpdateFailed()
     fun onUpdateSucceeded()
 }

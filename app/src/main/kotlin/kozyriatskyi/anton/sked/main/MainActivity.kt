@@ -221,8 +221,4 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
     }
-
-    override fun setTableView() {
-
-    }
 }
