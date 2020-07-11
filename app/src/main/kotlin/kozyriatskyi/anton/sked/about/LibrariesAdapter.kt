@@ -23,7 +23,7 @@ class LibrariesAdapter(private val data: List<Library>) : RecyclerView.Adapter<R
     }
 
     private class LibrariesHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var name: TextView = view.findViewById(R.id.library_name)
-        var license: TextView = view.findViewById(R.id.library_license)
+        val name: TextView = view.findViewById(R.id.library_name)
+        val license: TextView = view.findViewById(R.id.library_license)
     }
 }
