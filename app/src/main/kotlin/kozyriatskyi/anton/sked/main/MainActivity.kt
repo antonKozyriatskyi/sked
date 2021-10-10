@@ -144,9 +144,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         when (item.itemId) {
             R.id.main_relogin -> IntroActivity.start(this)
             R.id.main_preferences -> SettingsActivity.start(this)
-            33 /*Show notification*/ -> { // only for debugging
-                throw Exception("crashlytics test")
-            }
             R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_audiences -> AudiencesActivity.start(this)
             R.id.main_about -> AboutActivity.start(this)
