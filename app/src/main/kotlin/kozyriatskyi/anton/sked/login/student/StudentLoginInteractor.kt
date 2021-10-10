@@ -1,6 +1,6 @@
 package kozyriatskyi.anton.sked.login.student
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -69,7 +69,7 @@ class StudentLoginInteractor(private val studentInfoProvider: StudentInfoProvide
                 jobManager.launchUpdaterJob()
                 logger.logStudent()
             }
-            .doOnError { Crashlytics.logException(it) }
+            .doOnError { FirebaseCrashlytics.getInstance().recordException(it) }
 
     fun saveUser(student: Student) = userUserInfoStorage.saveUser(student)
 }

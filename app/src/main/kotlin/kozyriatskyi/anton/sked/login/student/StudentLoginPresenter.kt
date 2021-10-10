@@ -1,6 +1,6 @@
 package kozyriatskyi.anton.sked.login.student
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kozyriatskyi.anton.sked.data.pojo.Item
@@ -125,8 +125,8 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
                 .doOnError {
                     logE("Error loading student schedule: ${it.message}") //TODO
                     val str = "Error loading student schedule: ${student.faculty}[${student.facultyId}]\n${student.course}[${student.courseId}]\n${student.group}[${student.groupId}]\n"
-                    Crashlytics.logException(it)
-                    Crashlytics.log(str)
+                    FirebaseCrashlytics.getInstance().recordException(it)
+                    FirebaseCrashlytics.getInstance().log(str)
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
                         viewState.switchError(StudentLoginFragment.ERROR_SCHEDULE, "${it.message}", true)

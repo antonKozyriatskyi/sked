@@ -3,7 +3,7 @@ package kozyriatskyi.anton.sked
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
 import com.firebase.jobdispatcher.GooglePlayDriver
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -61,15 +61,15 @@ class App : BaseApplication() {
 
         when (cancelAllResult) {
             FirebaseJobDispatcher.CANCEL_RESULT_SUCCESS -> {
-                Crashlytics.log("Job dispatcher cancel all result: CANCEL_RESULT_SUCCESS")
+                FirebaseCrashlytics.getInstance().log("Job dispatcher cancel all result: CANCEL_RESULT_SUCCESS")
                 logD("Job dispatcher cancel all result: CANCEL_RESULT_SUCCESS")
             }
             FirebaseJobDispatcher.CANCEL_RESULT_UNKNOWN_ERROR -> {
-                Crashlytics.log("Job dispatcher cancel all result: CANCEL_RESULT_UNKNOWN_ERROR")
+                FirebaseCrashlytics.getInstance().log("Job dispatcher cancel all result: CANCEL_RESULT_UNKNOWN_ERROR")
                 logD("Job dispatcher cancel all result: CANCEL_RESULT_UNKNOWN_ERROR")
             }
             FirebaseJobDispatcher.CANCEL_RESULT_NO_DRIVER_AVAILABLE -> {
-                Crashlytics.log("Job dispatcher cancel all result: CANCEL_RESULT_NO_DRIVER_AVAILABLE")
+                FirebaseCrashlytics.getInstance().log("Job dispatcher cancel all result: CANCEL_RESULT_NO_DRIVER_AVAILABLE")
                 logD("Job dispatcher cancel all result: CANCEL_RESULT_NO_DRIVER_AVAILABLE")
             }
         }

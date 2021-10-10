@@ -11,8 +11,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.*
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
@@ -96,7 +96,7 @@ class UpdaterJobService : JobService() {
             try {
                 dispatcher.mustSchedule(job)
             } catch (e: FirebaseJobDispatcher.ScheduleFailedException) {
-                Crashlytics.logException(e)
+                FirebaseCrashlytics.getInstance().recordException(e)
             }
         }
     }
@@ -140,7 +140,7 @@ class UpdaterJobService : JobService() {
         } catch (t: Throwable) {
             isSuccessfullyUpdated = false
             logE("Error updating schedule: ${t.message}", t)
-            Crashlytics.logException(t)
+            FirebaseCrashlytics.getInstance().recordException(t)
         }
 
         val notifyOnUpdate = userPreferences.getBoolean(UserSettingsStorage.KEY_NOTIFY_ON_UPDATE, true)
