@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.about.AboutActivity
@@ -84,7 +84,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         tabs = findViewById(R.id.main_tabs)
 
         findViewById<BottomNavigationView>(R.id.main_bottomnavigation_viewmodes)
-                .setOnNavigationItemSelectedListener(this)
+                .setOnItemSelectedListener(this)
 
         byDayViewFragment = supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
         byWeekViewFragment = supportFragmentManager.findFragmentByTag(ByWeekViewFragment.TAG) ?: ByWeekViewFragment()
