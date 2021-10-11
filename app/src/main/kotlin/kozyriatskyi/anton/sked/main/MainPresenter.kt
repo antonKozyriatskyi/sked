@@ -1,24 +1,30 @@
 package kozyriatskyi.anton.sked.main
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import moxy.InjectViewState
-import moxy.MvpPresenter
 
 @InjectViewState
-class MainPresenter(private val userInfoStorage: UserInfoStorage,
-                    private val userSettingsStorage: UserSettingsStorage,
-                    private val interactor: MainInteractor) : MvpPresenter<MainView>() {
+class MainPresenter(
+    private val userInfoStorage: UserInfoStorage,
+    private val userSettingsStorage: UserSettingsStorage,
+    private val interactor: MainInteractor
+) : BasePresenter<MainView>() {
 
-    private var scheduleUpdateDisposable: Disposable? = null
+    private var scheduleUpdateJob: Job? = null
 
     override fun onFirstViewAttach() {
         viewState.setSubtitle(userInfoStorage.getUserName())
 
-        when (userSettingsStorage.getInt(UserSettingsStorage.KEY_DEFAULT_VIEW_MODE, UserSettingsStorage.VIEW_BY_DAY)) {
+        when (userSettingsStorage.getInt(
+            UserSettingsStorage.KEY_DEFAULT_VIEW_MODE,
+            UserSettingsStorage.VIEW_BY_DAY
+        )) {
             UserSettingsStorage.VIEW_BY_DAY -> viewState.setDayView()
             UserSettingsStorage.VIEW_BY_WEEK -> viewState.setWeekView()
         }
@@ -37,16 +43,26 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
     }
 
     private fun updateSchedule() {
-        scheduleUpdateDisposable = interactor.updateSchedule()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { viewState.switchProgress(true) }
-                .doFinally { viewState.switchProgress(false) }
-                .subscribe({ viewState.onUpdateSucceeded() },
-                        { viewState.onUpdateFailed() })
+        scheduleUpdateJob?.cancel()
+
+        viewState.switchProgress(true)
+
+        scheduleUpdateJob = scope.launch {
+            val updateResult = withContext(Dispatchers.IO) {
+                interactor.updateSchedule()
+            }
+
+            viewState.switchProgress(false)
+
+            updateResult
+                .onSuccess { viewState.onUpdateSucceeded() }
+                .onFailure { viewState.onUpdateFailed() }
+        }
     }
 
     override fun onDestroy() {
-        scheduleUpdateDisposable?.dispose()
+        super.onDestroy()
+
+        scheduleUpdateJob?.cancel()
     }
 }
