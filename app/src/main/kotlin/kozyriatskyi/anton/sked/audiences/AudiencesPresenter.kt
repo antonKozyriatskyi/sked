@@ -1,18 +1,21 @@
 package kozyriatskyi.anton.sked.audiences
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.repository.Time
 import moxy.InjectViewState
-import moxy.MvpPresenter
 
 @InjectViewState
-class AudiencesPresenter(private val interactor: AudiencesInteractor,
-                         private val mapper: AudiencesMapper) : MvpPresenter<AudiencesView>() {
+class AudiencesPresenter(
+    private val interactor: AudiencesInteractor,
+    private val mapper: AudiencesMapper
+) : BasePresenter<AudiencesView>() {
 
-    private var audiencesDisposable: Disposable? = null
-    private var timesDisposable: Disposable? = null
+    private var audiencesJob: Job? = null
+    private var timesJob: Job? = null
 
     private lateinit var latestDate: String
     private lateinit var latestTimeStart: Time
@@ -42,12 +45,15 @@ class AudiencesPresenter(private val interactor: AudiencesInteractor,
     private fun loadAudiences(date: String, lessonStart: Time, lessonEnd: Time) {
         viewState.showAudiencesLoading()
 
-        audiencesDisposable?.dispose()
-        audiencesDisposable = interactor.getAudiences(date, lessonStart.id, lessonEnd.id)
-                .subscribeOn(Schedulers.io())
-                .map(mapper::toUi)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::onAudiencesLoaded, ::onErrorLoadingAudiences)
+        audiencesJob?.cancel()
+        audiencesJob = scope.launch {
+            withContext(Dispatchers.IO) {
+                interactor.getAudiences(date, lessonStart.id, lessonEnd.id)
+                    .map(mapper::toUi)
+            }
+                .onSuccess(::onAudiencesLoaded)
+                .onFailure(::onErrorLoadingAudiences)
+        }
     }
 
     private fun onAudiencesLoaded(audiences: List<AudienceUi>) {
@@ -61,17 +67,20 @@ class AudiencesPresenter(private val interactor: AudiencesInteractor,
     private fun loadTimes() {
         viewState.showTimesLoading()
 
-        timesDisposable?.dispose()
-        timesDisposable = interactor.getTimes()
-                .subscribeOn(Schedulers.io())
-                .map {
-                    // sort times
-                    val start = it.first.sortedBy { it.id.toInt() }
-                    val end = it.second.sortedBy { it.id.toInt() }
-                    Pair(start, end)
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::onTimesLoaded, ::onErrorLoadingTimes)
+        timesJob?.cancel()
+        timesJob = scope.launch {
+            withContext(Dispatchers.IO) {
+                interactor.getTimes()
+                    .map { (start, end) ->
+                        // sort times
+                        val startSorted = start.sortedBy { it.id.toInt() }
+                        val endSorted = end.sortedBy { it.id.toInt() }
+                        Pair(startSorted, endSorted)
+                    }
+            }
+                .onSuccess(::onTimesLoaded)
+                .onFailure(::onErrorLoadingTimes)
+        }
     }
 
     private fun onTimesLoaded(times: Pair<List<Time>, List<Time>>) {
@@ -83,7 +92,9 @@ class AudiencesPresenter(private val interactor: AudiencesInteractor,
     }
 
     override fun onDestroy() {
-        audiencesDisposable?.dispose()
-        timesDisposable?.dispose()
+        super.onDestroy()
+
+        audiencesJob?.cancel()
+        timesJob?.cancel()
     }
 }
