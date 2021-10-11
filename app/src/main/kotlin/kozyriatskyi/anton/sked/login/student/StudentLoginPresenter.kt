@@ -3,11 +3,13 @@ package kozyriatskyi.anton.sked.login.student
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.util.logE
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import java.util.*
 import javax.inject.Inject
 
@@ -16,7 +18,7 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class StudentLoginPresenter @Inject constructor(private val interactor: StudentLoginInteractor) : MvpPresenter<StudentLoginView>() {
+class StudentLoginPresenter @Inject constructor(private val interactor: StudentLoginInteractor) : BasePresenter<StudentLoginView>() {
 
     private val disposables = CompositeDisposable()
 
@@ -204,8 +206,10 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
     }
 
     private fun subscribeConnectionState() {
-        disposables.add(interactor.connectionStateChanges()
-                .subscribe { onConnectionStateChanged(it) })
+        scope.launch {
+            interactor.connectionStateChanges()
+                .collectLatest { onConnectionStateChanged(it) }
+        }
     }
 
     private fun initSubscriptions() {
@@ -232,5 +236,8 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         viewState.restorePositions(uiModel.facultyPosition, uiModel.coursePosition, uiModel.groupPosition)
     }
 
-    override fun onDestroy() = disposables.dispose()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
 }

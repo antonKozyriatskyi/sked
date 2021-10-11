@@ -4,6 +4,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.Student
@@ -54,8 +55,7 @@ class StudentLoginInteractor(private val studentInfoProvider: StudentInfoProvide
 
     fun getGroups(courseId: String) = groups.accept(courseId)
 
-    fun connectionStateChanges(): Observable<Boolean> =
-            connectionStateProvider.connectionStateChanges()
+    fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
 
     fun loadSchedule(student: Student) = schedule.accept(student)
 

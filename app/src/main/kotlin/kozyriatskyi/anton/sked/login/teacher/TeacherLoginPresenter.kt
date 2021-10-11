@@ -2,11 +2,13 @@ package kozyriatskyi.anton.sked.login.teacher
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.util.logD
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import java.util.*
 
 /**
@@ -14,7 +16,7 @@ import java.util.*
  */
 
 @InjectViewState
-class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : MvpPresenter<TeacherLoginView>() {
+class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : BasePresenter<TeacherLoginView>() {
 
     private val disposables = CompositeDisposable()
 
@@ -172,9 +174,10 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Mv
     }
 
     private fun subscribeConnectionState() {
-        disposables.add(interactor.connectionStateChanges()
-                .subscribe { onConnectionStateChanged(it) })
-    }
+        scope.launch {
+            interactor.connectionStateChanges()
+                .collectLatest { onConnectionStateChanged(it) }
+        }    }
 
     private fun initSubscriptions() {
         subscribeDepartments()
@@ -199,5 +202,8 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Mv
         viewState.restorePositions(uiModel.departmentPosition, uiModel.teacherPosition)
     }
 
-    override fun onDestroy() = disposables.dispose()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
 }
