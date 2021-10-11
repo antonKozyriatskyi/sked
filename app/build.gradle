@@ -76,6 +76,7 @@ ext {
     rxrelay = '2.1.0'
     preferences = '1.1.1'
     firebase_job_dispatcher = '0.8.5'
+    coroutines = '1.5.2'
 
     junitVersion = '4.13'
     mockitoVersion = '1.10.19'
@@ -110,6 +111,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
     implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
 
     implementation "com.firebase:firebase-jobdispatcher:$firebase_job_dispatcher"
     implementation "com.google.firebase:firebase-analytics:$firebase"
