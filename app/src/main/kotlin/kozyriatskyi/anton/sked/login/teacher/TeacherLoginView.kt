@@ -4,16 +4,15 @@ import kozyriatskyi.anton.sked.data.pojo.Item
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import java.util.*
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface TeacherLoginView : MvpView {
 
     fun showMessage(msg: String)
 
-    fun showDepartments(departments: ArrayList<Item>)
+    fun showDepartments(departments: List<Item>)
 
-    fun showTeachers(teachers: ArrayList<Item>)
+    fun showTeachers(teachers: List<Item>)
 
     fun switchError(type: Int = 0, message: String = "", show: Boolean)
 

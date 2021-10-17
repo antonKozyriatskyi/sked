@@ -21,7 +21,6 @@ import kozyriatskyi.anton.sked.util.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import java.util.*
 import javax.inject.Inject
 
 class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterView.OnItemSelectedListener,
@@ -132,15 +131,15 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
         errorDialog.show()
     }
 
-    override fun showFaculties(faculties: ArrayList<Item>) {
+    override fun showFaculties(faculties: List<Item>) {
         (facultiesSpinner.adapter as ItemSpinnerAdapter).updateData(faculties)
     }
 
-    override fun showCourses(courses: ArrayList<Item>) {
+    override fun showCourses(courses: List<Item>) {
         (coursesSpinner.adapter as ItemSpinnerAdapter).updateData(courses)
     }
 
-    override fun showGroups(groups: ArrayList<Item>) {
+    override fun showGroups(groups: List<Item>) {
         (groupsSpinner.adapter as ItemSpinnerAdapter).updateData(groups)
     }
 

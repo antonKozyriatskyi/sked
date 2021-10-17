@@ -21,7 +21,6 @@ import kozyriatskyi.anton.sked.util.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import java.util.*
 import javax.inject.Inject
 
 
@@ -127,11 +126,11 @@ class TeacherLoginFragment : MvpAppCompatFragment(), TeacherLoginView, AdapterVi
         errorDialog.show()
     }
 
-    override fun showDepartments(departments: ArrayList<Item>) {
+    override fun showDepartments(departments: List<Item>) {
         (departmentsSpinner.adapter as ItemSpinnerAdapter).updateData(departments)
     }
 
-    override fun showTeachers(teachers: ArrayList<Item>) {
+    override fun showTeachers(teachers: List<Item>) {
         (teachersSpinner.adapter as ItemSpinnerAdapter).updateData(teachers)
     }
 
