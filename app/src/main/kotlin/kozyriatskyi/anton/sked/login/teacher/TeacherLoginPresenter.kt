@@ -1,15 +1,13 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
-import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.util.logD
 import moxy.InjectViewState
-import java.util.*
 
 /**
  * Created by Anton on 07.07.2017.
@@ -18,16 +16,22 @@ import java.util.*
 @InjectViewState
 class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : BasePresenter<TeacherLoginView>() {
 
-    private val disposables = CompositeDisposable()
-
     private val uiModel = TeacherLoginStateModel()
 
     private val teacher = Teacher()
 
-    private var retryAction: (() -> Unit)? = { setLoadingState(); interactor.getDepartments() }
+    private var retryAction: (() -> Unit)? = null
 
     override fun onFirstViewAttach() {
-        initSubscriptions()
+        observeConnectionState()
+
+        loadDepartments()
+    }
+
+    override fun attachView(view: TeacherLoginView) {
+        super.attachView(view)
+
+        viewState.restorePositions(uiModel.departmentPosition, uiModel.teacherPosition)
     }
 
     fun onDepartmentChosen(department: String, departmentId: String, position: Int) {
@@ -36,9 +40,7 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
         teacher.department = department
         teacher.departmentId = departmentId
 
-        setLoadingState()
-        retryAction = { interactor.getTeachers(departmentId) }
-        interactor.getTeachers(departmentId)
+        loadTeachers(departmentId)
     }
 
     fun onTeacherChosen(teacher: String, teacherId: String, position: Int) {
@@ -53,15 +55,14 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
     fun retry() {
         retryAction?.let {
             viewState.switchError(show = false)
-            setLoadingState()
-            it.invoke()
+            it()
         }
     }
 
     fun onLoadButtonClick() {
         setLoadingState()
-        retryAction = { interactor.loadSchedule(teacher) }
-        interactor.loadSchedule(teacher)
+        retryAction = { loadSchedule(teacher) }
+        loadSchedule(teacher)
     }
 
     private fun setLoadingState() {
@@ -108,82 +109,86 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
         viewState.setLoaded(false)
     }
 
-    private fun subscribeSchedule() {
-        disposables.add(interactor.scheduleLoadingStatus()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError {
-                    logD("Error loading teacher schedule: ${it.message}")
-                    if (uiModel.isConnectionAvailable) {
-                        setErrorState()
-                        viewState.switchError(TeacherLoginFragment.ERROR_SCHEDULE, "${it.message}", true)
-                    }
-                }
-                .retry()
-                .subscribe({
-                    interactor.saveUser(teacher)
-                    viewState.openScheduleScreen()
-                }, {
-//                    //TODO
-//                    logD("Error loading teacher schedule: ${it.message}")
-//                    if (uiModel.isConnectionAvailable) {
-//                        setErrorState()
-//                        viewState.switchError(TeacherLoginFragment.ERROR_SCHEDULE, "${it.message}", true)
-//                    }
-//                    subscribeSchedule()
-                }))
-    }
+    private fun loadDepartments() {
+        setLoadingState()
+        retryAction = { loadDepartments() }
 
-    private fun subscribeDepartments() {
-        disposables.add(interactor.departments()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { retryAction = null }
-                .subscribe({ departments: ArrayList<Item> ->
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadDepartments() }
+                .onSuccess { departments ->
                     viewState.showDepartments(departments)
                     if (departments.isEmpty()) {
-                        // since departments is an empty list I can use it to remove items from adapter
-                        viewState.showTeachers(departments)
+                        viewState.showTeachers(emptyList())
                         setNotLoadedState()
                     }
-                }, {
+
+                    retryAction = null
+                }
+                .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
                         logD("Error loading departments: ${it.message}")
-                        viewState.switchError(TeacherLoginFragment.ERROR_DEPARTMENTS, "${it.message}", true)
+                        viewState.switchError(
+                            TeacherLoginFragment.ERROR_DEPARTMENTS,
+                            "${it.message}",
+                            true
+                        )
                     }
-                    subscribeDepartments()
-                }))
+                }
+        }
     }
 
-    private fun subscribeTeachers() {
-        disposables.add(interactor.teachers()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { retryAction = null }
-                .subscribe({ teachers: ArrayList<Item> ->
+    private fun loadTeachers(departmentId: String) {
+        setLoadingState()
+        retryAction = { loadTeachers(departmentId) }
+
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadTeachers(departmentId) }
+                .onSuccess { teachers ->
                     viewState.showTeachers(teachers)
                     if (teachers.isEmpty()) {
                         setNotLoadedState()
                     }
-                }, {
+
+                    retryAction = null
+                }
+                .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
-                        logD("Error loading teachers: ${it.message}")
-                        viewState.switchError(TeacherLoginFragment.ERROR_TEACHER, "${it.message}", true)
+                        viewState.switchError(
+                            TeacherLoginFragment.ERROR_TEACHER,
+                            "${it.message}",
+                            true
+                        )
                     }
-                    subscribeTeachers()
-                }))
+                }
+        }
     }
 
-    private fun subscribeConnectionState() {
+    private fun loadSchedule(teacher: Teacher) {
+        setLoadingState()
+
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadSchedule(teacher) }
+                .onSuccess { viewState.openScheduleScreen() }
+                .onFailure {
+                    if (uiModel.isConnectionAvailable) {
+                        setErrorState()
+                        viewState.switchError(
+                            TeacherLoginFragment.ERROR_SCHEDULE,
+                            "${it.message}",
+                            true
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun observeConnectionState() {
         scope.launch {
             interactor.connectionStateChanges()
                 .collectLatest { onConnectionStateChanged(it) }
-        }    }
-
-    private fun initSubscriptions() {
-        subscribeDepartments()
-        subscribeTeachers()
-        subscribeSchedule()
-        subscribeConnectionState()
+        }
     }
 
     private fun onConnectionStateChanged(isConnectionAvailableNow: Boolean) {
@@ -194,16 +199,5 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
         viewState.onConnectionChanged(isConnectionAvailableNow)
 
         if (isConnectionAvailableNow) retry()
-    }
-
-    override fun attachView(view: TeacherLoginView) {
-        super.attachView(view)
-
-        viewState.restorePositions(uiModel.departmentPosition, uiModel.teacherPosition)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
     }
 }
