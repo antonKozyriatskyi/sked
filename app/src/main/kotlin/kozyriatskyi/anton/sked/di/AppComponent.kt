@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.di
 
 import android.content.Context
 import dagger.Component
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
@@ -13,7 +14,6 @@ import kozyriatskyi.anton.sked.di.module.ScheduleProviderModule
 import kozyriatskyi.anton.sked.di.module.StorageModule
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
-import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 
@@ -26,7 +26,7 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 interface AppComponent {
     fun appContext(): Context
     fun jobManager(): JobManager
-    fun firebaseLogger(): FirebaseAnalyticsLogger
+    fun analyticsManager(): AnalyticsManager
     fun resourceManager(): ResourceManager
     fun userInfoStorage(): UserInfoStorage
     fun userSettingsStorage(): UserSettingsStorage
