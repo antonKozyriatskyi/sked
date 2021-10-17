@@ -79,7 +79,7 @@ object DateUtils {
 
     fun sundayDate(numberOfWeek: Int = 0, inShortFormat: Boolean = false): String {
         val calendar = getCalendar()
-        // if set Calendar.DAY_OF_WEEK as Calendar.SATURDAY directly, it calculates wrong date on pre-marshmallow
+        // if set Calendar.DAY_OF_WEEK as Calendar.SUNDAY directly, it calculates wrong date on pre-marshmallow
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
         calendar.add(Calendar.DAY_OF_WEEK, 1)
         calendar.add(Calendar.WEEK_OF_YEAR, numberOfWeek)
