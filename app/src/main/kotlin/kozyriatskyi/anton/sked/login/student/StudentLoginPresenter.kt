@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Student
-import kozyriatskyi.anton.sked.util.logE
 import moxy.InjectViewState
 import javax.inject.Inject
 
@@ -145,7 +144,6 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
                 .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
-                        logE("Error loading faculties: ${it.message}")
                         viewState.switchError(
                             StudentLoginFragment.ERROR_FACULTIES,
                             "${it.message}",
@@ -181,7 +179,6 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
                             "${it.message}",
                             true
                         )
-                        logE("Error loading courses: ${it.message}")
                     }
                 }
         }
@@ -204,7 +201,6 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
                 .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
-                        logE("Error loading groups")
                         viewState.switchError(
                             StudentLoginFragment.ERROR_GROUPS,
                             "${it.message}",

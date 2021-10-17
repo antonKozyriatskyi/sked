@@ -1,7 +1,7 @@
 package kozyriatskyi.anton.sked.login.student
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.flow.Flow
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
@@ -11,7 +11,6 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.StudentInfoProvider
-import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 
 class StudentLoginInteractor(
@@ -22,7 +21,7 @@ class StudentLoginInteractor(
     private val connectionStateProvider: ConnectionStateProvider,
     private val mapper: LessonMapper,
     private val jobManager: JobManager,
-    private val logger: FirebaseAnalyticsLogger
+    private val analyticsManager: AnalyticsManager
 ) {
 
     fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
@@ -30,25 +29,68 @@ class StudentLoginInteractor(
     fun loadFaculties(): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getFaculties()
     }
+        .onFailure {
+            analyticsManager.logFailure(
+                message = "Students faculties list loading failed:",
+                throwable = it
+            )
+        }
 
     fun loadCourses(facultyId: String): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getCourses(facultyId)
     }
+        .onFailure {
+            val msg = """
+                Students courses list loading failed:
+                facultyId: $facultyId
+                """.trimIndent()
+
+            analyticsManager.logFailure(
+                message = msg,
+                throwable = it
+            )
+        }
 
     fun loadGroups(courseId: String): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getGroups(courseId)
     }
+        .onFailure {
+            val msg = """
+                Students groups list loading failed:
+                courseId: $courseId
+                """.trimIndent()
+
+            analyticsManager.logFailure(
+                message = msg,
+                throwable = it
+            )
+        }
 
     fun loadSchedule(student: Student): Result<List<LessonNetwork>> = kotlin.runCatching {
         scheduleProvider.getSchedule(student)
-    }.onSuccess {
-        scheduleRepository.saveLessons(mapper.networkToDb(it))
-
-        jobManager.launchUpdaterJob()
-        logger.logStudent()
-        userUserInfoStorage.saveUser(student)
-    }.onFailure {
-        FirebaseCrashlytics.getInstance().recordException(it)
     }
+        .onSuccess {
+            scheduleRepository.saveLessons(mapper.networkToDb(it))
+
+            jobManager.launchUpdaterJob()
+            analyticsManager.logUserType(AnalyticsManager.UserType.Student)
+            userUserInfoStorage.saveUser(student)
+
+        }.onFailure {
+            val msg = """
+            Student schedule loading failed:
+            faculty: ${student.faculty}
+            facultyId: ${student.facultyId}
+            course: ${student.course}
+            courseId: ${student.courseId}
+            group: ${student.group}
+            groupId: ${student.groupId}
+            """.trimIndent()
+
+            analyticsManager.logFailure(
+                message = msg,
+                throwable = it
+            )
+        }
 }
 

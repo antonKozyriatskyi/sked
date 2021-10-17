@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Teacher
-import kozyriatskyi.anton.sked.util.logD
 import moxy.InjectViewState
 
 /**
@@ -127,7 +126,6 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
                 .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
-                        logD("Error loading departments: ${it.message}")
                         viewState.switchError(
                             TeacherLoginFragment.ERROR_DEPARTMENTS,
                             "${it.message}",

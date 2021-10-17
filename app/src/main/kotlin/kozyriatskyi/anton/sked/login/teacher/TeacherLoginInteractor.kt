@@ -1,7 +1,7 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.flow.Flow
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
@@ -11,7 +11,6 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
-import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
 import kozyriatskyi.anton.sked.util.JobManager
 
 class TeacherLoginInteractor(
@@ -22,17 +21,32 @@ class TeacherLoginInteractor(
     private val connectionStateProvider: ConnectionStateProvider,
     private val mapper: LessonMapper,
     private val jobManager: JobManager,
-    private val logger: FirebaseAnalyticsLogger
+    private val analyticsManager: AnalyticsManager
 ) {
 
     fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
 
     fun loadDepartments(): Result<List<Item>> = kotlin.runCatching {
         teacherInfoProvider.getDepartments()
+    }.onFailure {
+        analyticsManager.logFailure(
+            message = "Teachers departments loading failed",
+            throwable = it
+        )
     }
 
     fun loadTeachers(departmentId: String): Result<List<Item>> = kotlin.runCatching {
         teacherInfoProvider.getTeachers(departmentId)
+    }.onFailure {
+        val msg = """
+                Teachers list loading failed:
+                departmentId: $departmentId
+                """.trimIndent()
+
+        analyticsManager.logFailure(
+            message = msg,
+            throwable = it
+        )
     }
 
     fun loadSchedule(teacher: Teacher): Result<List<LessonNetwork>> {
@@ -42,10 +56,22 @@ class TeacherLoginInteractor(
             scheduleRepository.saveLessons(mapper.networkToDb(it))
 
             jobManager.launchUpdaterJob()
-            logger.logTeacher()
+            analyticsManager.logUserType(AnalyticsManager.UserType.Teacher)
             userInfoStorage.saveUser(teacher)
+
         }.onFailure {
-            FirebaseCrashlytics.getInstance().recordException(it)
+            val msg = """
+                Teacher schedule loading failed:
+                department: ${teacher.department}
+                departmentId: ${teacher.departmentId}
+                teacher: ${teacher.teacher}
+                teacherId: ${teacher.teacherId}
+                """.trimIndent()
+
+            analyticsManager.logFailure(
+                message = msg,
+                throwable = it
+            )
         }
     }
 }
