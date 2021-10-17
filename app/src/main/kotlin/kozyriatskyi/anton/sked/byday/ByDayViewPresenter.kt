@@ -1,21 +1,21 @@
 package kozyriatskyi.anton.sked.byday
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kozyriatskyi.anton.sked.common.BasePresenter
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import java.util.*
 
 @InjectViewState
-class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : MvpPresenter<ByDayView>() {
+class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : BasePresenter<ByDayView>() {
 
     private var hasSundayTab = false
     private var hasSaturdayTab = false
 
     private var todayPositionIsSet = false
-
-    private val disposables = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         subscribe()
@@ -35,33 +35,29 @@ class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : MvpPrese
     }
 
     private fun thisWeekendLessonsCount() {
-        val disposable = interactor.thisWeekendLessonsCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                    val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
-                    viewState.showDays(showNextWeek)
-                    subscribeWeekendLessonsCount(showNextWeek)
-                }
-
-        disposables.add(disposable)
+        interactor.thisWeekendLessonsCount()
+            .take(1)
+            .flowOn(Dispatchers.IO)
+            .onEach { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
+                val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
+                viewState.showDays(showNextWeek)
+                subscribeWeekendLessonsCount(showNextWeek)
+            }
+            .launchIn(scope)
     }
 
     private fun subscribeWeekendLessonsCount(nextWeek: Boolean) {
-        val disposable = interactor.weekendLessonsCount(nextWeek)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                    editWeekendTabsIfNeeded(hasLessonsOnSaturday, hasLessonsOnSunday)
+        interactor.weekendLessonsCount(nextWeek)
+            .flowOn(Dispatchers.IO)
+            .onEach { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
+                editWeekendTabsIfNeeded(hasLessonsOnSaturday, hasLessonsOnSunday)
 
-                    if (todayPositionIsSet.not()) {
-                        viewState.setTodayPosition(todayPosition(nextWeek))
-                        todayPositionIsSet = true
-                    }
+                if (todayPositionIsSet.not()) {
+                    viewState.setTodayPosition(todayPosition(nextWeek))
+                    todayPositionIsSet = true
                 }
-
-        disposables.add(disposable)
+            }
+            .launchIn(scope)
     }
 
     private fun showNextWeek(hasLessonsOnSaturday: Boolean, hasLessonsOnSunday: Boolean): Boolean {
@@ -80,7 +76,10 @@ class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : MvpPrese
         return isWeekendToday and hasLessonsOnWeekend.not()
     }
 
-    private fun editWeekendTabsIfNeeded(hasLessonsOnSaturday: Boolean, hasLessonsOnSunday: Boolean) {
+    private fun editWeekendTabsIfNeeded(
+        hasLessonsOnSaturday: Boolean,
+        hasLessonsOnSunday: Boolean
+    ) {
         if (hasLessonsOnSaturday) {
             if (hasSaturdayTab.not()) {
                 viewState.addTab()
@@ -110,9 +109,5 @@ class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : MvpPrese
 
             if (hasLessonsOnSaturday.not() and hasSaturdayTab) viewState.removeTab()
         }
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
     }
 }

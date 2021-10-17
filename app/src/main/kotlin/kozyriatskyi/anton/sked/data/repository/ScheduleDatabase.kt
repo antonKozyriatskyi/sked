@@ -1,6 +1,6 @@
 package kozyriatskyi.anton.sked.data.repository
 
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 import kozyriatskyi.anton.sked.data.LessonsDatabase
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
@@ -12,10 +12,8 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 class ScheduleDatabase(private val database: LessonsDatabase,
                        private val timeLogger: ScheduleUpdateTimeLogger) : ScheduleStorage {
 
-    override fun getLessonsByDate(date: String): Observable<List<LessonDb>> =
-            database.scheduleDao()
-                    .observeAllByDate(date)
-                    .toObservable()
+    override fun getLessonsByDate(date: String): Flow<List<LessonDb>> =
+            database.scheduleDao().observeAllByDate(date)
 
     override fun saveLessons(lessons: List<LessonDb>) {
         with(database.scheduleDao()) {
@@ -26,9 +24,8 @@ class ScheduleDatabase(private val database: LessonsDatabase,
         timeLogger.saveTime()
     }
 
-    override fun amountOfLessonsOnDate(date: String): Observable<Int> =
+    override fun amountOfLessonsOnDate(date: String): Flow<Int> =
             database.scheduleDao()
             .amountOfLessonsByDate(date)
-            .toObservable()
 }
 

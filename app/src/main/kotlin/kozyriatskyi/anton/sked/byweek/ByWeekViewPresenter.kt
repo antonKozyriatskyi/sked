@@ -1,17 +1,18 @@
 package kozyriatskyi.anton.sked.byweek
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.util.DateUtils
 import moxy.InjectViewState
-import moxy.MvpPresenter
 import java.util.*
 
 @InjectViewState
-class ByWeekViewPresenter(private val interactor: ByWeekViewInteractor) : MvpPresenter<ByWeekView>() {
-
-    private val disposables = CompositeDisposable()
+class ByWeekViewPresenter(private val interactor: ByWeekViewInteractor) :
+    BasePresenter<ByWeekView>() {
 
     override fun onFirstViewAttach() {
         subscribe()
@@ -22,16 +23,15 @@ class ByWeekViewPresenter(private val interactor: ByWeekViewInteractor) : MvpPre
     }
 
     private fun thisWeekendLessonsCount() {
-        val disposable = interactor.firstWeekendLessonsCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                    val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
-                    viewState.showWeeks(getDateTitles())
-                    if (showNextWeek) viewState.showNextWeek()
-                }
-
-        disposables.add(disposable)
+        interactor.firstWeekendLessonsCount()
+            .take(1)
+            .flowOn(Dispatchers.IO)
+            .onEach { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
+                val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
+                viewState.showWeeks(getDateTitles())
+                if (showNextWeek) viewState.showNextWeek()
+            }
+            .launchIn(scope)
     }
 
     private fun showNextWeek(hasLessonsOnSaturday: Boolean, hasLessonsOnSunday: Boolean): Boolean {
@@ -50,12 +50,13 @@ class ByWeekViewPresenter(private val interactor: ByWeekViewInteractor) : MvpPre
     }
 
     private fun getDateTitles(): Array<String> {
-        return Array(5, {
-            "${DateUtils.mondayDate(it, inShortFormat = true)} - ${DateUtils.sundayDate(it, inShortFormat = true)}"
-        })
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
+        return Array(5) {
+            "${DateUtils.mondayDate(it, inShortFormat = true)} - ${
+                DateUtils.sundayDate(
+                    it,
+                    inShortFormat = true
+                )
+            }"
+        }
     }
 }

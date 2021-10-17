@@ -3,7 +3,7 @@ package kozyriatskyi.anton.sked.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
 
 
@@ -16,7 +16,7 @@ interface LessonsDao {
 
     // dd-MM-yyyy
     @Query("SELECT * FROM lessons WHERE date = :date ORDER BY number")
-    fun observeAllByDate(date: String): Flowable<List<LessonDb>>
+    fun observeAllByDate(date: String): Flow<List<LessonDb>>
 
     @Insert
     fun insertAll(lessons: List<LessonDb>)
@@ -25,5 +25,5 @@ interface LessonsDao {
     fun deleteAll()
 
     @Query("SELECT count(*) FROM lessons WHERE date = :date")
-    fun amountOfLessonsByDate(date: String): Flowable<Int>
+    fun amountOfLessonsByDate(date: String): Flow<Int>
 }
