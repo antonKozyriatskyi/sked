@@ -1,16 +1,15 @@
 package kozyriatskyi.anton.sked.login.student
 
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
-import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.util.logE
 import moxy.InjectViewState
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -18,18 +17,29 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class StudentLoginPresenter @Inject constructor(private val interactor: StudentLoginInteractor) : BasePresenter<StudentLoginView>() {
-
-    private val disposables = CompositeDisposable()
+class StudentLoginPresenter @Inject constructor(private val interactor: StudentLoginInteractor) :
+    BasePresenter<StudentLoginView>() {
 
     private val uiModel = StudentLoginStateModel()
 
     private val student = Student()
 
-    private var retryAction: (() -> Unit)? = { setLoadingState(); interactor.getFaculties() }
+    private var retryAction: (() -> Unit)? = null
 
     override fun onFirstViewAttach() {
-        initSubscriptions()
+
+        observeConnectionState()
+        loadFaculties()
+    }
+
+    override fun attachView(view: StudentLoginView) {
+        super.attachView(view)
+
+        viewState.restorePositions(
+            uiModel.facultyPosition,
+            uiModel.coursePosition,
+            uiModel.groupPosition
+        )
     }
 
     fun onFacultyChosen(faculty: String, facultyId: String, position: Int) {
@@ -38,9 +48,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         student.faculty = faculty
         student.facultyId = facultyId
 
-        setLoadingState()
-        retryAction = { interactor.getCourses(facultyId) }
-        interactor.getCourses(facultyId)
+        loadCourses(facultyId)
     }
 
     fun onCourseChosen(course: String, courseId: String, position: Int) {
@@ -49,9 +57,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         student.course = course
         student.courseId = courseId
 
-        setLoadingState()
-        retryAction = { interactor.getGroups(courseId) }
-        interactor.getGroups(courseId)
+        loadGroups(courseId)
     }
 
     fun onGroupChosen(group: String, groupId: String, position: Int) {
@@ -66,15 +72,14 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
     fun retry() {
         retryAction?.let {
             viewState.switchError(show = false)
-            setLoadingState()
-            it.invoke()
+            it()
         }
     }
 
     fun onLoadButtonClick() {
         setLoadingState()
         retryAction = { interactor.loadSchedule(student) }
-        interactor.loadSchedule(student)
+        loadSchedule(student)
     }
 
     private fun setLoadingState() {
@@ -121,54 +126,43 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         viewState.setLoaded(false)
     }
 
-    private fun subscribeSchedule() {
-        disposables.add(interactor.scheduleLoadingStatus()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError {
-                    logE("Error loading student schedule: ${it.message}") //TODO
-                    val str = "Error loading student schedule: ${student.faculty}[${student.facultyId}]\n${student.course}[${student.courseId}]\n${student.group}[${student.groupId}]\n"
-                    FirebaseCrashlytics.getInstance().recordException(it)
-                    FirebaseCrashlytics.getInstance().log(str)
-                    if (uiModel.isConnectionAvailable) {
-                        setErrorState()
-                        viewState.switchError(StudentLoginFragment.ERROR_SCHEDULE, "${it.message}", true)
-                    }
-                }
-                .retry()
-                .subscribe {
-                    interactor.saveUser(student)
-                    viewState.openScheduleScreen()
-                })
-    }
+    private fun loadFaculties() {
+        setLoadingState()
+        retryAction = { loadFaculties() }
 
-    private fun subscribeFaculties() {
-        disposables.add(interactor.faculties()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { retryAction = null }
-                .subscribe({ faculties: ArrayList<Item> ->
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadFaculties() }
+                .onSuccess { faculties ->
                     viewState.showFaculties(faculties)
                     if (faculties.isEmpty()) {
-                        // since faculties is an empty list I can use it to remove items from
-                        // other adapters
-                        viewState.showCourses(faculties)
-                        viewState.showGroups(faculties)
+                        viewState.showCourses(emptyList())
+                        viewState.showGroups(emptyList())
                         setNotLoadedState()
                     }
-                }, {
+
+                    retryAction = null
+                }
+                .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
                         logE("Error loading faculties: ${it.message}")
-                        viewState.switchError(StudentLoginFragment.ERROR_FACULTIES, "${it.message}", true)
+                        viewState.switchError(
+                            StudentLoginFragment.ERROR_FACULTIES,
+                            "${it.message}",
+                            true
+                        )
                     }
-                    subscribeFaculties()
-                }))
+                }
+        }
     }
 
-    private fun subscribeCourses() {
-        disposables.add(interactor.courses()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { retryAction = null }
-                .subscribe({ courses: ArrayList<Item> ->
+    private fun loadCourses(facultyId: String) {
+        setLoadingState()
+        retryAction = { loadCourses(facultyId) }
+
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadCourses(facultyId) }
+                .onSuccess { courses ->
                     viewState.showCourses(courses)
                     if (courses.isEmpty()) {
                         // since faculties is an empty list I can use it to remove items from
@@ -176,48 +170,74 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
                         viewState.showGroups(courses)
                         setNotLoadedState()
                     }
-                }, {
+
+                    retryAction = null
+                }
+                .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
-                        viewState.switchError(StudentLoginFragment.ERROR_COURSES, "${it.message}", true)
+                        viewState.switchError(
+                            StudentLoginFragment.ERROR_COURSES,
+                            "${it.message}",
+                            true
+                        )
                         logE("Error loading courses: ${it.message}")
                     }
-                    subscribeCourses()
-                }))
+                }
+        }
     }
 
-    private fun subscribeGroups() {
-        disposables.add(interactor.groups()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { retryAction = null }
-                .subscribe({ groups: ArrayList<Item> ->
+    private fun loadGroups(courseId: String) {
+        setLoadingState()
+        retryAction = { loadGroups(courseId) }
+
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadGroups(courseId) }
+                .onSuccess { groups ->
                     viewState.showGroups(groups)
                     if (groups.isEmpty()) {
                         setNotLoadedState()
                     }
-                }, {
+
+                    retryAction = null
+                }
+                .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()
                         logE("Error loading groups")
-                        viewState.switchError(StudentLoginFragment.ERROR_GROUPS, "${it.message}", true)
+                        viewState.switchError(
+                            StudentLoginFragment.ERROR_GROUPS,
+                            "${it.message}",
+                            true
+                        )
                     }
-                    subscribeGroups()
-                }))
-    }
-
-    private fun subscribeConnectionState() {
-        scope.launch {
-            interactor.connectionStateChanges()
-                .collectLatest { onConnectionStateChanged(it) }
+                }
         }
     }
 
-    private fun initSubscriptions() {
-        subscribeFaculties()
-        subscribeCourses()
-        subscribeGroups()
-        subscribeSchedule()
-        subscribeConnectionState()
+    private fun loadSchedule(student: Student) {
+        scope.launch {
+            withContext(Dispatchers.IO) { interactor.loadSchedule(student) }
+                .onSuccess { viewState.openScheduleScreen() }
+                .onFailure {
+                    if (uiModel.isConnectionAvailable) {
+                        setErrorState()
+                        viewState.switchError(
+                            StudentLoginFragment.ERROR_SCHEDULE,
+                            "${it.message}",
+                            true
+                        )
+                    }
+                }
+        }
+    }
+
+
+    private fun observeConnectionState() {
+        interactor.connectionStateChanges()
+            .flowOn(Dispatchers.IO)
+            .onEach { onConnectionStateChanged(it) }
+            .launchIn(scope)
     }
 
     private fun onConnectionStateChanged(isConnectionAvailableNow: Boolean) {
@@ -228,16 +248,5 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         viewState.onConnectionChanged(isConnectionAvailableNow)
 
         if (isConnectionAvailableNow) retry()
-    }
-
-    override fun attachView(view: StudentLoginView) {
-        super.attachView(view)
-
-        viewState.restorePositions(uiModel.facultyPosition, uiModel.coursePosition, uiModel.groupPosition)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposables.dispose()
     }
 }
