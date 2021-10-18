@@ -10,11 +10,9 @@ class MainInteractor(private val scheduleStorage: ScheduleStorage,
                      private val scheduleLoader: ScheduleProvider,
                      private val userInfoStorage: UserInfoStorage) {
 
-    suspend fun updateSchedule(): Result<Unit> {
+    fun updateSchedule(): Result<Unit> = kotlin.runCatching {
         val schedule = scheduleLoader.getSchedule(userInfoStorage.getUser())
         val dbSchedule = lessonMapper.networkToDb(schedule)
         scheduleStorage.saveLessons(dbSchedule)
-
-        return Result.success(Unit)
     }
 }

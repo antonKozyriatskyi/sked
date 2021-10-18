@@ -48,21 +48,14 @@ class MainPresenter(
         viewState.switchProgress(true)
 
         scheduleUpdateJob = scope.launch {
-            val updateResult = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 interactor.updateSchedule()
             }
+                .onSuccess { viewState.onUpdateSucceeded() }
+                .onFailure { viewState.onUpdateFailed() }
 
             viewState.switchProgress(false)
 
-            updateResult
-                .onSuccess { viewState.onUpdateSucceeded() }
-                .onFailure { viewState.onUpdateFailed() }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        scheduleUpdateJob?.cancel()
     }
 }
