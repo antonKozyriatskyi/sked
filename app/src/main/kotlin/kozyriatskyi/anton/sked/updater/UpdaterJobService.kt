@@ -19,6 +19,7 @@ import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
+import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.util.logE
 import java.lang.Math.random
@@ -113,6 +114,10 @@ class UpdaterJobService : JobService() {
     @Inject
     lateinit var timeLogger: ScheduleUpdateTimeLogger
 
+
+    @Inject
+    lateinit var dateManipulator: DateManipulator
+
     override fun onCreate() {
         Injector.inject(this)
     }
@@ -135,7 +140,14 @@ class UpdaterJobService : JobService() {
 
         try {
             val user = userInfoPreferences.getUser()
-            scheduleLoader.getSchedule(user)
+            val startDate = dateManipulator.getFirstDayOfWeekDate(0)
+            val endDate = dateManipulator.getLastDayOfWeekDate(5)
+
+            scheduleLoader.getSchedule(
+                user,
+                startDate = startDate,
+                endDate = endDate
+            )
             timeLogger.saveTime()
         } catch (t: Throwable) {
             isSuccessfullyUpdated = false

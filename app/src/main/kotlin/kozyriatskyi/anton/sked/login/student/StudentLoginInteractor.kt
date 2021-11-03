@@ -11,6 +11,7 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.StudentInfoProvider
+import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.JobManager
 
 class StudentLoginInteractor(
@@ -21,7 +22,8 @@ class StudentLoginInteractor(
     private val connectionStateProvider: ConnectionStateProvider,
     private val mapper: LessonMapper,
     private val jobManager: JobManager,
-    private val analyticsManager: AnalyticsManager
+    private val analyticsManager: AnalyticsManager,
+    private val dateManipulator: DateManipulator
 ) {
 
     fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
@@ -67,7 +69,11 @@ class StudentLoginInteractor(
         }
 
     fun loadSchedule(student: Student): Result<List<LessonNetwork>> = kotlin.runCatching {
-        scheduleProvider.getSchedule(student)
+        scheduleProvider.getSchedule(
+            user = student,
+            startDate = dateManipulator.getFirstDayOfWeekDate(),
+            endDate = dateManipulator.getLastDayOfWeekDate(5)
+        )
     }
         .onSuccess {
             scheduleRepository.saveLessons(mapper.networkToDb(it))

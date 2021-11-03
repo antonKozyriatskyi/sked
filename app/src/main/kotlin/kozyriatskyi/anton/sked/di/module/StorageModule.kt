@@ -46,7 +46,10 @@ class StorageModule {
 
     @App
     @Provides
-    fun provideScheduleStorage(context: Context, scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger): ScheduleStorage {
+    fun provideScheduleStorage(
+        context: Context,
+        scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger
+    ): ScheduleStorage {
         val lessonsDatabase = LessonsDatabase.getInstance(context)
         return ScheduleDatabase(lessonsDatabase, scheduleUpdateTimeLogger)
     }

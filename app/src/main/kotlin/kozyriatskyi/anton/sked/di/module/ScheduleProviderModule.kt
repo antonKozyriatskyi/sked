@@ -10,6 +10,7 @@ import kozyriatskyi.anton.sked.di.App
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.StudentScheduleProvider
 import kozyriatskyi.anton.sked.repository.TeacherScheduleProvider
+import kozyriatskyi.anton.sked.util.DateFormatter
 import kozyriatskyi.anton.sutparser.StudentScheduleParser
 import kozyriatskyi.anton.sutparser.TeacherScheduleParser
 
@@ -22,14 +23,14 @@ class ScheduleProviderModule {
 
     @App
     @Provides
-    fun provideNetworkStudentScheduleLoader(): StudentScheduleProvider {
-        return ParsedStudentScheduleProvider(StudentScheduleParser())
+    fun provideNetworkStudentScheduleLoader(dateFormatter: DateFormatter): StudentScheduleProvider {
+        return ParsedStudentScheduleProvider(StudentScheduleParser(), dateFormatter)
     }
 
     @App
     @Provides
-    fun provideNetworkTeacherScheduleLoader(): TeacherScheduleProvider {
-        return ParsedTeacherScheduleProvider(TeacherScheduleParser())
+    fun provideNetworkTeacherScheduleLoader(dateFormatter: DateFormatter): TeacherScheduleProvider {
+        return ParsedTeacherScheduleProvider(TeacherScheduleParser(), dateFormatter)
     }
 
     @App

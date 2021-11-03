@@ -11,6 +11,7 @@ import kozyriatskyi.anton.sked.di.Login
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.StudentInfoProvider
+import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.JobManager
 import kozyriatskyi.anton.sutparser.StudentInfoParser
 
@@ -35,7 +36,8 @@ class StudentLoginModule {
         scheduleRepository: ScheduleStorage,
         connectionStateProvider: ConnectionStateProvider,
         mapper: LessonMapper, jobManager: JobManager,
-        analyticsManager: AnalyticsManager
+        analyticsManager: AnalyticsManager,
+        dateManipulator: DateManipulator
     ): StudentLoginInteractor = StudentLoginInteractor(
         studentInfoProvider,
         userUserInfoStorage,
@@ -44,6 +46,7 @@ class StudentLoginModule {
         connectionStateProvider,
         mapper,
         jobManager,
-        analyticsManager
+        analyticsManager,
+        dateManipulator
     )
 }

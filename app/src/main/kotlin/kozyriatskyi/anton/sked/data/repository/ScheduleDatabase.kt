@@ -5,15 +5,22 @@ import kozyriatskyi.anton.sked.data.LessonsDatabase
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
+import java.time.LocalDate
 
 /**
  * Created by Anton on 13.07.2017.
  */
-class ScheduleDatabase(private val database: LessonsDatabase,
-                       private val timeLogger: ScheduleUpdateTimeLogger) : ScheduleStorage {
+class ScheduleDatabase(
+    private val database: LessonsDatabase,
+    private val timeLogger: ScheduleUpdateTimeLogger
+) : ScheduleStorage {
 
-    override fun getLessonsByDate(date: String): Flow<List<LessonDb>> =
-            database.scheduleDao().observeAllByDate(date)
+    override fun getLessonsOnDate(date: LocalDate): Flow<List<LessonDb>> =
+        database.scheduleDao().observeAllByDate(date)
+
+    override fun getLessonsBetweenDates(start: LocalDate, end: LocalDate): Flow<List<LessonDb>> {
+       return database.scheduleDao().observeAllBetweenDates(start, end)
+    }
 
     override fun saveLessons(lessons: List<LessonDb>) {
         with(database.scheduleDao()) {
@@ -24,8 +31,8 @@ class ScheduleDatabase(private val database: LessonsDatabase,
         timeLogger.saveTime()
     }
 
-    override fun amountOfLessonsOnDate(date: String): Flow<Int> =
-            database.scheduleDao()
+    override fun amountOfLessonsOnDate(date: LocalDate): Flow<Int> =
+        database.scheduleDao()
             .amountOfLessonsByDate(date)
 }
 
