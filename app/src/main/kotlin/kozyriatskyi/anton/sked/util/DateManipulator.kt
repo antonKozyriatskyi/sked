@@ -10,7 +10,7 @@ import java.time.temporal.WeekFields
  */
 class DateManipulator {
 
-    private var weekFields: WeekFields = WeekFields.SUNDAY_START
+    private var weekFields: WeekFields = WeekFields.ISO
 
     fun today(): LocalDate = LocalDate.now()
 
