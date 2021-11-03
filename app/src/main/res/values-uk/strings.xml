@@ -22,15 +22,15 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="days_of_week">
-        <item>Понеділок</item>
-        <item>Вівторок</item>
-        <item>Середа</item>
-        <item>Четвер</item>
-        <item>П\'ятниця</item>
-        <item>Субота</item>
-        <item>Неділя</item>
-    </string-array>
+
+    <string name="day_of_week_monday">Понеділок</string>
+    <string name="day_of_week_tuesday">Вівторок</string>
+    <string name="day_of_week_wednesday">Середа</string>
+    <string name="day_of_week_thursday">Четвер</string>
+    <string name="day_of_week_friday">П\'ятниця</string>
+    <string name="day_of_week_saturday">Субота</string>
+    <string name="day_of_week_sunday">Неділя</string>
+
 
     <string name="about_activity_title">Про додаток</string>
     <string name="about_developed_by">Розроблено Антоном Козиряцьким</string>

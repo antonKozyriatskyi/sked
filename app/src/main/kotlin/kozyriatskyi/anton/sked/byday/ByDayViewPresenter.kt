@@ -1,113 +1,79 @@
 package kozyriatskyi.anton.sked.byday
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kozyriatskyi.anton.sked.common.BasePresenter
+import kozyriatskyi.anton.sked.util.DateManipulator
+import kozyriatskyi.anton.sked.util.onFirstEmit
+import kozyriatskyi.anton.sked.util.zip
 import moxy.InjectViewState
-import java.util.*
+import java.time.LocalDate
 
 @InjectViewState
-class ByDayViewPresenter(private val interactor: ByDayViewInteractor) : BasePresenter<ByDayView>() {
-
-    private var hasSundayTab = false
-    private var hasSaturdayTab = false
-
-    private var todayPositionIsSet = false
+class ByDayViewPresenter(
+    private val interactor: ByDayViewInteractor,
+    private val dateManipulator: DateManipulator,
+    private val itemMapper: ByDayViewItemMapper
+) : BasePresenter<ByDayView>() {
 
     override fun onFirstViewAttach() {
-        subscribe()
+        setupDays()
     }
 
-    private fun subscribe() {
-        thisWeekendLessonsCount()
-    }
+    private fun setupDays() = scope.launch {
+        val today = dateManipulator.today()
+        val todayIsWorkday = dateManipulator.isWorkday(today)
+        val hasLessonsOnWeekends = hasLessonsOnWeekends(today)
+        val showCurrentWeek = todayIsWorkday || hasLessonsOnWeekends
 
-    private fun todayPosition(isNextWeek: Boolean): Int {
-        if (isNextWeek) return 0
+        val days = if (showCurrentWeek) {
+            getDays(false, hasLessonsOnWeekends.not())
+        } else {
+            getDays(true, canFilterOutWeekends = true)
+        }
 
-        val calendar = Calendar.getInstance()
-        calendar.firstDayOfWeek = Calendar.MONDAY
-        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
-        return if (dayOfWeek == Calendar.SUNDAY) 6 else dayOfWeek - 2
-    }
-
-    private fun thisWeekendLessonsCount() {
-        interactor.thisWeekendLessonsCount()
-            .take(1)
+        days
             .flowOn(Dispatchers.IO)
-            .onEach { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
-                viewState.showDays(showNextWeek)
-                subscribeWeekendLessonsCount(showNextWeek)
-            }
-            .launchIn(scope)
+            .onFirstEmit { checkPosition(it, today, showCurrentWeek) }
+            .collect { viewState.showDays(it) }
     }
 
-    private fun subscribeWeekendLessonsCount(nextWeek: Boolean) {
-        interactor.weekendLessonsCount(nextWeek)
-            .flowOn(Dispatchers.IO)
-            .onEach { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                editWeekendTabsIfNeeded(hasLessonsOnSaturday, hasLessonsOnSunday)
+    private suspend fun hasLessonsOnWeekends(date: LocalDate): Boolean =
+        dateManipulator.getRemainingWeekends(date)
+            .any { interactor.hasLessonsOnDate(it).take(1).single() }
 
-                if (todayPositionIsSet.not()) {
-                    viewState.setTodayPosition(todayPosition(nextWeek))
-                    todayPositionIsSet = true
+    @OptIn(FlowPreview::class)
+    private fun getDays(
+        nextWeek: Boolean,
+        canFilterOutWeekends: Boolean
+    ): Flow<List<ByDayViewItem>> {
+        val weekNum = if (nextWeek) 1 else 0
+
+        return dateManipulator.getWeekRange(weekNum)
+            .map { date -> interactor.hasLessonsOnDate(date).map { date to it } }
+            .zip()
+            .map { data ->
+                data.filter { (date, hasLessons) ->
+                    dateManipulator.isWorkday(date) || (hasLessons || canFilterOutWeekends.not())
                 }
+                    .map(Pair<LocalDate, Boolean>::first)
             }
-            .launchIn(scope)
+            .map { dates -> dates.map(itemMapper::create) }
+
     }
 
-    private fun showNextWeek(hasLessonsOnSaturday: Boolean, hasLessonsOnSunday: Boolean): Boolean {
-        val c = Calendar.getInstance()
-        c.firstDayOfWeek = Calendar.MONDAY
-
-        val dayOfWeek = c[Calendar.DAY_OF_WEEK]
-
-        if (dayOfWeek == Calendar.SUNDAY) {
-            return hasLessonsOnSunday.not()
+    private fun checkPosition(
+        items: List<ByDayViewItem>,
+        today: LocalDate,
+        showCurrentWeek: Boolean
+    ) = scope.launch {
+        val position = when {
+            showCurrentWeek -> items.indexOfFirst { it.date == today }
+            else -> 0
         }
 
-        val isWeekendToday = dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY
-        val hasLessonsOnWeekend = hasLessonsOnSaturday or hasLessonsOnSunday
-        // if today is weekend and there are no lessons on Saturday or Sunday - show next week
-        return isWeekendToday and hasLessonsOnWeekend.not()
-    }
-
-    private fun editWeekendTabsIfNeeded(
-        hasLessonsOnSaturday: Boolean,
-        hasLessonsOnSunday: Boolean
-    ) {
-        if (hasLessonsOnSaturday) {
-            if (hasSaturdayTab.not()) {
-                viewState.addTab()
-                hasSaturdayTab = true
-            }
-        } else {
-            if (hasSaturdayTab and hasLessonsOnSunday.not()) {
-                viewState.removeTab()
-                hasSaturdayTab = false
-            }
-        }
-
-        if (hasLessonsOnSunday) {
-            if (hasSaturdayTab.not()) {
-                viewState.addTab()
-                hasSaturdayTab = true
-            }
-            if (hasSundayTab.not()) {
-                viewState.addTab()
-                hasSundayTab = true
-            }
-        } else {
-            if (hasSundayTab) {
-                viewState.removeTab()
-                hasSundayTab = false
-            }
-
-            if (hasLessonsOnSaturday.not() and hasSaturdayTab) viewState.removeTab()
-        }
+        viewState.showDayAt(position)
     }
 }

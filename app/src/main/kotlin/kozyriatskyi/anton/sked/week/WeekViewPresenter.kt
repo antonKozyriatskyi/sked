@@ -5,11 +5,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.*
+import kozyriatskyi.anton.sked.util.batched
+import kozyriatskyi.anton.sked.util.zipWith
 import moxy.InjectViewState
+import java.time.LocalDate
 
 @InjectViewState
 class WeekViewPresenter(
-    private val weekNumber: Int,
+    private val dates: List<LocalDate>,
     private val interactor: WeekViewInteractor,
     private val dayMapper: DayMapper
 ) : BasePresenter<WeekView>() {
@@ -28,30 +31,15 @@ class WeekViewPresenter(
     }
 
     private fun observeLessons() {
-        lessonsJob = interactor.lessons(weekNumber)
-            .map(::removeWeekendsIfNoLessons)
-            .map(dayMapper::dbToUi)
+        lessonsJob = interactor.getLessons(dates.first(), dates.last())
             .flowOn(Dispatchers.IO)
-            .catch { viewState.showError(it.message ?: "Error") }
+            .map { lessons -> lessons.groupBy(LessonDb::date) }
+            .zipWith(dates.asFlow()) { groupedLessons, date -> date to groupedLessons[date].orEmpty() }
+            .map { (date, lessons) -> dayMapper.createUiModel(date, lessons) }
+            .batched(dates.size)
+            .flowOn(Dispatchers.Default)
+            .catch { viewState.showError(it.message.orEmpty()) }
             .onEach(viewState::showLessons)
             .launchIn(scope)
-    }
-
-    @Suppress("NAME_SHADOWING")
-    private fun removeWeekendsIfNoLessons(days: List<Day>): List<Day> {
-        val days = days.toMutableList()
-
-        val sunday = days[days.lastIndex]
-        val saturday = days[days.lastIndex - 1]
-
-        if (sunday.lessons.isEmpty()) {
-            days.remove(sunday)
-        }
-
-        if (saturday.lessons.isEmpty()) {
-            days.remove(saturday)
-        }
-
-        return days
     }
 }

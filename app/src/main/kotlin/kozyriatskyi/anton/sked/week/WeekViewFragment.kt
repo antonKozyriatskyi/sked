@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.R
@@ -19,24 +20,22 @@ import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import moxy.presenter.ProvidePresenterTag
+import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 /**
  * Created by Anton on 11.08.2017.
  */
 
+@Suppress("UNCHECKED_CAST")
 class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.OnLessonClickListener {
 
     companion object {
-        private const val EXTRA_WEEK_NUM = "week_num"
+        private const val ARG_DATES = "WeekViewFragment::dates"
 
-        fun create(weekNumber: Int): WeekViewFragment {
-            val fragment = WeekViewFragment()
-            val arguments = Bundle()
-            arguments.putInt(EXTRA_WEEK_NUM, weekNumber)
-            fragment.arguments = arguments
-            return fragment
+
+        fun create(dates: List<LocalDate>): WeekViewFragment = WeekViewFragment().apply {
+            arguments = bundleOf(ARG_DATES to dates)
         }
     }
 
@@ -44,29 +43,20 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
     @InjectPresenter
     lateinit var presenter: WeekViewPresenter
 
-    private var weekNumber: Int by Delegates.notNull()
-
     private lateinit var recycler: RecyclerView
 
     @ProvidePresenterTag(presenterClass = WeekViewPresenter::class)
-    fun provideTag(): String = arguments!!.getInt(EXTRA_WEEK_NUM).toString()
+    fun provideTag(): String {
+        val dates = requireArguments().getSerializable(ARG_DATES) as List<LocalDate>
+        return dates.first().toString()
+    }
 
     @ProvidePresenter
     fun providePresenter(): WeekViewPresenter {
-        val weekNumber = arguments?.getInt(EXTRA_WEEK_NUM)
-                ?: throw  IllegalArgumentException("Arguments must not be null " +
-                        "and must contain EXTRA_WEEK_NUM")
-        Injector.inject(this, weekNumber)
+        val dates = requireArguments().getSerializable(ARG_DATES) as List<LocalDate>
+
+        Injector.inject(this, dates)
         return presenter
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        val arguments = arguments ?: throw  IllegalArgumentException("Arguments must not be null " +
-                "and must contain EXTRA_WEEK_NUM")
-
-        weekNumber = arguments.getInt(EXTRA_WEEK_NUM)
-
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,7 +64,7 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
 
         recycler = rootView.find(R.id.lessons_recycler)
         recycler.layoutManager = LinearLayoutManager(context)
-        val adapter = WeekLessonsAdapter(this)
+        val adapter = WeekLessonsAdapter(requireContext(), this)
         recycler.adapter = adapter
         recycler.addItemDecoration(StickyHeaderItemDecoration(recycler))
 
@@ -99,11 +89,11 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
 
     override fun showStudentLessonDetails(lesson: LessonUi) {
         val sheet = LessonDetailsSheet.create(lesson, LessonDetailsSheet.USER_TYPE_STUDENT)
-        sheet.show(activity!!.supportFragmentManager, LessonDetailsSheet.TAG)
+        sheet.show(requireActivity().supportFragmentManager, LessonDetailsSheet.TAG)
     }
 
     override fun showTeacherLessonDetails(lesson: LessonUi) {
         val sheet = LessonDetailsSheet.create(lesson, LessonDetailsSheet.USER_TYPE_TEACHER)
-        sheet.show(activity!!.supportFragmentManager, LessonDetailsSheet.TAG)
+        sheet.show(requireActivity().supportFragmentManager, LessonDetailsSheet.TAG)
     }
 }

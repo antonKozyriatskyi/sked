@@ -9,18 +9,19 @@ import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import moxy.InjectViewState
+import java.time.LocalDate
 
 @InjectViewState
 class DayViewPresenter(
-    private val dayNumber: Int, private val nextWeek: Boolean,
-    private val interactor: DayViewInteractor, private val dayMapper: DayMapper
-) :
-    BasePresenter<DayView>() {
+    private val date: LocalDate,
+    private val interactor: DayViewInteractor,
+    private val dayMapper: DayMapper
+) : BasePresenter<DayView>() {
 
     private var lessonsJob: Job? = null
 
     override fun onFirstViewAttach() {
-        subscribeLessons()
+        observeLessons()
     }
 
     fun onLessonClick(lesson: LessonUi) {
@@ -32,13 +33,12 @@ class DayViewPresenter(
         }
     }
 
-    private fun subscribeLessons() {
-        val weekNum = if (nextWeek) 1 else 0
-
-        lessonsJob = interactor.lessons(dayNumber, weekNum)
-            .map(dayMapper::dbToUi)
+    private fun observeLessons() {
+        lessonsJob = interactor.observeLessons(date)
+            .map { dayMapper.createUiModel(date, it) }
             .flowOn(Dispatchers.IO)
-            .catch { viewState.showError(it.message ?: "Error") }
+            .catch { viewState.showError(it.message.orEmpty()) }
+            .onEach { println("${it.shortDate} | ${it.lessons.size}") }
             .onEach { viewState.showDay(it) }
             .launchIn(scope)
     }

@@ -5,9 +5,10 @@ import dagger.Provides
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import java.time.LocalDate
 
 @Module
-class DayViewModule(private val dayNumber: Int, private val nextWeek: Boolean) {
+class DayViewModule(private val date: LocalDate) {
 
     @Provides
     fun provideInteractor(scheduleRepository: ScheduleStorage, userInfoStorage: UserInfoStorage): DayViewInteractor {
@@ -16,6 +17,6 @@ class DayViewModule(private val dayNumber: Int, private val nextWeek: Boolean) {
 
     @Provides
     fun providePresenter(dayViewInteractor: DayViewInteractor, dayMapper: DayMapper): DayViewPresenter {
-        return DayViewPresenter(dayNumber, nextWeek, dayViewInteractor, dayMapper)
+        return DayViewPresenter(date, dayViewInteractor, dayMapper)
     }
 }

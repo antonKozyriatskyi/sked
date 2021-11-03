@@ -6,18 +6,20 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import kozyriatskyi.anton.sked.week.WeekViewFragment
 
-class WeeksAdapter(childFragmentManager: FragmentManager, private val titles: Array<String>)
-    : FragmentStatePagerAdapter(childFragmentManager) {
+class WeeksAdapter(childFragmentManager: FragmentManager) : FragmentStatePagerAdapter(childFragmentManager) {
 
-    companion object {
-        private const val DEFAULT_TABS_COUNT = 5
-    }
+    private var items: List<WeekTabItem> = emptyList()
 
-    override fun getItem(i: Int): Fragment = WeekViewFragment.create(i)
+    override fun getItem(i: Int): Fragment = WeekViewFragment.create(items[i].dates)
 
-    override fun getCount(): Int = DEFAULT_TABS_COUNT
+    override fun getCount(): Int = items.size
 
-    override fun getPageTitle(position: Int): CharSequence = titles[position]
+    override fun getPageTitle(position: Int): CharSequence = items[position].title
 
     override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
+
+    fun update(items: List<WeekTabItem>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
 }

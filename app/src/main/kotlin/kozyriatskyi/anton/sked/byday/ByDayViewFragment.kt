@@ -54,7 +54,11 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val rootView = container!!.inflate(R.layout.fragment_by_day_view)
         daysViewPager = rootView.find(R.id.byday_pager_days)
 
@@ -65,21 +69,18 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
         return rootView
     }
 
-    override fun showDays(isNextWeek: Boolean) {
-        val tabTitles = context!!.resources.getStringArray(R.array.days_of_week)
-        adapter = DaysAdapter(childFragmentManager, tabTitles, isNextWeek)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        adapter = DaysAdapter(childFragmentManager, requireContext())
         daysViewPager.adapter = adapter
     }
 
-    override fun addTab() {
-        adapter.addTab()
+    override fun showDays(days: List<ByDayViewItem>) {
+        adapter.update(days)
     }
 
-    override fun removeTab() {
-        adapter.removeTab()
-    }
-
-    override fun setTodayPosition(todayPosition: Int) {
+    override fun showDayAt(todayPosition: Int) {
         daysViewPager.setCurrentItem(todayPosition, false)
     }
 }
