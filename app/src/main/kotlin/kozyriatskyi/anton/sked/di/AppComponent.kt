@@ -14,6 +14,8 @@ import kozyriatskyi.anton.sked.di.module.ScheduleProviderModule
 import kozyriatskyi.anton.sked.di.module.StorageModule
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.util.DateFormatter
+import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.JobManager
 import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 
@@ -35,4 +37,6 @@ interface AppComponent {
     fun scheduleUpdateTimeLogger(): ScheduleUpdateTimeLogger
     fun lessonMapper(): LessonMapper
     fun dayMapper(): DayMapper
+    fun dateManipulator(): DateManipulator
+    fun dateFormatter(): DateFormatter
 }
