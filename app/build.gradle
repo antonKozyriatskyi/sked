@@ -122,5 +122,3 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-all:$mockitoVersion"
 }
-
-apply plugin: 'com.google.gms.google-services'
