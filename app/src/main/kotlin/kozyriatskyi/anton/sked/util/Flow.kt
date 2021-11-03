@@ -1,32 +1,92 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package kozyriatskyi.anton.sked.util
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.flow.*
 
-fun <T1, T2, T3, T4, T5, T6, T7, R> zipFlows(
-    flow1: Flow<T1>,
-    flow2: Flow<T2>,
-    flow3: Flow<T3>,
-    flow4: Flow<T4>,
-    flow5: Flow<T5>,
-    flow6: Flow<T6>,
-    flow7: Flow<T7>,
-    transform: suspend (T1, T2, T3, T4, T5, T6, T7) -> R
-): Flow<R> = flow1.zip(flow2) { a, b -> listOf(a, b) }
-    .zip(flow3) { accumulator, value -> accumulator + value }
-    .zip(flow4) { accumulator, value -> accumulator + value }
-    .zip(flow5) { accumulator, value -> accumulator + value }
-    .zip(flow6) { accumulator, value -> accumulator + value }
-    .zip(flow7) { accumulator, value ->
-        val list = accumulator + value
+fun <T> Flow<T>.onFirstEmit(action: suspend (T) -> Unit): Flow<T> = flow {
+    var hadFirstEmit = false
 
-        transform(
-            list[0] as T1,
-            list[1] as T2,
-            list[2] as T3,
-            list[3] as T4,
-            list[4] as T5,
-            list[5] as T6,
-            list[6] as T7,
-        )
+    collect { value ->
+
+        if (hadFirstEmit.not()) {
+            hadFirstEmit = true
+            action(value)
+        }
+
+        emit(value)
     }
+}
+
+fun <T> Flow<T>.batched(capacity: Int): Flow<List<T>> = flow {
+    val items = ArrayList<T>(capacity)
+
+    collect { value ->
+        items.add(value)
+
+        if (items.size == capacity) {
+            emit(items.toList())
+            items.clear()
+        }
+    }
+}
+
+fun <T1, T2, R> Flow<T1>.zipWith(
+    other: Flow<T2>,
+    transform: suspend (T1, T2) -> R
+): Flow<R> = flow {
+    collect { thisVal ->
+        other.collect { thatVal ->
+            emit(transform(thisVal, thatVal))
+        }
+    }
+}
+
+fun <T> List<Flow<T>>.zip(): Flow<List<T>> = zipFlows(
+    flows = this,
+    initial = ::listOf,
+    accumulator = { acc, v -> acc + v }
+)
+
+fun <T, R> zipFlows(
+    flows: List<Flow<T>>,
+    initial: (T) -> R,
+    accumulator: (R, T) -> R,
+): Flow<R> {
+
+    check(flows.size > 1) {
+        "Can't zip less than 1 flow"
+    }
+
+    var accF: Flow<R> = flows.first().map { initial(it) }
+    for (f in flows.drop(1)) {
+        accF = accF.zip(f) { a, b -> accumulator(a, b) }
+    }
+
+    return accF
+}
+
+fun <T> List<Flow<T>>.combine(): Flow<List<T>> = combineFlows(
+    flows = this,
+    initial = ::listOf,
+    accumulator = { acc, v -> acc + v }
+)
+
+
+fun <T, R> combineFlows(
+    flows: List<Flow<T>>,
+    initial: (T) -> R,
+    accumulator: (R, T) -> R,
+): Flow<R> {
+
+    check(flows.size > 1) {
+        "Can't combine less than 1 flow"
+    }
+
+    var accF: Flow<R> = flows.first().map { initial(it) }
+    for (f in flows.drop(1)) {
+        accF = accF.combine(f) { a, b -> accumulator(a, b) }
+    }
+
+    return accF
+}
