@@ -5,6 +5,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kozyriatskyi.anton.sked.common.BasePresenter
+import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.onFirstEmit
 import kozyriatskyi.anton.sked.util.zip
@@ -15,23 +16,26 @@ import java.time.LocalDate
 class ByDayViewPresenter(
     private val interactor: ByDayViewInteractor,
     private val dateManipulator: DateManipulator,
-    private val itemMapper: ByDayViewItemMapper
+    private val itemMapper: ByDayViewItemMapper,
+    private val userSettingsStorage: UserSettingsStorage
 ) : BasePresenter<ByDayView>() {
 
     override fun onFirstViewAttach() {
-        setupDays()
+        userSettingsStorage.observeFirstDayOfWeek()
+            .flowOn(Dispatchers.IO)
+            .onEach { setupDays() }
+            .launchIn(scope)
     }
 
-    private fun setupDays() = scope.launch {
+    private suspend fun setupDays() {
         val today = dateManipulator.today()
         val todayIsWorkday = dateManipulator.isWorkday(today)
         val hasLessonsOnWeekends = hasLessonsOnWeekends(today)
         val showCurrentWeek = todayIsWorkday || hasLessonsOnWeekends
 
-        val days = if (showCurrentWeek) {
-            getDays(false, hasLessonsOnWeekends.not())
-        } else {
-            getDays(true, canFilterOutWeekends = true)
+        val days = when {
+            showCurrentWeek -> getDays(false, hasLessonsOnWeekends.not())
+            else -> getDays(true, canFilterOutWeekends = true)
         }
 
         days

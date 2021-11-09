@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
@@ -95,6 +96,8 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
                     .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
                     .commit()
         }
+
+        presenter.updateLocale(ConfigurationCompat.getLocales(resources.configuration)[0])
     }
 
     override fun onResume() {

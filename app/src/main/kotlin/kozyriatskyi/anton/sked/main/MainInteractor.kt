@@ -2,10 +2,12 @@ package kozyriatskyi.anton.sked.main
 
 import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
+import kozyriatskyi.anton.sked.data.repository.FirstDayOfWeekMode
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
+import java.util.*
 
 class MainInteractor(private val scheduleStorage: ScheduleStorage,
                      private val lessonMapper: LessonMapper,
@@ -22,5 +24,13 @@ class MainInteractor(private val scheduleStorage: ScheduleStorage,
 
         val dbSchedule = lessonMapper.networkToDb(schedule)
         scheduleStorage.saveLessons(dbSchedule)
+    }
+
+    fun updateLocale(locale: Locale) {
+        dateManipulator.updateLocale(locale)
+    }
+
+    fun updateFirstDayOfWeekMode(mode: FirstDayOfWeekMode) {
+        dateManipulator.updateFirstDayOfWeekMode(mode)
     }
 }

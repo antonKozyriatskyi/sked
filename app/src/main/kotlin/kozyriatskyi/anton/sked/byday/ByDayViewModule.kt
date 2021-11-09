@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.byday
 
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
 
@@ -16,8 +17,14 @@ class ByDayViewModule {
     fun providePresenter(
         interactor: ByDayViewInteractor,
         dateManipulator: DateManipulator,
-        itemMapper: ByDayViewItemMapper
-    ): ByDayViewPresenter = ByDayViewPresenter(interactor, dateManipulator, itemMapper)
+        itemMapper: ByDayViewItemMapper,
+        userSettingsStorage: UserSettingsStorage
+    ): ByDayViewPresenter = ByDayViewPresenter(
+        interactor,
+        dateManipulator,
+        itemMapper,
+        userSettingsStorage
+    )
 
     @Provides
     fun provideByDayViewItemMapper(): ByDayViewItemMapper = ByDayViewItemMapper()

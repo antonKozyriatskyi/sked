@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.byweek
 
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.DateFormatter
 import kozyriatskyi.anton.sked.util.DateManipulator
@@ -18,8 +19,14 @@ class ByWeekViewModule {
     fun providePresenter(
         interactor: ByWeekViewInteractor,
         dateManipulator: DateManipulator,
-        itemMapper: ByWeekViewItemMapper
-    ): ByWeekViewPresenter = ByWeekViewPresenter(interactor, dateManipulator, itemMapper)
+        itemMapper: ByWeekViewItemMapper,
+        userSettingsStorage: UserSettingsStorage
+    ): ByWeekViewPresenter = ByWeekViewPresenter(
+        interactor,
+        dateManipulator,
+        itemMapper,
+        userSettingsStorage
+    )
 
 
     @Provides
