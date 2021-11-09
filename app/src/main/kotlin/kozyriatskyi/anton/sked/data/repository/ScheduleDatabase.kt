@@ -23,9 +23,11 @@ class ScheduleDatabase(
     }
 
     override fun saveLessons(lessons: List<LessonDb>) {
-        with(database.scheduleDao()) {
-            deleteAll()
-            insertAll(lessons)
+        database.runInTransaction {
+            with(database.scheduleDao()) {
+                deleteAll()
+                insertAll(lessons)
+            }
         }
 
         timeLogger.saveTime()
