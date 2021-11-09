@@ -82,6 +82,8 @@ class DateManipulator {
     }
 
     fun updateLocale(locale: Locale) {
+        if (locale == this.locale) return
+
         this.locale = locale
 
         if (firstDayOfWeekMode == FirstDayOfWeekMode.LocaleBased) {
