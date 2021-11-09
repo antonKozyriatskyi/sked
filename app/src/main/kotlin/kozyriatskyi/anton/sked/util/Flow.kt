@@ -44,23 +44,23 @@ fun <T1, T2, R> Flow<T1>.zipWith(
 
 fun <T> List<Flow<T>>.zip(): Flow<List<T>> = zipFlows(
     flows = this,
-    initial = ::listOf,
-    accumulator = { acc, v -> acc + v }
+    accumulator = ::emptyList,
+    zipper = { acc, v -> acc + v }
 )
 
 fun <T, R> zipFlows(
     flows: List<Flow<T>>,
-    initial: (T) -> R,
-    accumulator: (R, T) -> R,
+    accumulator: () -> R,
+    zipper: (R, T) -> R,
 ): Flow<R> {
 
     check(flows.size > 1) {
         "Can't zip less than 1 flow"
     }
 
-    var accF: Flow<R> = flows.first().map { initial(it) }
-    for (f in flows.drop(1)) {
-        accF = accF.zip(f) { a, b -> accumulator(a, b) }
+    var accF: Flow<R> = flowOf(accumulator())
+    for (f in flows) {
+        accF = accF.zip(f) { a, b -> zipper(a, b) }
     }
 
     return accF
@@ -68,24 +68,24 @@ fun <T, R> zipFlows(
 
 fun <T> List<Flow<T>>.combine(): Flow<List<T>> = combineFlows(
     flows = this,
-    initial = ::listOf,
-    accumulator = { acc, v -> acc + v }
+    accumulator = ::emptyList,
+    combiner = { acc, v -> acc + v }
 )
 
 
 fun <T, R> combineFlows(
     flows: List<Flow<T>>,
-    initial: (T) -> R,
-    accumulator: (R, T) -> R,
+    accumulator: () -> R,
+    combiner: (R, T) -> R,
 ): Flow<R> {
 
     check(flows.size > 1) {
         "Can't combine less than 1 flow"
     }
 
-    var accF: Flow<R> = flows.first().map { initial(it) }
-    for (f in flows.drop(1)) {
-        accF = accF.combine(f) { a, b -> accumulator(a, b) }
+    var accF: Flow<R> = flowOf(accumulator())
+    for (f in flows) {
+        accF = accF.combine(f) { a, b -> combiner(a, b) }
     }
 
     return accF
