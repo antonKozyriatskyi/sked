@@ -1,14 +1,20 @@
 package kozyriatskyi.anton.sked.util
 
+import kozyriatskyi.anton.sked.data.repository.FirstDayOfWeekMode
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
+import java.util.*
 
 /**
  * Created by Backbase R&D B.V. on 18.10.2021.
  */
 class DateManipulator {
+
+    private var locale: Locale = Locale.getDefault()
+
+    private var firstDayOfWeekMode: FirstDayOfWeekMode = FirstDayOfWeekMode.Monday
 
     private var weekFields: WeekFields = WeekFields.ISO
 
@@ -65,5 +71,21 @@ class DateManipulator {
         return today
             .with(adjuster)
             .plusWeeks(addWeeks.toLong())
+    }
+
+    fun updateFirstDayOfWeekMode(dayOfWeekModeMode: FirstDayOfWeekMode) {
+        weekFields = when (dayOfWeekModeMode) {
+            FirstDayOfWeekMode.Monday -> WeekFields.ISO
+            FirstDayOfWeekMode.Sunday -> WeekFields.SUNDAY_START
+            FirstDayOfWeekMode.LocaleBased -> WeekFields.of(locale)
+        }
+    }
+
+    fun updateLocale(locale: Locale) {
+        this.locale = locale
+
+        if (firstDayOfWeekMode == FirstDayOfWeekMode.LocaleBased) {
+            weekFields = WeekFields.of(locale)
+        }
     }
 }
