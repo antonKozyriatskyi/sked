@@ -42,13 +42,6 @@
         <item>Системная</item>
     </string-array>
 
-    <string-array name="pref_theme_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>-1</item>
-    </string-array>
-
     <string name="day_of_week_monday">Понедельник</string>
     <string name="day_of_week_tuesday">Вторник</string>
     <string name="day_of_week_wednesday">Среда</string>
@@ -81,5 +74,13 @@
     <string name="audience_sheet_end_time_title">Конец</string>
 
     <string name="about_privacy_policy">Политика конфиденциальности</string>
+
+    <string name="pref_first_day_of_week_header">Первый день недели</string>
+
+    <string-array name="pref_first_day_of_week_days">
+        <item>Понедельник</item>
+        <item>Воскресенье</item>
+        <item>В зависимости от локали</item>
+    </string-array>
 
 </resources>

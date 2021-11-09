@@ -21,6 +21,14 @@
             android:summary="%s"
             android:title="@string/pref_theme_header" />
 
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_first_day_of_week_days"
+            android:entryValues="@array/pref_first_day_of_week_values"
+            android:key="start_day"
+            android:summary="%s"
+            android:title="@string/pref_first_day_of_week_header" />
+
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

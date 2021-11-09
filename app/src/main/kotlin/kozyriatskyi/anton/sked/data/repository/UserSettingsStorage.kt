@@ -2,6 +2,10 @@ package kozyriatskyi.anton.sked.data.repository
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class UserSettingsStorage(private val preferences: SharedPreferences) {
 
@@ -16,7 +20,14 @@ class UserSettingsStorage(private val preferences: SharedPreferences) {
         const val THEME_AUTO = AppCompatDelegate.MODE_NIGHT_AUTO
         const val THEME_LIGHT = AppCompatDelegate.MODE_NIGHT_NO
         const val THEME_DARK = AppCompatDelegate.MODE_NIGHT_YES
+
+        private const val START_DAY_KEY = "start_day"
     }
+
+    private val firstDayOfWeekMode: FirstDayOfWeekMode
+        get() {
+            return FirstDayOfWeekMode.values()[getString(START_DAY_KEY, "0").toInt()]
+        }
 
     fun getString(key: String, default: String): String = preferences.getString(key, default)!!
 
@@ -24,4 +35,18 @@ class UserSettingsStorage(private val preferences: SharedPreferences) {
 
     fun getBoolean(key: String, default: Boolean): Boolean = preferences.getBoolean(key, default)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeFirstDayOfWeek(): Flow<FirstDayOfWeekMode> = callbackFlow {
+        // Dispatch initial value
+        channel.trySend(firstDayOfWeekMode)
+
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == START_DAY_KEY) {
+                channel.trySend(firstDayOfWeekMode)
+            }
+        }
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+
+        awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
 }
