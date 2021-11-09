@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.main
 
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
@@ -16,7 +17,7 @@ class MainInteractor(private val scheduleStorage: ScheduleStorage,
         val schedule = scheduleLoader.getSchedule(
             user = userInfoStorage.getUser(),
             startDate = dateManipulator.getFirstDayOfWeekDate(),
-            endDate = dateManipulator.getLastDayOfWeekDate(5)
+            endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
         )
 
         val dbSchedule = lessonMapper.networkToDb(schedule)

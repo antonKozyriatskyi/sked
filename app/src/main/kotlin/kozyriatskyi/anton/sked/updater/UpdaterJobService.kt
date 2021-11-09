@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.firebase.jobdispatcher.*
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kozyriatskyi.anton.sked.R
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
@@ -140,8 +141,8 @@ class UpdaterJobService : JobService() {
 
         try {
             val user = userInfoPreferences.getUser()
-            val startDate = dateManipulator.getFirstDayOfWeekDate(0)
-            val endDate = dateManipulator.getLastDayOfWeekDate(5)
+            val startDate = dateManipulator.getFirstDayOfWeekDate()
+            val endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
 
             scheduleLoader.getSchedule(
                 user,

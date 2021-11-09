@@ -3,6 +3,7 @@ package kozyriatskyi.anton.sked.byweek
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kozyriatskyi.anton.sked.common.BasePresenter
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.combine
 import kozyriatskyi.anton.sked.util.onFirstEmit
@@ -21,7 +22,7 @@ class ByWeekViewPresenter(
     }
 
     private fun setupWeeks() = scope.launch {
-        List(5) {
+        List(SCHEDULE_WEEKS_RANGE) {
             getItemForDate(dateManipulator.getWeekRange(it))
         }.combine()
             .onFirstEmit { checkPosition() }

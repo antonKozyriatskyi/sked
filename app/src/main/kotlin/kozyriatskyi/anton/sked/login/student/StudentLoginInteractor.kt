@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.login.student
 
 import kotlinx.coroutines.flow.Flow
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
@@ -72,7 +73,7 @@ class StudentLoginInteractor(
         scheduleProvider.getSchedule(
             user = student,
             startDate = dateManipulator.getFirstDayOfWeekDate(),
-            endDate = dateManipulator.getLastDayOfWeekDate(5)
+            endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
         )
     }
         .onSuccess {
