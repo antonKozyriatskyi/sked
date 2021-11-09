@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.analytics.FirebaseAnalyticsManager
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.App
 import kozyriatskyi.anton.sked.util.DateFormatter
@@ -47,6 +48,10 @@ class AppModule(private val appContext: Context) {
     @App
     @Provides
     fun provideDateFormatter(): DateFormatter = DateFormatter()
+
+    @App
+    @Provides
+    fun provideAppConfigurationManager(): AppConfigurationManager = AppConfigurationManager()
 
 }
 

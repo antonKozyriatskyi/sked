@@ -4,8 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.common.BasePresenter
-import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.onFirstEmit
 import kozyriatskyi.anton.sked.util.zip
@@ -17,11 +17,11 @@ class ByDayViewPresenter(
     private val interactor: ByDayViewInteractor,
     private val dateManipulator: DateManipulator,
     private val itemMapper: ByDayViewItemMapper,
-    private val userSettingsStorage: UserSettingsStorage
+    private val appConfigurationManager: AppConfigurationManager
 ) : BasePresenter<ByDayView>() {
 
     override fun onFirstViewAttach() {
-        userSettingsStorage.observeFirstDayOfWeek()
+        appConfigurationManager.configurationChanges
             .flowOn(Dispatchers.IO)
             .onEach { setupDays() }
             .launchIn(scope)

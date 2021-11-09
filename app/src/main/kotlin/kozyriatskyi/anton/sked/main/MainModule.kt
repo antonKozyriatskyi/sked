@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.main
 
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
@@ -22,9 +23,16 @@ class MainModule {
         mapper: LessonMapper,
         scheduleLoader: ScheduleProvider,
         userInfoStorage: UserInfoStorage,
-        dateManipulator: DateManipulator
-    ): MainInteractor =
-        MainInteractor(scheduleRepository, mapper, scheduleLoader, userInfoStorage, dateManipulator)
+        dateManipulator: DateManipulator,
+        appConfigurationManager: AppConfigurationManager
+    ): MainInteractor = MainInteractor(
+        scheduleRepository,
+        mapper,
+        scheduleLoader,
+        userInfoStorage,
+        dateManipulator,
+        appConfigurationManager
+    )
 
 
     @Provides

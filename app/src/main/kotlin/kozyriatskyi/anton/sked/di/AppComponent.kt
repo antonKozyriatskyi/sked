@@ -3,6 +3,7 @@ package kozyriatskyi.anton.sked.di
 import android.content.Context
 import dagger.Component
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
@@ -39,4 +40,5 @@ interface AppComponent {
     fun dayMapper(): DayMapper
     fun dateManipulator(): DateManipulator
     fun dateFormatter(): DateFormatter
+    fun appConfigurationManager(): AppConfigurationManager
 }

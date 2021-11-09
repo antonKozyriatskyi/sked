@@ -3,9 +3,9 @@ package kozyriatskyi.anton.sked.byweek
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
-import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.combine
 import kozyriatskyi.anton.sked.util.onFirstEmit
@@ -17,11 +17,11 @@ class ByWeekViewPresenter(
     private val interactor: ByWeekViewInteractor,
     private val dateManipulator: DateManipulator,
     private val mapper: ByWeekViewItemMapper,
-    private val userSettingsStorage: UserSettingsStorage
+    private val appConfigurationManager: AppConfigurationManager
 ) : BasePresenter<ByWeekView>() {
 
     override fun onFirstViewAttach() {
-        userSettingsStorage.observeFirstDayOfWeek()
+        appConfigurationManager.configurationChanges
             .flowOn(Dispatchers.IO)
             .onEach { setupWeeks() }
             .launchIn(scope)
