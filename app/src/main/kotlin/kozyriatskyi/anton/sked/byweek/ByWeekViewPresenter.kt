@@ -12,7 +12,8 @@ import java.time.LocalDate
 @InjectViewState
 class ByWeekViewPresenter(
     private val interactor: ByWeekViewInteractor,
-    private val dateManipulator: DateManipulator
+    private val dateManipulator: DateManipulator,
+    private val mapper: ByWeekViewItemMapper
 ) : BasePresenter<ByWeekView>() {
 
     override fun onFirstViewAttach() {
@@ -31,7 +32,7 @@ class ByWeekViewPresenter(
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun getItemForDate(dates: List<LocalDate>): Flow<ByWeekViewItem> {
-        return flowOf(ByWeekViewItem(dates))
+        return flow { emit(mapper.create(dates)) }
     }
 
     private fun checkPosition() = scope.launch {

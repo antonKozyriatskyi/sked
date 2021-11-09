@@ -89,14 +89,10 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
         return weeks.map {
             val dates = it.dates
             WeekTabItem(
-                title = getTitle(dates.first(), dates.last()),
+                title = it.title,
                 dates = dates
             )
         }
-    }
-
-    private fun getTitle(startDate: LocalDate, endDate: LocalDate): String {
-        return "${dateFormatter.short(startDate)} - ${dateFormatter.short(endDate)}"
     }
 }
 
