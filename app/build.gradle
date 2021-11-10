@@ -22,6 +22,10 @@ android {
                 keyPassword props.RELEASE_KEY_PASSWORD
             } else {
                 logger.quiet("local.properties not found. Reading from the env variables.")
+                logger.quiet("KEYSTORE_FILE -> " + System.getenv('KEYSTORE_FILE'))
+                logger.quiet("KEYSTORE_PASSWORD -> " + System.getenv('KEYSTORE_PASSWORD'))
+                logger.quiet("RELEASE_KEY_ALIAS -> " + System.getenv('RELEASE_KEY_ALIAS'))
+                logger.quiet("RELEASE_KEY_PASSWORD -> " + System.getenv('RELEASE_KEY_PASSWORD'))
                 logger.quiet("Has keystore ${rootProject.file("signing").exists()}")
                 if (rootProject.file("signing").exists()) {
                     rootProject.file("signing").list().each {
