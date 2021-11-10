@@ -26,6 +26,7 @@ android {
                 logger.quiet("KEYSTORE_PASSWORD -> " + System.getenv('KEYSTORE_PASSWORD'))
                 logger.quiet("RELEASE_KEY_ALIAS -> " + System.getenv('RELEASE_KEY_ALIAS'))
                 logger.quiet("RELEASE_KEY_PASSWORD -> " + System.getenv('RELEASE_KEY_PASSWORD'))
+                logger.quiet("ALL_PROPS -> " + System.getenv())
                 logger.quiet("Has keystore ${rootProject.file("signing").exists()}")
                 if (rootProject.file("signing").exists()) {
                     rootProject.file("signing").list().each {
