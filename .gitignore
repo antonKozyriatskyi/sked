@@ -54,4 +54,4 @@ google-services.json
 /app/release/output.json
 
 # Keystore folder that is created on CI
-keystore/
+signing/

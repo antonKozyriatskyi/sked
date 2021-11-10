@@ -6,21 +6,21 @@ apply plugin: 'io.fabric'
 android {
     signingConfigs {
         r_config {
-            def localPropsFile = rootProject.file("local.properties")
+            def keystorePropsFile = rootProject.file("signing/keystore.properties")
 
-            if (localPropsFile.exists()) {
-                logger.quiet("Found local.properties")
+            if (keystorePropsFile.exists()) {
+                logger.quiet("Found keystore.properties")
 
-                def localProps = new Properties()
-                localProps.load(localPropsFile.newDataInputStream())
+                def props = new Properties()
+                props.load(keystorePropsFile.newDataInputStream())
 
-                storeFile file(localProps.RELEASE_STORE_FILE)
-                storePassword localProps.RELEASE_STORE_PASSWORD
-                keyAlias localProps.RELEASE_KEY_ALIAS
-                keyPassword localProps.RELEASE_KEY_PASSWORD
+                storeFile file(props.RELEASE_STORE_FILE)
+                storePassword props.RELEASE_STORE_PASSWORD
+                keyAlias props.RELEASE_KEY_ALIAS
+                keyPassword props.RELEASE_KEY_PASSWORD
             } else {
-                logger.quiet("local.properties not found. Trying to read from the env variables.")
-                logger.quiet("Has keystore ${rootProject.file("keystore").exists()}")
+                logger.quiet("local.properties not found. Reading from the env variables.")
+                logger.quiet("Has keystore ${rootProject.file("signing").exists()}")
                 if (rootProject.file("keystore").exists()) {
                     rootProject.file("keystore").list().each {
                         logger.quiet("Found file: $it")

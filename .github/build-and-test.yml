@@ -25,7 +25,7 @@ jobs:
         with:
           repository: ${{ secrets.KEYSTORE_GIT_REPO }}
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-          path: ${{ secrets.KEYSTORE_FILE }}
+          path: signing
 
       - name: Build debug APK
         run: |
