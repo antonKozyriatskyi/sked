@@ -50,5 +50,7 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
-/gradle.properties
 /app/release/output.json
+
+# Keystore folder that is created on CI
+secrets/
