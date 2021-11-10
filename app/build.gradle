@@ -23,8 +23,8 @@ android {
             } else {
                 logger.quiet("local.properties not found. Reading from the env variables.")
                 logger.quiet("Has keystore ${rootProject.file("signing").exists()}")
-                if (rootProject.file("keystore").exists()) {
-                    rootProject.file("keystore").list().each {
+                if (rootProject.file("signing").exists()) {
+                    rootProject.file("signing").list().each {
                         logger.quiet("Found file: $it")
                     }
                 }
@@ -54,8 +54,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.r_config
         }
