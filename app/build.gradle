@@ -20,6 +20,12 @@ android {
                 keyPassword localProps.RELEASE_KEY_PASSWORD
             } else {
                 logger.quiet("local.properties not found. Trying to read from the env variables.")
+                logger.quiet("Has keystore ${rootProject.file("keystore").exists()}")
+                if (rootProject.file("keystore").exists()) {
+                    rootProject.file("keystore").list().each {
+                        logger.quiet("Found file: $it")
+                    }
+                }
                 logger.quiet("Keystore path: ${System.getenv('KEYSTORE_FILE')}")
 
                 storeFile file(System.getenv('KEYSTORE_FILE'))
