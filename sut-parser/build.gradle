@@ -8,9 +8,6 @@ dependencies {
     implementation "junit:junit:4.13"
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 buildscript {
     repositories {
         mavenCentral()
