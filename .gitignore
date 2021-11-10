@@ -52,3 +52,6 @@ captures/
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 /app/release/output.json
+
+# Keystore folder that is created on CI
+keystore/
