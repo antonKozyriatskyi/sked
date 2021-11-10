@@ -63,10 +63,6 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    dexOptions {
-        javaMaxHeapSize "4G"
-    }
-
     lintOptions {
         abortOnError false
     }
