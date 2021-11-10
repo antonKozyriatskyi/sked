@@ -28,7 +28,7 @@ jobs:
         with:
           repository: ${{ secrets.KEYSTORE_GIT_REPO }}
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-          path: signing
+          path: ${{ secrets.KEYSTORE_REPO_TARGET }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
