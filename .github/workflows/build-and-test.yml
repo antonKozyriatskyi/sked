@@ -32,7 +32,7 @@ jobs:
           ./gradlew assembleDebug --stacktrace
 
       - name: Build debug AAB
-          run: |
-            ./gradlew bundleDebug --stacktrace
+        run: |
+          ./gradlew bundleDebug --stacktrace
 
 
