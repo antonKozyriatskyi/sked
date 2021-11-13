@@ -36,7 +36,9 @@ class DayViewFragment : MvpAppCompatFragment(), DayView, DayLessonsAdapter.OnLes
         }
     }
 
-    private lateinit var adapter: DayLessonsAdapter
+    private val adapter: DayLessonsAdapter by lazy {
+        DayLessonsAdapter(this)
+    }
 
     @Inject
     @InjectPresenter
@@ -56,15 +58,16 @@ class DayViewFragment : MvpAppCompatFragment(), DayView, DayLessonsAdapter.OnLes
         return presenter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = container!!.inflate(R.layout.fragment_lessons)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_lessons, container, false)
 
-        val recycler = rootView.find<RecyclerView>(R.id.lessons_recycler)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val recycler = view.find<RecyclerView>(R.id.lessons_recycler)
         recycler.layoutManager = LinearLayoutManager(context)
-        adapter = DayLessonsAdapter(this)
         recycler.adapter = adapter
-
-        return rootView
     }
 
     override fun onLessonClick(lesson: LessonUi) {

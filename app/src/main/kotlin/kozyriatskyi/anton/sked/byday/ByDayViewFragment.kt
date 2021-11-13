@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.TabsOwner
@@ -30,10 +30,17 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
     @InjectPresenter
     lateinit var presenter: ByDayViewPresenter
 
-    private lateinit var adapter: DaysAdapter
-    private lateinit var daysViewPager: ViewPager
+    private val adapter: DaysAdapter by lazy {
+        DaysAdapter(this)
+    }
+    private lateinit var daysViewPager: ViewPager2
 
-    private var tabsOwner: TabsOwner? = null
+    private lateinit var tabsOwner: TabsOwner
+
+    private val titleProvider: TabsOwner.TitleProvider by lazy {
+        val context = requireContext()
+        TabsOwner.TitleProvider { position -> adapter.getTitle(context, position) }
+    }
 
     @ProvidePresenter
     fun providePresenter(): ByDayViewPresenter {
@@ -49,38 +56,34 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if (hidden.not()) {
-            tabsOwner?.setupWithViewPager(daysViewPager, true)
-        }
+        setupTabsIfNeeded(hidden)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val rootView = container!!.inflate(R.layout.fragment_by_day_view)
-        daysViewPager = rootView.find(R.id.byday_pager_days)
-
-        if (isHidden.not()) {
-            tabsOwner?.setupWithViewPager(daysViewPager, true)
-        }
-
-        return rootView
-    }
+    ): View? = inflater.inflate(R.layout.fragment_by_day_view, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        adapter = DaysAdapter(childFragmentManager, requireContext())
+        daysViewPager = view.find(R.id.byday_pager_days)
         daysViewPager.adapter = adapter
+
+        setupTabsIfNeeded(isHidden)
     }
 
     override fun showDays(days: List<ByDayViewItem>) {
+        daysViewPager.offscreenPageLimit = days.size / 2
         adapter.update(days)
     }
 
     override fun showDayAt(todayPosition: Int) {
         daysViewPager.setCurrentItem(todayPosition, false)
+    }
+
+    private fun setupTabsIfNeeded(isHidden: Boolean) {
+        if (isHidden.not() && ::tabsOwner.isInitialized) {
+            tabsOwner.setupWithViewPager(daysViewPager, titleProvider)
+        }
     }
 }

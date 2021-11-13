@@ -1,24 +1,24 @@
 package kozyriatskyi.anton.sked.byweek
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import kozyriatskyi.anton.sked.week.WeekViewFragment
 
-class WeeksAdapter(childFragmentManager: FragmentManager) : FragmentStatePagerAdapter(childFragmentManager) {
+class WeeksAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    private var items: List<WeekTabItem> = emptyList()
+    private var items: List<ByWeekViewItem> = emptyList()
 
-    override fun getItem(i: Int): Fragment = WeekViewFragment.create(items[i].dates)
+    override fun getItemCount(): Int = items.size
 
-    override fun getCount(): Int = items.size
+    override fun createFragment(position: Int): Fragment {
+        return WeekViewFragment.create(items[position].dates)
+    }
 
-    override fun getPageTitle(position: Int): CharSequence = items[position].title
+    fun getTitle(position: Int): String = items[position].title
 
-    override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
-
-    fun update(items: List<WeekTabItem>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(items: List<ByWeekViewItem>) {
         this.items = items
         notifyDataSetChanged()
     }
