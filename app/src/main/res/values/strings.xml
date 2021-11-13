@@ -31,11 +31,8 @@
     <string name="notification_schedule_updated_title" translatable="false">@string/app_name</string>
     <string name="notification_schedule_updated_successfully">Schedule has been updated</string>
     <string name="notification_schedule_updated_unsuccessfully">Failed to update schedule</string>
-
-
-    <!-- Navigation drawer -->
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="notification_channel_name">Schedule updates</string>
+    <string name="notification_channel_description">All schedule update notifications go here</string>
 
 
     <string name="day_of_week_monday">Monday</string>

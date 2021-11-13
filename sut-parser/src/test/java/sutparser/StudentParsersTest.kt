@@ -2,6 +2,7 @@ package sutparser
 
 import kozyriatskyi.anton.sutparser.StudentInfoParser
 import kozyriatskyi.anton.sutparser.StudentScheduleParser
+import org.junit.Ignore
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,6 +15,7 @@ class StudentParsersTest {
     private val infoParser = StudentInfoParser()
     private val scheduleParser = StudentScheduleParser()
 
+    @Ignore
     @Test
     fun test() {
         val faculties = infoParser.getFaculties()

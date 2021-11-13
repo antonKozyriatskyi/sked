@@ -1,24 +1,52 @@
 package kozyriatskyi.anton.sked.util
 
 import android.content.Context
-import com.firebase.jobdispatcher.FirebaseJobDispatcher
-import com.firebase.jobdispatcher.GooglePlayDriver
+import androidx.work.*
 import kozyriatskyi.anton.sked.updater.UpdaterJobService
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
+
+private const val UNIQUE_WORK_NAME = "update-schedule"
 
 class JobManager(private val context: Context) {
 
     fun launchUpdaterJob() {
-        val cancelAllResult = FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
 
-        when (cancelAllResult) {
-            FirebaseJobDispatcher.CANCEL_RESULT_SUCCESS ->
-                logI("Job dispatcher cancel all result: CANCEL_RESULT_SUCCESS")
-            FirebaseJobDispatcher.CANCEL_RESULT_UNKNOWN_ERROR ->
-                logI("Job dispatcher cancel all result: CANCEL_RESULT_UNKNOWN_ERROR")
-            FirebaseJobDispatcher.CANCEL_RESULT_NO_DRIVER_AVAILABLE ->
-                logI("Job dispatcher cancel all result: CANCEL_RESULT_NO_DRIVER_AVAILABLE")
+        val request = PeriodicWorkRequestBuilder<UpdaterJobService>(Duration.ofDays(1))
+            .setConstraints(constraints)
+            .setInitialDelay(calculateInitialDelay(), TimeUnit.SECONDS)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                10L, TimeUnit.MINUTES
+            )
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniquePeriodicWork(
+                UNIQUE_WORK_NAME,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                request
+            )
+    }
+
+
+    private fun calculateInitialDelay(): Long {
+        val now = LocalDateTime.now()
+
+        var targetTime = LocalDateTime.now()
+            .withHour(18)
+            .withMinute(0)
+            .withSecond(0)
+
+        if (targetTime.isBefore(now)) {
+            targetTime = targetTime.plusDays(1)
         }
 
-        UpdaterJobService.start(context)
+        return now.until(targetTime, ChronoUnit.SECONDS)
     }
 }
