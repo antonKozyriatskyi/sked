@@ -82,5 +82,7 @@
         <item>Воскресенье</item>
         <item>В зависимости от локали</item>
     </string-array>
+    <string name="notification_channel_name">Обновления расписания</string>
+    <string name="notification_channel_description">Здесь находяться уведомления об обновлении расписания</string>
 
 </resources>

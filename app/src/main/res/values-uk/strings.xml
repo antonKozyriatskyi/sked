@@ -83,5 +83,7 @@
         <item>Неділя</item>
         <item>В залежності від локалі</item>
     </string-array>
+    <string name="notification_channel_name">Оновлення розкладу</string>
+    <string name="notification_channel_description">Тут знаходяться усі сповіщення про оновлення розкладу</string>
 
 </resources>
