@@ -77,7 +77,7 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
 
     override fun showWeekItems(weekItems: List<ByWeekViewItem>) {
         weeksViewPager.offscreenPageLimit = weekItems.size / 2
-        adapter.update(mapToTabItems(weekItems))
+        adapter.update(weekItems)
     }
 
     override fun showWeekAt(position: Int) {
@@ -89,19 +89,4 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
             tabsOwner.setupWithViewPager(weeksViewPager, titleProvider)
         }
     }
-
-    private fun mapToTabItems(weeks: List<ByWeekViewItem>): List<WeekTabItem> {
-        return weeks.map {
-            val dates = it.dates
-            WeekTabItem(
-                title = it.title,
-                dates = dates
-            )
-        }
-    }
 }
-
-class WeekTabItem(
-    val title: String,
-    val dates: List<LocalDate>
-)

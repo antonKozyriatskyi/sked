@@ -7,7 +7,7 @@ import kozyriatskyi.anton.sked.week.WeekViewFragment
 
 class WeeksAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    private var items: List<WeekTabItem> = emptyList()
+    private var items: List<ByWeekViewItem> = emptyList()
 
     override fun getItemCount(): Int = items.size
 
@@ -18,7 +18,7 @@ class WeeksAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     fun getTitle(position: Int): String = items[position].title
 
     @SuppressLint("NotifyDataSetChanged")
-    fun update(items: List<WeekTabItem>) {
+    fun update(items: List<ByWeekViewItem>) {
         this.items = items
         notifyDataSetChanged()
     }
