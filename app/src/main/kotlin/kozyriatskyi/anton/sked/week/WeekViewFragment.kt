@@ -28,11 +28,12 @@ import javax.inject.Inject
  */
 
 @Suppress("UNCHECKED_CAST")
-class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.OnLessonClickListener {
+class WeekViewFragment : MvpAppCompatFragment(), WeekView,
+    WeekLessonsAdapter.OnLessonClickListener {
 
     companion object {
-        private const val ARG_DATES = "WeekViewFragment::dates"
 
+        private const val ARG_DATES = "WeekViewFragment::dates"
 
         fun create(dates: List<LocalDate>): WeekViewFragment = WeekViewFragment().apply {
             arguments = bundleOf(ARG_DATES to dates)
@@ -44,6 +45,9 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
     lateinit var presenter: WeekViewPresenter
 
     private lateinit var recycler: RecyclerView
+    private val adapter by lazy {
+        WeekLessonsAdapter(requireContext(), this)
+    }
 
     @ProvidePresenterTag(presenterClass = WeekViewPresenter::class)
     fun provideTag(): String {
@@ -59,16 +63,18 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
         return presenter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = container!!.inflate(R.layout.fragment_lessons)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_lessons, container, false)
 
-        recycler = rootView.find(R.id.lessons_recycler)
-        recycler.layoutManager = LinearLayoutManager(context)
-        val adapter = WeekLessonsAdapter(requireContext(), this)
-        recycler.adapter = adapter
-        recycler.addItemDecoration(StickyHeaderItemDecoration(recycler))
-
-        return rootView
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recycler = view.find<RecyclerView>(R.id.lessons_recycler).also {
+            it.adapter = adapter
+            it.layoutManager = LinearLayoutManager(context)
+            it.addItemDecoration(StickyHeaderItemDecoration(it))
+        }
     }
 
     override fun onLessonClick(lesson: LessonUi) {
@@ -76,7 +82,7 @@ class WeekViewFragment : MvpAppCompatFragment(), WeekView, WeekLessonsAdapter.On
     }
 
     override fun showLessons(lessons: List<DayUi>) {
-        (recycler.adapter as WeekLessonsAdapter).update(lessons)
+        adapter.update(lessons)
     }
 
     override fun showError(message: String) {

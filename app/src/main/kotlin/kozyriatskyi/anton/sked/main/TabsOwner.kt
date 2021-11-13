@@ -1,7 +1,13 @@
 package kozyriatskyi.anton.sked.main
 
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 
-interface TabsOwner {
-    fun setupWithViewPager(viewPager: ViewPager, autoRefresh: Boolean)
+fun interface TabsOwner {
+
+    fun setupWithViewPager(viewPager: ViewPager2, titleProvider: TitleProvider)
+
+    fun interface TitleProvider {
+
+        fun getTitle(position: Int): String
+    }
 }

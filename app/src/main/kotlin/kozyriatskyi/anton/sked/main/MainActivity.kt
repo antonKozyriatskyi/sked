@@ -10,9 +10,11 @@ import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.about.AboutActivity
 import kozyriatskyi.anton.sked.audiences.AudiencesActivity
@@ -57,6 +59,8 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     private lateinit var menuProgressItem: MenuItem
 
     private var showProgressBar = false
+
+    private var tabLayoutMediator: TabLayoutMediator? = null
 
     private var nightMode = AppCompatDelegate.getDefaultNightMode()
 
@@ -134,14 +138,24 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         when (menuItem.itemId) {
             R.id.navigation_day -> presenter.onSetDayViewClick()
             R.id.navigation_week -> presenter.onSetWeekViewClick()
-//            R.id.navigation_table -> presenter.onSetTableViewClick()
         }
 
         return true
     }
 
-    override fun setupWithViewPager(viewPager: ViewPager, autoRefresh: Boolean) {
-        tabs.setupWithViewPager(viewPager, autoRefresh)
+    override fun setupWithViewPager(viewPager: ViewPager2, titleProvider: TabsOwner.TitleProvider) {
+        tabLayoutMediator?.detach()
+        tabLayoutMediator = TabLayoutMediator(tabs, viewPager, true) { tab, positions ->
+            tab.text = titleProvider.getTitle(positions)
+        }.apply {
+            attach()
+        }
+
+        // Sometimes selected tab doesn't get scrolled to and appear visible on screen
+        // thus we manually scroll to it
+        tabs.post {
+            tabs.setScrollPosition(viewPager.currentItem, 0f, true)
+        }
     }
 
     override fun setSubtitle(text: String) {
