@@ -38,7 +38,6 @@ class DayViewPresenter(
             .map { dayMapper.createUiModel(date, it) }
             .flowOn(Dispatchers.IO)
             .catch { viewState.showError(it.message.orEmpty()) }
-            .onEach { println("${it.shortDate} | ${it.lessons.size}") }
             .onEach { viewState.showDay(it) }
             .launchIn(scope)
     }
