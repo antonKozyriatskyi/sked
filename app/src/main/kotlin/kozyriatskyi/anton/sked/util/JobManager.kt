@@ -3,7 +3,6 @@ package kozyriatskyi.anton.sked.util
 import android.content.Context
 import androidx.work.*
 import kozyriatskyi.anton.sked.updater.UpdaterJobService
-import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
@@ -17,7 +16,7 @@ class JobManager(private val context: Context) {
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
 
-        val request = PeriodicWorkRequestBuilder<UpdaterJobService>(Duration.ofDays(1))
+        val request = PeriodicWorkRequestBuilder<UpdaterJobService>(1, TimeUnit.DAYS)
             .setConstraints(constraints)
             .setInitialDelay(calculateInitialDelay(), TimeUnit.SECONDS)
             .setBackoffCriteria(
@@ -44,7 +43,11 @@ class JobManager(private val context: Context) {
             .withSecond(0)
 
         if (targetTime.isBefore(now)) {
-            targetTime = targetTime.plusDays(1)
+            targetTime = targetTime
+                .plusDays(1)
+                // Adding extra minute because `until` returns a whole number,
+                // representing the number of complete units between the two date-times
+                .plusMinutes(1)
         }
 
         return now.until(targetTime, ChronoUnit.SECONDS)
