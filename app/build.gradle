@@ -7,7 +7,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     signingConfigs {
-        r_config {
+        release {
             def keystorePropsFile = rootProject.file("secrets/keystore.properties")
 
             if (keystorePropsFile.exists()) {
@@ -50,7 +50,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.r_config
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
