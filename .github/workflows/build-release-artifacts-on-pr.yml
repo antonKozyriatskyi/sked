@@ -62,6 +62,7 @@ jobs:
           git commit -m "Release ${{ env.release_name }} [skip-ci]"
 
           git remote set-url --push origin "https://antonKozyriatskyi:$GITHUB_TOKEN@github.com/${GITHUB_REPOSITORY#*/}"
+          git fetch
           git branch -a
           git push origin "$GITHUB_HEAD_REF"
 
