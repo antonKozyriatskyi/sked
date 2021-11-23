@@ -65,7 +65,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_head }}
+          branch: ${{ github.ref }}
 
       - name: Build release APK
         run: ./gradlew assembleRelease --stacktrace
