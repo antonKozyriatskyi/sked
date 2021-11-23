@@ -17,14 +17,6 @@
         android:theme="@style/AppTheme.ActionBar"
         android:usesCleartextTraffic="true">
 
-        <service
-            android:name=".updater.UpdaterJobService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".login.LoginActivity"
             android:exported="false" />

@@ -7,7 +7,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     signingConfigs {
-        r_config {
+        release {
             def keystorePropsFile = rootProject.file("secrets/keystore.properties")
 
             if (keystorePropsFile.exists()) {
@@ -23,7 +23,7 @@ android {
             } else {
                 logger.quiet("Reading keystore properties from env variables")
 
-                storeFile file(System.getenv('KEYSTORE_FILE'))
+                storeFile rootProject.file(System.getenv('KEYSTORE_FILE'))
                 storePassword System.getenv('KEYSTORE_PASSWORD')
                 keyAlias System.getenv('RELEASE_KEY_ALIAS')
                 keyPassword System.getenv('RELEASE_KEY_PASSWORD')
@@ -36,7 +36,7 @@ android {
         applicationId 'kozyriatskyi.anton.sked'
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 20
+        versionCode 21
         versionName "1.2.2"
 
         javaCompileOptions {
@@ -47,16 +47,20 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.r_config
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".debug"
+
+            splits.abi.enable = false
+            splits.density.enable = false
+            ext.alwaysUpdateBuildId = false
         }
     }
     sourceSets {
