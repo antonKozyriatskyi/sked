@@ -61,6 +61,7 @@ jobs:
           git add "${GITHUB_WORKSPACE}/app/build.gradle"
           git commit -m "Release ${{ env.release_name }} [skip-ci]"
           git remote set-url --push origin https://antonKozyriatskyi:$GITHUB_TOKEN@github.com/sked
+          git log --oneline origin/chore/ci-deploy
 
       - name: Push changes
         uses: ad-m/github-push-action@master
