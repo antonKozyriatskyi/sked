@@ -60,14 +60,10 @@ jobs:
           git config --local user.name "gh"
           git add "${GITHUB_WORKSPACE}/app/build.gradle"
           git commit -m "Release ${{ env.release_name }} [skip-ci]"
-          git remote set-url --push origin https://antonKozyriatskyi:$GITHUB_TOKEN@github.com/sked
-          git log --oneline chore/ci-deploy
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'chore/ci-deploy'
+          repoName = "${GITHUB_REPOSITORY#*/}
+          git remote set-url --push origin "https://antonKozyriatskyi:$GITHUB_TOKEN@github.com/${repoName}"
+          git push origin "$GITHUB_HEAD_REF"
 
       - name: Build release APK
         run: ./gradlew assembleRelease --stacktrace
