@@ -23,7 +23,7 @@ android {
             } else {
                 logger.quiet("Reading keystore properties from env variables")
 
-                storeFile file(System.getenv('KEYSTORE_FILE'))
+                storeFile rootProject.file(System.getenv('KEYSTORE_FILE'))
                 storePassword System.getenv('KEYSTORE_PASSWORD')
                 keyAlias System.getenv('RELEASE_KEY_ALIAS')
                 keyPassword System.getenv('RELEASE_KEY_PASSWORD')
