@@ -20,7 +20,6 @@ apply plugin: 'kotlin'
 
 allprojects {
     repositories {
-        jcenter() // TODO remove when get rid of firebase job dispatcher
         mavenCentral()
         google()
     }
