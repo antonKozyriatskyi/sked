@@ -120,7 +120,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
 
-    implementation "androidx.work:work-runtime-ktx:2.7.0"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-all:$mockitoVersion"
