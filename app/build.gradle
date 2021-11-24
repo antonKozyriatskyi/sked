@@ -11,7 +11,7 @@ android {
             def keystorePropsFile = rootProject.file("secrets/keystore.properties")
 
             if (keystorePropsFile.exists()) {
-                logger.quiet("Reading keystore properties from keystore.properties")
+                logger.info("Reading keystore properties from keystore.properties")
 
                 def props = new Properties()
                 props.load(keystorePropsFile.newDataInputStream())
@@ -21,7 +21,7 @@ android {
                 keyAlias props.RELEASE_KEY_ALIAS
                 keyPassword props.RELEASE_KEY_PASSWORD
             } else {
-                logger.quiet("Reading keystore properties from env variables")
+                logger.info("Reading keystore properties from env variables")
 
                 storeFile rootProject.file(System.getenv('KEYSTORE_FILE'))
                 storePassword System.getenv('KEYSTORE_PASSWORD')
@@ -95,7 +95,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.preference:preference:$preferences"
@@ -104,9 +104,9 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$room"
     implementation "androidx.room:room-ktx:$room"
+    kapt "androidx.room:room-compiler:$room"
     implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
     implementation 'com.google.firebase:firebase-analytics:20.0.0'
-    kapt "androidx.room:room-compiler:$room"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -120,7 +120,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
 
-    implementation "androidx.work:work-runtime-ktx:2.7.0"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.mockito:mockito-all:$mockitoVersion"
