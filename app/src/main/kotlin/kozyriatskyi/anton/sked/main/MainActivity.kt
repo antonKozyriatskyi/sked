@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
@@ -62,8 +60,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     private var tabLayoutMediator: TabLayoutMediator? = null
 
-    private var nightMode = AppCompatDelegate.getDefaultNightMode()
-
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
         Injector.inject(this)
@@ -102,16 +98,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         }
 
         presenter.updateLocale(ConfigurationCompat.getLocales(resources.configuration)[0])
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val defaultNightMode = AppCompatDelegate.getDefaultNightMode()
-        if (nightMode != defaultNightMode) {
-            nightMode = defaultNightMode
-            recreate()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
