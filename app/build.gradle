@@ -11,7 +11,7 @@ android {
             def keystorePropsFile = rootProject.file("secrets/keystore.properties")
 
             if (keystorePropsFile.exists()) {
-                logger.quiet("Reading keystore properties from keystore.properties")
+                logger.info("Reading keystore properties from keystore.properties")
 
                 def props = new Properties()
                 props.load(keystorePropsFile.newDataInputStream())
@@ -21,7 +21,7 @@ android {
                 keyAlias props.RELEASE_KEY_ALIAS
                 keyPassword props.RELEASE_KEY_PASSWORD
             } else {
-                logger.quiet("Reading keystore properties from env variables")
+                logger.info("Reading keystore properties from env variables")
 
                 storeFile rootProject.file(System.getenv('KEYSTORE_FILE'))
                 storePassword System.getenv('KEYSTORE_PASSWORD')
