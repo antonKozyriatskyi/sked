@@ -77,7 +77,7 @@ android {
 }
 
 ext {
-    constraint_layout = '2.1.1'
+    constraint_layout = '2.1.2'
     moxy = '2.2.2'
     dagger = '2.29.1'
     room = '2.3.0'
