@@ -15,12 +15,14 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
+            app:title="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|snap|enterAlways" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_tabs"
+            app:tabIndicatorFullWidth="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="scrollable" />

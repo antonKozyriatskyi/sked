@@ -3,14 +3,13 @@ package kozyriatskyi.anton.sked.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
@@ -35,7 +34,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     NavigationBarView.OnItemSelectedListener {
 
     companion object {
-        private const val KEY_SHOW_PROGRESS = "show_progress"
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -47,8 +45,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     @Inject
     lateinit var userInfoStorage: UserInfoStorage
 
-    private lateinit var tabs: TabLayout
-
     @Inject
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -58,11 +54,12 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     private lateinit var menuProgressItem: MenuItem
 
-    private var showProgressBar = false
+    private lateinit var appbar: AppBarLayout
+    private lateinit var toolbar: Toolbar
+    private lateinit var tabs: TabLayout
+    private lateinit var bottomNav: BottomNavigationView
 
     private var tabLayoutMediator: TabLayoutMediator? = null
-
-    private var nightMode = AppCompatDelegate.getDefaultNightMode()
 
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
@@ -70,13 +67,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         return presenter
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(KEY_SHOW_PROGRESS, showProgressBar)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        showProgressBar = savedInstanceState?.getBoolean(KEY_SHOW_PROGRESS) ?: false
         super.onCreate(savedInstanceState)
 
         checkForFirstLaunch(savedInstanceState)
@@ -84,42 +75,37 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(findViewById(R.id.main_toolbar))
-
+        appbar = findViewById(R.id.main_appbar)
+        toolbar = findViewById(R.id.main_toolbar)
         tabs = findViewById(R.id.main_tabs)
+        bottomNav = findViewById(R.id.main_bottomnavigation_viewmodes)
 
         findViewById<BottomNavigationView>(R.id.main_bottomnavigation_viewmodes)
-                .setOnItemSelectedListener(this)
+            .setOnItemSelectedListener(this)
 
-        byDayViewFragment = supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
-        byWeekViewFragment = supportFragmentManager.findFragmentByTag(ByWeekViewFragment.TAG) ?: ByWeekViewFragment()
+        setupMenu()
+
+        byDayViewFragment =
+            supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
+        byWeekViewFragment =
+            supportFragmentManager.findFragmentByTag(ByWeekViewFragment.TAG) ?: ByWeekViewFragment()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
-                    .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
-                    .commit()
+                .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
+                .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
+                .commit()
         }
 
         presenter.updateLocale(ConfigurationCompat.getLocales(resources.configuration)[0])
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        val defaultNightMode = AppCompatDelegate.getDefaultNightMode()
-        if (nightMode != defaultNightMode) {
-            nightMode = defaultNightMode
-            recreate()
+    private fun setupMenu() {
+        toolbar.inflateMenu(R.menu.main_menu)
+        menuProgressItem = toolbar.menu.findItem(R.id.menu_main_update)
+        toolbar.setOnMenuItemClickListener {
+            onOptionsItemSelected(it)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        menuProgressItem = menu.findItem(R.id.menu_main_update)
-        switchProgress(showProgressBar)
-
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -159,12 +145,10 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     }
 
     override fun setSubtitle(text: String) {
-        supportActionBar?.subtitle = text
+        toolbar.subtitle = text
     }
 
     override fun switchProgress(showProgressBar: Boolean) {
-        this.showProgressBar = showProgressBar
-
         if (showProgressBar) {
             showProgress()
         } else {
@@ -197,17 +181,17 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     override fun setDayView() {
         supportFragmentManager.beginTransaction()
-                .hide(byWeekViewFragment)
-                .show(byDayViewFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
+            .hide(byWeekViewFragment)
+            .show(byDayViewFragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
     }
 
     override fun setWeekView() {
         supportFragmentManager.beginTransaction()
-                .hide(byDayViewFragment)
-                .show(byWeekViewFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
+            .hide(byDayViewFragment)
+            .show(byWeekViewFragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
     }
 }
