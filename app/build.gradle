@@ -85,7 +85,6 @@ ext {
     rxandroid = '2.1.1'
     rxrelay = '2.1.0'
     preferences = '1.1.1'
-    firebase_job_dispatcher = '0.8.5'
     coroutines = '1.5.2'
 
     junitVersion = '4.13'
