@@ -5,6 +5,10 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 android {
     signingConfigs {
         release {
@@ -90,6 +94,8 @@ ext {
 
 dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
+
+    debugImplementation 'com.github.haroldadmin:WhatTheStack:1.0.0-alpha02'
 
     implementation project(':sut-parser')
 
