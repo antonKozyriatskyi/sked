@@ -2,15 +2,29 @@ package kozyriatskyi.anton.sked.intro
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.composethemeadapter.MdcTheme
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.login.LoginView
 import kozyriatskyi.anton.sked.navigation.Destination
 import kozyriatskyi.anton.sked.navigation.Navigator
+import kozyriatskyi.anton.sked.util.takeIf
 import javax.inject.Inject
 
 class IntroFragment : Fragment(R.layout.fragment_intro) {
@@ -35,21 +49,106 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
 
         Injector.inject(this)
 
-        view.findViewById<Button>(R.id.intro_button_student)
-            .setOnClickListener {
-                navigator.goTo(Destination.Login(LoginView.UserType.STUDENT))
-            }
+        view.findViewById<ComposeView>(R.id.intro_compose).apply {
+            setContent {
+                MdcTheme {
+                    val icon = if (allowBackNavigation) Icons.Default.ArrowBack else null
+                    val onNavigateUp = if (allowBackNavigation) {
+                        { navigator.pop() }
+                    } else null
 
-        view.findViewById<Button>(R.id.intro_button_teacher)
-            .setOnClickListener {
-                navigator.goTo(Destination.Login(LoginView.UserType.TEACHER))
-            }
-
-        if (allowBackNavigation) {
-            view.findViewById<MaterialToolbar>(R.id.intro_toolbar).also { toolbar ->
-                toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24)
-                toolbar.setNavigationOnClickListener { navigator.pop() }
+                    IntroScreen(
+                        navigationIcon = icon,
+                        onNavigateUp = onNavigateUp,
+                        onStudentClick = {
+                            navigator.goTo(Destination.Login(LoginView.UserType.STUDENT))
+                        },
+                        onTeacherClick = {
+                            navigator.goTo(Destination.Login(LoginView.UserType.TEACHER))
+                        }
+                    )
+                }
             }
         }
     }
+}
+
+@Composable
+fun IntroScreen(
+    navigationIcon: ImageVector?,
+    onNavigateUp: (() -> Unit)?,
+    onStudentClick: () -> Unit,
+    onTeacherClick: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.intro_title))
+                },
+                navigationIcon = takeIf(navigationIcon != null && onNavigateUp != null) {
+                    IconButton(onClick = onNavigateUp!!) {
+                        Icon(
+                            imageVector = navigationIcon!!,
+                            contentDescription = null
+                        )
+                    }
+                },
+            )
+        }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            SecondaryButton(onClick = onStudentClick) {
+                Text(text = stringResource(id = R.string.login_student))
+            }
+
+            SecondaryButton(onClick = onTeacherClick) {
+                Text(text = stringResource(id = R.string.login_teacher))
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun SecondaryButton(
+    onClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit
+) {
+    val colors = ButtonDefaults.buttonColors(
+        backgroundColor = MaterialTheme.colors.secondary,
+        contentColor = MaterialTheme.colors.onSecondary
+    )
+
+    Button(
+        onClick = onClick,
+        colors = colors,
+        content = content
+    )
+}
+
+@Preview
+@Composable
+fun IntroScreenPreview_allowBack() {
+    IntroScreen(
+        navigationIcon = Icons.Default.ArrowBack,
+        onNavigateUp = { },
+        onStudentClick = { },
+        onTeacherClick = { }
+    )
+}
+
+@Preview
+@Composable
+fun IntroScreenPreview_notAllowBack() {
+    IntroScreen(
+        navigationIcon = null,
+        onNavigateUp = null,
+        onStudentClick = { },
+        onTeacherClick = { }
+    )
 }
