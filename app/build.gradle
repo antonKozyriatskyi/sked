@@ -74,6 +74,14 @@ android {
     compileOptions {
         coreLibraryDesugaringEnabled = true
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.0.5'
+    }
 }
 
 ext {
@@ -87,6 +95,7 @@ ext {
     preferences = '1.1.1'
     coroutines = '1.5.2'
     navComponent = '2.4.0-beta02'
+    compose = '1.0.5'
 
     junitVersion = '4.13'
     mockitoVersion = '1.10.19'
@@ -98,6 +107,17 @@ dependencies {
     debugImplementation 'com.github.haroldadmin:WhatTheStack:1.0.0-alpha02'
 
     implementation project(':sut-parser')
+
+    // Compose Material Design
+    implementation "androidx.compose.material:material:$compose"
+    // Animations
+    implementation "androidx.compose.animation:animation:1.1.0-beta04"
+    // Tooling support (Previews, etc.)
+    implementation "androidx.compose.ui:ui-tooling:$compose"
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
+    // MDC theme adapter
+    implementation "com.google.android.material:compose-theme-adapter:1.1.1"
 
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
