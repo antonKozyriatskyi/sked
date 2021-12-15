@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@android:id/list_container"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+        app:title="@string/settings_title" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/settings_layout_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -17,15 +25,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:text="@string/settings_schedule_update_time"
-
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/settings_tv_update_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
         tools:text="Schedule wasn't updated yet" />
 
 </LinearLayout>

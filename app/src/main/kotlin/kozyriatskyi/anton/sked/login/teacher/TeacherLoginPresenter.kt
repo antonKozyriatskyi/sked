@@ -6,6 +6,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Teacher
+import kozyriatskyi.anton.sked.navigation.Destination
+import kozyriatskyi.anton.sked.navigation.Navigator
 import moxy.InjectViewState
 
 /**
@@ -13,7 +15,10 @@ import moxy.InjectViewState
  */
 
 @InjectViewState
-class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : BasePresenter<TeacherLoginView>() {
+class TeacherLoginPresenter(
+    private val interactor: TeacherLoginInteractor,
+    private val navigator: Navigator
+) : BasePresenter<TeacherLoginView>() {
 
     private val uiModel = TeacherLoginStateModel()
 
@@ -168,7 +173,7 @@ class TeacherLoginPresenter(private val interactor: TeacherLoginInteractor) : Ba
 
         scope.launch {
             withContext(Dispatchers.IO) { interactor.loadSchedule(teacher) }
-                .onSuccess { viewState.openScheduleScreen() }
+                .onSuccess { navigator.goTo(Destination.Schedule) }
                 .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()

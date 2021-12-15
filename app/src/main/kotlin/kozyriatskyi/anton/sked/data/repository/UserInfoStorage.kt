@@ -56,7 +56,6 @@ class UserInfoStorage(private val preferences: SharedPreferences) {
         }
     }
 
-    @Throws(IllegalStateException::class)
     fun getUser(): User = when (preferences.getString(KEY_USER_TYPE, "")) {
         TYPE_STUDENT -> Student().apply {
             this.faculty = preferences.getString(KEY_FACULTY, "")!!
@@ -77,5 +76,6 @@ class UserInfoStorage(private val preferences: SharedPreferences) {
 
     fun getUserName(): String = getUser().name
 
-    fun isFirstLaunch(): Boolean = preferences.getBoolean(UserInfoStorage.KEY_FIRST_LAUNCH, true)
+    fun hasUser(): Boolean = preferences.contains(KEY_USER_TYPE)
+
 }

@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_main_update"
-        android:actionLayout="@layout/action_main_progress"
+        android:id="@+id/menu_schedule_update"
+        android:actionLayout="@layout/action_schedule_progress"
         android:icon="@drawable/ic_notif_update"
         android:title="@string/nav_update"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/main_relogin"
+        android:id="@+id/schedule_relogin"
         android:title="@string/nav_relogin" />
 
     <item
-        android:id="@+id/main_audiences"
+        android:id="@+id/schedule_audiences"
         android:icon="@drawable/nav_audiences"
         android:title="@string/nav_audiences"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/main_preferences"
+        android:id="@+id/schedule_preferences"
         android:icon="@drawable/nav_settings"
         android:title="@string/nav_settings" />
 
     <item
-        android:id="@+id/main_about"
+        android:id="@+id/schedule_about"
         android:icon="@drawable/nav_about"
         android:title="@string/nav_about" />
 

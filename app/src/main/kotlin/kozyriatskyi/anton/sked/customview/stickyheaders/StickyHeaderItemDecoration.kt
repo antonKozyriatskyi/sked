@@ -55,6 +55,10 @@ class StickyHeaderItemDecoration(recyclerView: RecyclerView) : RecyclerView.Item
         }
 
         adapter.registerAdapterDataObserver(dataObserver)
+
+        if (adapter.itemCount > 0) {
+            preprocessHeaders(recyclerView)
+        }
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {

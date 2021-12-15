@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.R
@@ -16,18 +19,21 @@ import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.repository.Time
 import kozyriatskyi.anton.sked.util.setGone
 import kozyriatskyi.anton.sked.util.setVisible
-import moxy.MvpAppCompatActivity
+import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
-class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSelectionSheet.OnTimeSelectListener,
-        View.OnClickListener, DatePickerDialog.OnDateSetListener {
+class AudiencesFragment : MvpAppCompatFragment(R.layout.fragment_free_audiences), AudiencesView,
+    AudiencesTimeSelectionSheet.OnTimeSelectListener,
+    View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     companion object {
         fun start(context: Context) {
-            context.startActivity(Intent(context, AudiencesActivity::class.java))
+            context.startActivity(Intent(context, AudiencesFragment::class.java))
         }
+
+        fun create(): AudiencesFragment = AudiencesFragment()
     }
 
     @Inject
@@ -50,31 +56,33 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
         return presenter
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_free_audiences)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        errorView = view.findViewById(R.id.audiences_error)
+        timesErrorView = view.findViewById(R.id.audiences_times_error)
+        loadingView = view.findViewById(R.id.audiences_loading)
 
-        errorView = findViewById(R.id.audiences_error)
-        timesErrorView = findViewById(R.id.audiences_times_error)
-        loadingView = findViewById(R.id.audiences_loading)
-
-        val retryLoadingAudiencesButton: Button = findViewById(R.id.audiences_error_retry_btn)
+        val retryLoadingAudiencesButton: Button = view.findViewById(R.id.audiences_error_retry_btn)
         retryLoadingAudiencesButton.setOnClickListener(this)
-        val retryLoadingTimesButton: Button = findViewById(R.id.audiences_times_error_retry_btn)
+        val retryLoadingTimesButton: Button =
+            view.findViewById(R.id.audiences_times_error_retry_btn)
         retryLoadingTimesButton.setOnClickListener(this)
 
         adapter = AudiencesAdapter()
-        audiencesList = findViewById<RecyclerView>(R.id.audiences_list).also {
+        audiencesList = view.findViewById<RecyclerView>(R.id.audiences_list).also {
             val columnCount = resources.getInteger(R.integer.audiences_column_number)
-            it.layoutManager = GridLayoutManager(this@AudiencesActivity, columnCount)
+            it.layoutManager = GridLayoutManager(requireContext(), columnCount)
             it.adapter = adapter
         }
 
-        val overlayView = findViewById<OverlayView>(R.id.overlay_view)
-        timeSheet = findViewById<AudiencesTimeSelectionSheet>(R.id.audience_sheet).also {
+        val overlayView = view.findViewById<OverlayView>(R.id.overlay_view)
+        timeSheet = view.findViewById<AudiencesTimeSelectionSheet>(R.id.audience_sheet).also {
             it.setupWithOverlayView(overlayView)
             it.onTimeSelectListener = this
             onDateSetListener = it
+        }
+
+        view.findViewById<Toolbar>(R.id.audiences_toolbar).setNavigationOnClickListener {
+            presenter.onNavigateUpClicked()
         }
     }
 
@@ -91,9 +99,10 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
 
     override fun onTimeSelected(date: String, start: Time, end: Time) {
         presenter.onLoadAudiencesButtonClick(
-                date = date,
-                timeStart = start,
-                timeEnd = end)
+            date = date,
+            timeStart = start,
+            timeEnd = end
+        )
     }
 
     override fun showAudiences(audiences: List<AudienceUi>) {
@@ -154,6 +163,6 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
     override fun onDestroy() {
         super.onDestroy()
 
-        if (isFinishing) Injector.release(this)
+        if (isRemoving) Injector.release(this)
     }
 }

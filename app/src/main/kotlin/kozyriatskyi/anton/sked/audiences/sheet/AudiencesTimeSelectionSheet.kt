@@ -199,8 +199,8 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
             return ContextCompat.getColor(context, typedValue.resourceId)
         }
 
-        val startColor = resolveColor(R.attr.colorPrimaryDark)
-        val endColor = resolveColor(R.attr.colorAccent)
+        val startColor = resolveColor(R.attr.colorPrimaryVariant)
+        val endColor = resolveColor(R.attr.colorSecondary)
 
         val colorEvaluator = ArgbEvaluator()
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {

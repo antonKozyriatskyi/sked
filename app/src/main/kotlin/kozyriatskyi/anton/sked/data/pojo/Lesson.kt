@@ -1,9 +1,11 @@
 package kozyriatskyi.anton.sked.data.pojo
 
+import android.os.Parcelable
 import androidx.annotation.ColorRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.util.DateFormatter
 import java.time.LocalDate
@@ -26,6 +28,7 @@ data class LessonNetwork(
     val whoShort: String
 )
 
+@Parcelize
 data class LessonUi(
     val date: LocalDate,
     val shortDate: String,
@@ -40,7 +43,7 @@ data class LessonUi(
     val who: String,
     val whoShort: String,
     val time: String
-)
+) : Parcelable
 
 @Entity(tableName = "lessons")
 data class LessonDb(

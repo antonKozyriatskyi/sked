@@ -25,7 +25,7 @@
     <string name="day_of_week_sunday">Неділя</string>
 
 
-    <string name="about_activity_title">Про додаток</string>
+    <string name="about_title">Про додаток</string>
     <string name="about_developed_by">Розроблено Антоном Козиряцьким</string>
     <string name="exit">Вийти</string>
     <string name="intro_title">Виберіть свою сторону</string>
@@ -65,7 +65,7 @@
     <string name="lesson_details_who_teacher">Викладач:</string>
     <string name="lesson_details_room">Аудиторія:</string>
     <string name="audiences_title">Аудиторії</string>
-    <string name="audiences_loading_error">Не вдалось заантажити аудиторії</string>
+    <string name="audiences_loading_error">Не вдалось завантажити аудиторії</string>
     <string name="audience_status_free">Вілно</string>
     <string name="audience_status_busy">Зайнято</string>
     <string name="audience_sheet_title">Дата та час</string>

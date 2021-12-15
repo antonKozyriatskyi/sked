@@ -1,20 +1,20 @@
 package kozyriatskyi.anton.sked.byweek
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.main.TabsOwner
+import kozyriatskyi.anton.sked.schedule.TabsOwner
 import kozyriatskyi.anton.sked.util.DateFormatter
 import kozyriatskyi.anton.sked.util.find
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import java.time.LocalDate
 import javax.inject.Inject
 
 /**
@@ -36,9 +36,13 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
 
     private lateinit var weeksViewPager: ViewPager2
 
-    private val adapter: WeeksAdapter by lazy {
-        WeeksAdapter(this)
-    }
+//    private val adapter: WeeksAdapter by lazy {
+//        WeeksAdapter(this).also {
+//            it.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+//        }
+//    }
+//
+    private lateinit var adapter: WeeksAdapter
 
     private lateinit var tabsOwner: TabsOwner
 
@@ -52,14 +56,14 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
         return presenter
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        tabsOwner = context as TabsOwner
-    }
-
     override fun onHiddenChanged(hidden: Boolean) {
         setupTabsIfNeeded(hidden)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        tabsOwner = parentFragment as TabsOwner
     }
 
     override fun onCreateView(
@@ -70,13 +74,16 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         weeksViewPager = view.find(R.id.byweek_pager_weeks)
+        adapter = WeeksAdapter(this).apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        }
         weeksViewPager.adapter = adapter
 
         setupTabsIfNeeded(isHidden)
     }
 
     override fun showWeekItems(weekItems: List<ByWeekViewItem>) {
-        weeksViewPager.offscreenPageLimit = weekItems.size / 2
+        weeksViewPager.offscreenPageLimit = 2
         adapter.update(weekItems)
     }
 
@@ -88,5 +95,10 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
         if (isHidden.not() && ::tabsOwner.isInitialized) {
             tabsOwner.setupWithViewPager(weeksViewPager, titleProvider)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        weeksViewPager.adapter = null
     }
 }

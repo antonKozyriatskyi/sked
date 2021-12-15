@@ -11,9 +11,4 @@
         android:icon="@drawable/nav_week"
         android:title="@string/nav_by_week_schedule" />
 
-    <!--<item
-        android:id="@+id/navigation_table"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="Table" />-->
-
 </menu>

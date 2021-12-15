@@ -1,4 +1,4 @@
-package kozyriatskyi.anton.sked.main
+package kozyriatskyi.anton.sked.schedule
 
 import androidx.viewpager2.widget.ViewPager2
 

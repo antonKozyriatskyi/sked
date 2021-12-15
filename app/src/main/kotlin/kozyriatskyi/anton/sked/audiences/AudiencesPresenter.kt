@@ -5,13 +5,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
+import kozyriatskyi.anton.sked.navigation.Navigator
 import kozyriatskyi.anton.sked.repository.Time
 import moxy.InjectViewState
 
 @InjectViewState
 class AudiencesPresenter(
     private val interactor: AudiencesInteractor,
-    private val mapper: AudiencesMapper
+    private val mapper: AudiencesMapper,
+    private val navigator: Navigator
 ) : BasePresenter<AudiencesView>() {
 
     private var audiencesJob: Job? = null
@@ -96,5 +98,9 @@ class AudiencesPresenter(
 
         audiencesJob?.cancel()
         timesJob?.cancel()
+    }
+
+    fun onNavigateUpClicked() {
+        navigator.pop()
     }
 }

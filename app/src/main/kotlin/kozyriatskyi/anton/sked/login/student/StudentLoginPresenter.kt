@@ -8,15 +8,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Student
+import kozyriatskyi.anton.sked.navigation.Destination
+import kozyriatskyi.anton.sked.navigation.Navigator
 import moxy.InjectViewState
-import javax.inject.Inject
 
 /**
  * Created by Anton on 07.07.2017.
  */
 
 @InjectViewState
-class StudentLoginPresenter @Inject constructor(private val interactor: StudentLoginInteractor) :
+class StudentLoginPresenter(
+    private val interactor: StudentLoginInteractor,
+    private val navigator: Navigator
+) :
     BasePresenter<StudentLoginView>() {
 
     private val uiModel = StudentLoginStateModel()
@@ -214,7 +218,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
     private fun loadSchedule(student: Student) {
         scope.launch {
             withContext(Dispatchers.IO) { interactor.loadSchedule(student) }
-                .onSuccess { viewState.openScheduleScreen() }
+                .onSuccess { navigator.goTo(Destination.Schedule) }
                 .onFailure {
                     if (uiModel.isConnectionAvailable) {
                         setErrorState()

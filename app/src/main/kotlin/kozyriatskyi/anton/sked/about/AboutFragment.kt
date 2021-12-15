@@ -1,47 +1,48 @@
 package kozyriatskyi.anton.sked.about
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.BuildConfig
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Library
+import kozyriatskyi.anton.sked.di.Injector
+import kozyriatskyi.anton.sked.navigation.Navigator
 import java.util.*
+import javax.inject.Inject
 
-class AboutActivity : AppCompatActivity(), View.OnClickListener {
+class AboutFragment : Fragment(R.layout.fragment_about), View.OnClickListener {
 
     companion object {
-        private const val URL_PRIVACY_POLICY = "https://firebasestorage.googleapis.com/v0/b/sked-a797c.appspot.com/o/privacy_policy.html?alt=media&token=cf8d3456-a2ff-49c8-a9f6-f879e0e55775"
+        private const val URL_PRIVACY_POLICY =
+            "https://firebasestorage.googleapis.com/v0/b/sked-a797c.appspot.com/o/privacy_policy.html?alt=media&token=cf8d3456-a2ff-49c8-a9f6-f879e0e55775"
         private const val URL_VK = "http://vk.com/kozyriatskyi"
         private const val URL_TG_APP = "tg://resolve?domain=antonKozyriatskyi"
         private const val URL_TG_WEB = "http://www.telegram.me/antonKozyriatskyi"
 
-        fun start(context: Context) {
-            context.startActivity(Intent(context, AboutActivity::class.java))
-        }
+        fun create(): AboutFragment = AboutFragment()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val recycler = findViewById<RecyclerView>(R.id.about_rv_libraries)
+        val recycler = view.findViewById<RecyclerView>(R.id.about_rv_libraries)
         recycler.adapter = LibrariesAdapter(getLibraries())
-        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.layoutManager = LinearLayoutManager(requireContext())
 
-        findViewById<TextView>(R.id.about_tv_version).text = getString(R.string.about_version_name,
-                BuildConfig.VERSION_NAME)
-        findViewById<TextView>(R.id.about_tv_telegram).setOnClickListener(this)
-        findViewById<TextView>(R.id.about_tv_vk).setOnClickListener(this)
-        findViewById<TextView>(R.id.about_tv_privacy_policy).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.about_tv_version).text = getString(
+            R.string.about_version_name,
+            BuildConfig.VERSION_NAME
+        )
+        view.findViewById<TextView>(R.id.about_tv_telegram).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.about_tv_vk).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.about_tv_privacy_policy).setOnClickListener(this)
     }
-
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -53,7 +54,7 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun tryOpenUri(uri: String): Boolean {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-        val canOpen = intent.resolveActivity(packageManager) != null
+        val canOpen = intent.resolveActivity(requireActivity().packageManager) != null
         if (canOpen) startActivity(intent)
 
         return canOpen
@@ -63,7 +64,9 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
         val libs = ArrayList<Library>()
 
-        libs.add(Library("Jsoup", """The MIT License
+        libs.add(
+            Library(
+                "Jsoup", """The MIT License
 Copyright © 2009 - 2017 Jonathan Hedley (jonathan@hedley.net)
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -77,9 +80,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""))
+"""
+            )
+        )
 
-        libs.add(Library("RxRelay", """Copyright 2014 Netflix, Inc.
+        libs.add(
+            Library(
+                "RxRelay", """Copyright 2014 Netflix, Inc.
 Copyright 2015 Jake Wharton
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -92,9 +99,13 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License."""))
+limitations under the License."""
+            )
+        )
 
-        libs.add(Library("RxAndroid", """Copyright 2015 The RxAndroid authors
+        libs.add(
+            Library(
+                "RxAndroid", """Copyright 2015 The RxAndroid authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -106,9 +117,13 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License."""))
+limitations under the License."""
+            )
+        )
 
-        libs.add(Library("RxJava", """Copyright (c) 2016-present, RxJava Contributors.
+        libs.add(
+            Library(
+                "RxJava", """Copyright (c) 2016-present, RxJava Contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -120,9 +135,13 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License."""))
+limitations under the License."""
+            )
+        )
 
-        libs.add(Library("Dagger 2", """Copyright 2012 The Dagger Authors
+        libs.add(
+            Library(
+                "Dagger 2", """Copyright 2012 The Dagger Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -134,9 +153,13 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License."""))
+limitations under the License."""
+            )
+        )
 
-        libs.add(Library("Moxy", """The MIT License (MIT)
+        libs.add(
+            Library(
+                "Moxy", """The MIT License (MIT)
 
 Copyright (c) 2016 Arello Mobile
 
@@ -156,7 +179,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE."""))
+SOFTWARE."""
+            )
+        )
 
         libs.sortBy { it.name }
 

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="exit">Выйти</string>
-    <string name="about_activity_title">О приложении</string>
+    <string name="about_title">О приложении</string>
     <string name="about_developed_by">Разработано Антоном Козыряцким</string>
     <string name="intro_title">Выберите свою сторону</string>
     <string name="login_course">Курс</string>

@@ -22,8 +22,6 @@ interface TeacherLoginView : MvpView {
 
     fun enableUi(setEnabled: Boolean)
 
-    fun openScheduleScreen()
-
     fun setLoaded(isLoaded: Boolean)
 
     fun onConnectionChanged(isConnectionAvailableNow: Boolean)

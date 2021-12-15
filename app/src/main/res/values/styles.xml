@@ -1,43 +1,42 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorOnPrimary">#fff</item>
+        <item name="colorPrimaryVariant">@color/primaryDark</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">#fff</item>
+
+        <item name="android:statusBarColor">?colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">?colorPrimaryVariant</item>
         <item name="android:spinnerMode">dialog</item>
-        <item name="preferenceTheme">@style/AppTheme.Preference</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
-        <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>
-        <item name="actionBarTheme">@style/AppTheme.AppBarOverlay</item>
+
+        <item name="tabStyle">@style/Widget.Sked.TabLayout.Colored</item>
+        <item name="actionBarStyle">@style/Widget.MaterialComponents.ActionBar.Primary</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Primary</item>
+        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
     </style>
 
-    <style name="AppTheme.Splash" parent="AppTheme">
+    <style name="Base.AppTheme.Splash" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="AppTheme">
-        <item name="windowActionBar">true</item>
-        <item name="windowNoTitle">false</item>
-    </style>
+    <style name="AppTheme" parent="Base.AppTheme" />
 
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.Splash" parent="Base.AppTheme.Splash" />
 
     <!-- Custom Preference Theme -->
-    <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="preferenceFragmentCompatStyle">@style/AppTheme.PreferenceFragment</item>
-    </style>
-
-    <!-- Custom Style for PreferenceFragmentCompat -->
-    <style name="AppTheme.PreferenceFragment" parent="PreferenceFragment.Material">
-        <item name="android:layout">@layout/fragment_settings</item>
-    </style>
-
     <style name="WindowTransition.Fade" parent="">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="Widget.Sked.TabLayout.Colored" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="tabIndicatorColor">?attr/colorSecondary</item>
     </style>
 
 </resources>

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.Audiences
+import kozyriatskyi.anton.sked.navigation.Navigator
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
 import kozyriatskyi.anton.sutparser.AudiencesParser
 
@@ -12,8 +13,11 @@ class AudiencesModule {
 
     @Audiences
     @Provides
-    fun providePresenter(interactor: AudiencesInteractor, mapper: AudiencesMapper): AudiencesPresenter =
-            AudiencesPresenter(interactor, mapper)
+    fun providePresenter(
+        interactor: AudiencesInteractor,
+        mapper: AudiencesMapper,
+        navigator: Navigator
+    ): AudiencesPresenter = AudiencesPresenter(interactor, mapper, navigator)
 
 
     @Audiences

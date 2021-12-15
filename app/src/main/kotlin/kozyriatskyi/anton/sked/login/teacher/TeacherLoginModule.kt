@@ -8,6 +8,7 @@ import kozyriatskyi.anton.sked.data.provider.ParsedTeacherInfoProvider
 import kozyriatskyi.anton.sked.data.repository.ConnectionStateProvider
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.di.Login
+import kozyriatskyi.anton.sked.navigation.Navigator
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
@@ -24,8 +25,8 @@ class TeacherLoginModule {
         ParsedTeacherInfoProvider(TeacherInfoParser())
 
     @Provides
-    fun providePresenter(interactor: TeacherLoginInteractor): TeacherLoginPresenter =
-        TeacherLoginPresenter(interactor)
+    fun providePresenter(interactor: TeacherLoginInteractor, navigator: Navigator): TeacherLoginPresenter =
+        TeacherLoginPresenter(interactor, navigator)
 
     @Provides
     @Login

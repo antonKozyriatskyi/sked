@@ -4,10 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="kozyriatskyi.anton.sked.audiences.AudiencesActivity">
+    tools:context="kozyriatskyi.anton.sked.audiences.AudiencesFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/audiences_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/audiences_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:title="@string/audiences_title" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -20,15 +35,14 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include layout="@layout/activity_free_audiences_loading" />
+        <include layout="@layout/fragment_free_audiences_loading" />
 
-        <include layout="@layout/activity_free_audiences_error" />
+        <include layout="@layout/fragment_free_audiences_error" />
 
-        <include layout="@layout/activity_free_audiences_times_error" />
+        <include layout="@layout/fragment_free_audiences_times_error" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

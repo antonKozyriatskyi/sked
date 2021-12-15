@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sked.login.student
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +12,9 @@ import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.login.ItemSpinnerAdapter
-import kozyriatskyi.anton.sked.login.LoginActivity
+import kozyriatskyi.anton.sked.login.LoginFragment
 import kozyriatskyi.anton.sked.login.OnInternetConnectionChangeListener
 import kozyriatskyi.anton.sked.login.OnLoadingStateChangeListener
-import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.util.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
@@ -24,7 +22,7 @@ import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterView.OnItemSelectedListener,
-        LoginActivity.OnLoadButtonClickListener {
+        LoginFragment.OnLoadButtonClickListener {
 
     companion object {
         const val TAG = "STUDENT_FRAGMENT"
@@ -56,19 +54,20 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
         return presenter
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        if (context is OnInternetConnectionChangeListener) {
-            onInternetConnectionChangeListener = context
+        val parent = parentFragment
+        if (parent is OnInternetConnectionChangeListener) {
+            onInternetConnectionChangeListener = parent
         } else {
-            throw ClassCastException("context $context must implement OnInternetConnectionChangeListener")
+            throw ClassCastException("parentFragment $parentFragment must implement OnInternetConnectionChangeListener")
         }
 
-        if (context is OnLoadingStateChangeListener) {
-            onLoadingStateChangeListener = context
+        if (parent is OnLoadingStateChangeListener) {
+            onLoadingStateChangeListener = parent
         } else {
-            throw ClassCastException("context $context must implement OnLoadingStateChangeListener")
+            throw ClassCastException("parentFragment $parentFragment must implement OnLoadingStateChangeListener")
         }
     }
 
@@ -89,11 +88,11 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
         coursesSpinner.onItemSelectedListener = this
         groupsSpinner.onItemSelectedListener = this
 
-        errorDialog = AlertDialog.Builder(context!!)
+        errorDialog = AlertDialog.Builder(requireContext())
                 .setCancelable(false)
                 .setNegativeButton(R.string.exit) { dialog, _ ->
                     dialog.dismiss()
-                    activity!!.finish()
+                    requireActivity().finish()
                 }
                 .setPositiveButton(R.string.retry) { dialog, _ ->
                     dialog.dismiss()
@@ -167,11 +166,6 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
             coursesSpinner.setDisabled()
             groupsSpinner.setDisabled()
         }
-    }
-
-    override fun openScheduleScreen() {
-        MainActivity.start(context!!)
-        activity!!.finish()
     }
 
     override fun setLoaded(isLoaded: Boolean) {

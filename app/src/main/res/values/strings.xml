@@ -1,8 +1,6 @@
 <resources>
 
     <string name="app_name" translatable="false">Sked</string>
-    <!--<string name="main_activity_title" translatable="false">@string/app_name</string>-->
-
 
     <!-- Login screen -->
     <string name="login_error_schedule">Error fetching schedule</string>
@@ -96,7 +94,7 @@
 
 
     <!-- About screen -->
-    <string name="about_activity_title">About</string>
+    <string name="about_title">About</string>
     <string name="about_privacy_policy">Privacy policy</string>
     <string name="about_version_name" translatable="false">Sked v%1$s.</string>
     <string name="about_developed_by">Developed by Anton Kozyriatskyi</string>

@@ -1,6 +1,5 @@
 package kozyriatskyi.anton.sked.byday
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +7,8 @@ import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
-import kozyriatskyi.anton.sked.main.TabsOwner
+import kozyriatskyi.anton.sked.schedule.TabsOwner
 import kozyriatskyi.anton.sked.util.find
-import kozyriatskyi.anton.sked.util.inflate
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -30,9 +28,12 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
     @InjectPresenter
     lateinit var presenter: ByDayViewPresenter
 
-    private val adapter: DaysAdapter by lazy {
-        DaysAdapter(this)
-    }
+//    private val adapter: DaysAdapter by lazy {
+//        DaysAdapter(this)
+//    }
+//
+    private lateinit var adapter: DaysAdapter
+
     private lateinit var daysViewPager: ViewPager2
 
     private lateinit var tabsOwner: TabsOwner
@@ -49,14 +50,14 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
         return presenter
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        tabsOwner = context as TabsOwner
-    }
-
     override fun onHiddenChanged(hidden: Boolean) {
         setupTabsIfNeeded(hidden)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        tabsOwner = parentFragment as TabsOwner
     }
 
     override fun onCreateView(
@@ -67,6 +68,7 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         daysViewPager = view.find(R.id.byday_pager_days)
+        adapter = DaysAdapter(this)
         daysViewPager.adapter = adapter
 
         setupTabsIfNeeded(isHidden)
@@ -85,5 +87,10 @@ class ByDayViewFragment : MvpAppCompatFragment(), ByDayView {
         if (isHidden.not() && ::tabsOwner.isInitialized) {
             tabsOwner.setupWithViewPager(daysViewPager, titleProvider)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        daysViewPager.adapter = null
     }
 }

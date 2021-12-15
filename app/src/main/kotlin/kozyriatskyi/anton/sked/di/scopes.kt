@@ -15,6 +15,10 @@ annotation class MainScreen
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
+annotation class ScheduleScreen
+
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ByDay
 
 @Scope
@@ -44,3 +48,7 @@ annotation class Login
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Audiences
+
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Intro

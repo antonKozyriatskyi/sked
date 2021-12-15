@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_graph"
+    tools:ignore="InvalidNavigation">
+
+    <fragment
+        android:id="@+id/dest_intro_screen"
+        android:name="kozyriatskyi.anton.sked.intro.IntroFragment">
+
+        <action
+            android:id="@+id/action_intro_to_login_screen"
+            app:destination="@id/dest_login_screen"
+            app:popUpTo="@id/dest_intro_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dest_login_screen"
+        android:name="kozyriatskyi.anton.sked.login.LoginFragment">
+
+        <action
+            android:id="@+id/action_login_to_schedule_screen"
+            app:destination="@id/dest_schedule_screen"
+            app:popUpTo="@id/dest_schedule_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dest_schedule_screen"
+        android:name="kozyriatskyi.anton.sked.schedule.ScheduleFragment">
+
+        <action
+            android:id="@+id/action_schedule_to_intro_screen"
+            app:destination="@id/dest_intro_screen"
+            app:popUpTo="@id/dest_schedule_screen" />
+
+        <action
+            android:id="@+id/action_schedule_to_audiences_screen"
+            app:destination="@id/dest_audiences_screen"
+            app:popUpTo="@id/dest_schedule_screen" />
+
+        <action
+            android:id="@+id/action_schedule_to_settings_screen"
+            app:destination="@id/dest_settings_screen"
+            app:popUpTo="@id/dest_schedule_screen" />
+
+        <action
+            android:id="@+id/action_schedule_to_about_screen"
+            app:destination="@id/dest_about_screen"
+            app:popUpTo="@id/dest_schedule_screen" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dest_audiences_screen"
+        android:name="kozyriatskyi.anton.sked.audiences.AudiencesFragment" />
+
+    <fragment
+        android:id="@+id/dest_settings_screen"
+        android:name="kozyriatskyi.anton.sked.settings.SettingsScreenFragment" />
+
+    <fragment
+        android:id="@+id/dest_about_screen"
+        android:name="kozyriatskyi.anton.sked.about.AboutFragment" />
+
+</navigation>

@@ -1,13 +1,12 @@
 package kozyriatskyi.anton.sked.main
 
+import androidx.navigation.NavController
 import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
-import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
-import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
-import kozyriatskyi.anton.sked.repository.ScheduleProvider
-import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.di.MainScreen
+import kozyriatskyi.anton.sked.navigation.Navigator
 import kozyriatskyi.anton.sked.util.DateManipulator
 
 /**
@@ -17,19 +16,15 @@ import kozyriatskyi.anton.sked.util.DateManipulator
 @Module
 class MainModule {
 
+    private val navigator: Navigator by lazy {
+        Navigator()
+    }
+
     @Provides
     fun provideInteractor(
-        scheduleRepository: ScheduleStorage,
-        mapper: LessonMapper,
-        scheduleLoader: ScheduleProvider,
-        userInfoStorage: UserInfoStorage,
         dateManipulator: DateManipulator,
         appConfigurationManager: AppConfigurationManager
     ): MainInteractor = MainInteractor(
-        scheduleRepository,
-        mapper,
-        scheduleLoader,
-        userInfoStorage,
         dateManipulator,
         appConfigurationManager
     )
@@ -38,7 +33,15 @@ class MainModule {
     @Provides
     fun providePresenter(
         userInfoStorage: UserInfoStorage,
-        userSettingsStorage: UserSettingsStorage,
-        interactor: MainInteractor
-    ): MainPresenter = MainPresenter(userInfoStorage, userSettingsStorage, interactor)
+        interactor: MainInteractor,
+        navigator: Navigator
+    ): MainPresenter = MainPresenter(userInfoStorage, interactor, navigator)
+
+    @MainScreen
+    @Provides
+    fun provideNavigator(): Navigator = navigator
+
+    fun updateNavComponent(navController: NavController) {
+        navigator.updateNavController(navController)
+    }
 }
