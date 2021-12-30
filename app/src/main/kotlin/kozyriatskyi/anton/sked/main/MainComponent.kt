@@ -1,18 +1,29 @@
 package kozyriatskyi.anton.sked.main
 
-import dagger.Component
-import kozyriatskyi.anton.sked.di.AppComponent
+import dagger.Subcomponent
+import kozyriatskyi.anton.sked.audiences.AudiencesComponent
 import kozyriatskyi.anton.sked.di.MainScreen
-import kozyriatskyi.anton.sked.navigation.Navigator
+import kozyriatskyi.anton.sked.flow.main.MainFlowSubcomponentsModule
+import kozyriatskyi.anton.sked.flow.main.MainFlowViewModel
+import kozyriatskyi.anton.sked.screen.schedule.ScheduleComponent
+import kozyriatskyi.anton.sked.settings.SettingsComponent
 
 @MainScreen
-@Component(
-    modules = [MainModule::class],
-    dependencies = [AppComponent::class]
-)
+@Subcomponent(modules = [MainModule::class, MainFlowSubcomponentsModule::class])
 interface MainComponent {
 
-    fun provideNavigator(): Navigator
+    fun viewModel(): MainFlowViewModel
+
+    fun scheduleComponent(): ScheduleComponent
+
+    fun audiencesComponent(): AudiencesComponent
+
+    fun settingsComponent(): SettingsComponent
 
     fun inject(activity: MainActivity)
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): MainComponent
+    }
 }

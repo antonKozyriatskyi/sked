@@ -1,15 +1,20 @@
 package kozyriatskyi.anton.sked.byday
 
 import kozyriatskyi.anton.sked.R
+import kozyriatskyi.anton.sked.data.pojo.DayMapper
+import kozyriatskyi.anton.sked.data.pojo.LessonDb
+import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class ByDayViewItemMapper {
+class ByDayViewItemMapper(
+    private val dayMapper: DayMapper
+) {
 
-    fun create(date: LocalDate): ByDayViewItem {
+    fun create(date: LocalDate, lessons: List<LessonDb>): ByDayViewItem {
         return ByDayViewItem(
             title = getName(date.dayOfWeek),
-            date = date
+            day = dayMapper.createUiModel(date = date, lessons = lessons)
         )
     }
 

@@ -4,11 +4,12 @@ import androidx.navigation.NavController
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.intro.IntroFragment
 import kozyriatskyi.anton.sked.login.LoginFragment
+import javax.inject.Inject
 
 /**
  * Created by Backbase R&D B.V. on 27.11.2021.
  */
-class Navigator {
+class Navigator @Inject constructor() {
 
     private var pendingActions: MutableList<(NavController) -> Unit> = mutableListOf()
 

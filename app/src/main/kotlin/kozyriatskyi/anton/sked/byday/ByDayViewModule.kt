@@ -3,6 +3,7 @@ package kozyriatskyi.anton.sked.byday
 import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
+import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.DateManipulator
 
@@ -27,5 +28,7 @@ class ByDayViewModule {
     )
 
     @Provides
-    fun provideByDayViewItemMapper(): ByDayViewItemMapper = ByDayViewItemMapper()
+    fun provideByDayViewItemMapper(dayMapper: DayMapper): ByDayViewItemMapper = ByDayViewItemMapper(dayMapper)
+
+
 }

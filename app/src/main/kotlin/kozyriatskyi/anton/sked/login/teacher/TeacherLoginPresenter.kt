@@ -8,6 +8,7 @@ import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.navigation.Destination
 import kozyriatskyi.anton.sked.navigation.Navigator
+import kozyriatskyi.anton.sked.screen.login.teacher.TeacherLoginInteractor
 import moxy.InjectViewState
 
 /**

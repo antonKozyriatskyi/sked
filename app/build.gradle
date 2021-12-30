@@ -73,6 +73,9 @@ android {
 
     compileOptions {
         coreLibraryDesugaringEnabled = true
+
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -82,6 +85,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.0.5'
     }
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 ext {
@@ -111,13 +118,15 @@ dependencies {
     // Compose Material Design
     implementation "androidx.compose.material:material:$compose"
     // Animations
-    implementation "androidx.compose.animation:animation:1.1.0-beta04"
+    implementation "androidx.compose.animation:animation:1.1.0-rc01"
     // Tooling support (Previews, etc.)
     implementation "androidx.compose.ui:ui-tooling:$compose"
     // Integration with ViewModels
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
     // MDC theme adapter
-    implementation "com.google.android.material:compose-theme-adapter:1.1.1"
+    implementation "com.google.android.material:compose-theme-adapter:1.1.2"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02"
+    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
 
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -142,6 +151,7 @@ dependencies {
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navComponent")
     implementation("androidx.navigation:navigation-ui-ktx:$navComponent")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"

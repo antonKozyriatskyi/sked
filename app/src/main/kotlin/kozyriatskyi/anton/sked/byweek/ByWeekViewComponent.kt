@@ -1,14 +1,16 @@
 package kozyriatskyi.anton.sked.byweek
 
-import dagger.Component
-import kozyriatskyi.anton.sked.di.AppComponent
+import dagger.Subcomponent
 import kozyriatskyi.anton.sked.di.ByWeek
 
 @ByWeek
-@Component(
-    modules = [ByWeekViewModule::class],
-    dependencies = [AppComponent::class]
-)
+@Subcomponent(modules = [ByWeekViewModule::class])
 interface ByWeekViewComponent {
+
     fun inject(fragment: ByWeekViewFragment)
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): ByWeekViewComponent
+    }
 }

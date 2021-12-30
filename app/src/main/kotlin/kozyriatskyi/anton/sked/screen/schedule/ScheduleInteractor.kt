@@ -1,4 +1,4 @@
-package kozyriatskyi.anton.sked.schedule
+package kozyriatskyi.anton.sked.screen.schedule
 
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE

@@ -1,17 +1,20 @@
 package kozyriatskyi.anton.sked.data.pojo
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
+import kotlinx.parcelize.Parcelize
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.util.DateFormatter
 import java.time.DayOfWeek
 import java.time.LocalDate
 
+@Parcelize
 class DayUi(
     val date: LocalDate,
     @StringRes val name: Int,
     val shortDate: String,
     val lessons: List<LessonUi>
-)
+) : Parcelable
 
 class DayMapper(
     private val lessonMapper: LessonMapper,

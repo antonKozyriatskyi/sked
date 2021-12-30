@@ -1,16 +1,19 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import dagger.Component
-import kozyriatskyi.anton.sked.di.AppComponent
+import dagger.Subcomponent
 import kozyriatskyi.anton.sked.di.Login
-import kozyriatskyi.anton.sked.di.module.ConnectionModule
-import kozyriatskyi.anton.sked.main.MainComponent
+import kozyriatskyi.anton.sked.screen.login.teacher.TeacherLoginViewModel
 
 @Login
-@Component(
-    modules = [TeacherLoginModule::class, ConnectionModule::class],
-    dependencies = [AppComponent::class, MainComponent::class]
-)
+@Subcomponent(modules = [TeacherLoginModule::class])
 interface TeacherLoginComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): TeacherLoginComponent
+    }
+
+    fun viewModel(): TeacherLoginViewModel
+
     fun inject(teacherFragment: TeacherLoginFragment)
 }

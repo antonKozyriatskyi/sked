@@ -1,4 +1,4 @@
-package kozyriatskyi.anton.sked.schedule
+package kozyriatskyi.anton.sked.screen.schedule
 
 import dagger.Module
 import dagger.Provides
@@ -9,6 +9,7 @@ import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.navigation.Navigator
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
+import kozyriatskyi.anton.sked.schedule.SchedulePresenter
 import kozyriatskyi.anton.sked.util.DateManipulator
 
 /**

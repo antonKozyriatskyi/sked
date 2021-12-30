@@ -18,7 +18,7 @@ class DaysAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = items.size
 
     override fun createFragment(position: Int): Fragment {
-        return DayViewFragment.create(items[position].date)
+        return DayViewFragment.create(items[position].day.date)
     }
 
     fun getTitle(context: Context, position: Int): String {

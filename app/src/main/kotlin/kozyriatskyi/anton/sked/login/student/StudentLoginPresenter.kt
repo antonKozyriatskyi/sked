@@ -10,6 +10,8 @@ import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.Student
 import kozyriatskyi.anton.sked.navigation.Destination
 import kozyriatskyi.anton.sked.navigation.Navigator
+import kozyriatskyi.anton.sked.screen.login.student.StudentLoginInteractor
+import kozyriatskyi.anton.sked.screen.login.student.StudentLoginStateModel
 import moxy.InjectViewState
 
 /**
@@ -20,8 +22,7 @@ import moxy.InjectViewState
 class StudentLoginPresenter(
     private val interactor: StudentLoginInteractor,
     private val navigator: Navigator
-) :
-    BasePresenter<StudentLoginView>() {
+) : BasePresenter<StudentLoginView>() {
 
     private val uiModel = StudentLoginStateModel()
 
@@ -38,15 +39,15 @@ class StudentLoginPresenter(
     override fun attachView(view: StudentLoginView) {
         super.attachView(view)
 
-        viewState.restorePositions(
-            uiModel.facultyPosition,
-            uiModel.coursePosition,
-            uiModel.groupPosition
-        )
+//        viewState.restorePositions(
+//            uiModel.facultyPosition,
+//            uiModel.coursePosition,
+//            uiModel.groupPosition
+//        )
     }
 
     fun onFacultyChosen(faculty: String, facultyId: String, position: Int) {
-        uiModel.facultyPosition = position
+//        uiModel.facultyPosition = position
 
         student.faculty = faculty
         student.facultyId = facultyId
@@ -55,7 +56,7 @@ class StudentLoginPresenter(
     }
 
     fun onCourseChosen(course: String, courseId: String, position: Int) {
-        uiModel.coursePosition = position
+//        uiModel.coursePosition = position
 
         student.course = course
         student.courseId = courseId
@@ -64,7 +65,7 @@ class StudentLoginPresenter(
     }
 
     fun onGroupChosen(group: String, groupId: String, position: Int) {
-        uiModel.groupPosition = position
+//        uiModel.groupPosition = position
 
         student.group = group
         student.groupId = groupId
@@ -87,7 +88,7 @@ class StudentLoginPresenter(
 
     private fun setLoadingState() {
         with(uiModel) {
-            isLoading = true
+//            isLoading = true
             viewState.enableUi(enableUi)
             viewState.switchProgress(showProgress)
             viewState.switchError(show = false)
@@ -98,7 +99,7 @@ class StudentLoginPresenter(
 
     private fun setLoadedState() {
         with(uiModel) {
-            isLoaded = true
+//            isLoaded = true
             viewState.enableUi(enableUi)
             viewState.switchProgress(showProgress)
         }
@@ -108,11 +109,13 @@ class StudentLoginPresenter(
 
     private fun setNotLoadedState() {
         with(uiModel) {
-            isError = false
-            isLoading = false
-            isLoaded = false
+//            isError = false
+//            isLoading = false
+//            isLoaded = false
             viewState.enableUi(enableUi)
             viewState.switchProgress(showProgress)
+
+
         }
 
         viewState.setLoaded(false)
@@ -120,7 +123,7 @@ class StudentLoginPresenter(
 
     private fun setErrorState() {
         with(uiModel) {
-            isError = true
+//            isError = true
             viewState.enableUi(enableUi)
             viewState.switchProgress(showProgress)
             viewState.switchError(show = false)
@@ -241,7 +244,7 @@ class StudentLoginPresenter(
     }
 
     private fun onConnectionStateChanged(isConnectionAvailableNow: Boolean) {
-        uiModel.isConnectionAvailable = isConnectionAvailableNow
+//        uiModel.isConnectionAvailable = isConnectionAvailableNow
         viewState.enableUi(uiModel.enableUi)
         viewState.switchProgress(uiModel.showProgress)
         if (isConnectionAvailableNow.not()) viewState.switchError(show = false)

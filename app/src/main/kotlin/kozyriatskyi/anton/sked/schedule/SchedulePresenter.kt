@@ -11,6 +11,7 @@ import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.navigation.Destination
 import kozyriatskyi.anton.sked.navigation.Navigator
+import kozyriatskyi.anton.sked.screen.schedule.ScheduleInteractor
 import moxy.InjectViewState
 
 @InjectViewState

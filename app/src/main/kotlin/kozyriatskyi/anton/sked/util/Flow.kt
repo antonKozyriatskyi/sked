@@ -18,6 +18,19 @@ fun <T> Flow<T>.onFirstEmit(action: suspend (T) -> Unit): Flow<T> = flow {
     }
 }
 
+fun <T> Flow<T>.afterFirstEmit(action: suspend (T) -> Unit): Flow<T> = flow {
+    var isFirstEmit = true
+
+    collect { value ->
+        emit(value)
+
+        if (isFirstEmit) {
+            isFirstEmit = false
+            action(value)
+        }
+    }
+}
+
 fun <T> Flow<T>.batched(capacity: Int): Flow<List<T>> = flow {
     val items = ArrayList<T>(capacity)
 

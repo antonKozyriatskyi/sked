@@ -1,6 +1,7 @@
 package kozyriatskyi.anton.sked.main
 
 import android.os.Bundle
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.moxy.MvpAppCompatActivity
+import kozyriatskyi.anton.sked.screen.SkedApp
 import kozyriatskyi.anton.sked.util.awaitFragmentAttached
 import kozyriatskyi.anton.sked.util.awaitFragmentCreated
 import moxy.presenter.InjectPresenter
@@ -41,7 +43,11 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         setup(savedInstanceState)
 
         setTheme(R.style.AppTheme)
-        setContentView(R.layout.activity_main)
+        setContentView(ComposeView(this).apply {
+            setContent {
+                SkedApp()
+            }
+        })
     }
 
     private fun setup(savedInstanceState: Bundle?) {

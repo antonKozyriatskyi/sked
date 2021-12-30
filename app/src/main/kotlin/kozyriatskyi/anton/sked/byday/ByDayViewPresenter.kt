@@ -64,7 +64,8 @@ class ByDayViewPresenter(
                 }
                     .map(Pair<LocalDate, Boolean>::first)
             }
-            .map { dates -> dates.map(itemMapper::create) }
+            .map { emptyList() }
+//            .map { dates -> dates.map(itemMapper::create) }
 
     }
 
@@ -74,7 +75,7 @@ class ByDayViewPresenter(
         showCurrentWeek: Boolean
     ) = scope.launch {
         val position = when {
-            showCurrentWeek -> items.indexOfFirst { it.date == today }
+            showCurrentWeek -> items.indexOfFirst { it.day.date == today }
             else -> 0
         }
 

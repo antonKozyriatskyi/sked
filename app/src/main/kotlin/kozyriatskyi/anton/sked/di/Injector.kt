@@ -5,11 +5,8 @@ import android.content.Context
 import androidx.navigation.NavController
 import kozyriatskyi.anton.sked.audiences.AudiencesComponent
 import kozyriatskyi.anton.sked.audiences.AudiencesFragment
-import kozyriatskyi.anton.sked.audiences.DaggerAudiencesComponent
 import kozyriatskyi.anton.sked.byday.ByDayViewFragment
-import kozyriatskyi.anton.sked.byday.DaggerByDayViewComponent
 import kozyriatskyi.anton.sked.byweek.ByWeekViewFragment
-import kozyriatskyi.anton.sked.byweek.DaggerByWeekViewComponent
 import kozyriatskyi.anton.sked.day.DaggerDayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewFragment
 import kozyriatskyi.anton.sked.day.DayViewModule
@@ -20,19 +17,13 @@ import kozyriatskyi.anton.sked.login.DaggerLoginComponent
 import kozyriatskyi.anton.sked.login.LoginFragment
 import kozyriatskyi.anton.sked.login.LoginModule
 import kozyriatskyi.anton.sked.login.LoginView
-import kozyriatskyi.anton.sked.login.student.DaggerStudentLoginComponent
 import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
-import kozyriatskyi.anton.sked.login.teacher.DaggerTeacherLoginComponent
 import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
-import kozyriatskyi.anton.sked.main.DaggerMainComponent
 import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.main.MainComponent
 import kozyriatskyi.anton.sked.main.MainModule
-import kozyriatskyi.anton.sked.schedule.DaggerScheduleComponent
 import kozyriatskyi.anton.sked.schedule.ScheduleFragment
-import kozyriatskyi.anton.sked.settings.DaggerSettingsComponent
 import kozyriatskyi.anton.sked.settings.SettingsScreenFragment
-import kozyriatskyi.anton.sked.updater.DaggerUpdaterComponent
 import kozyriatskyi.anton.sked.updater.UpdaterJobService
 import kozyriatskyi.anton.sked.week.DaggerWeekViewComponent
 import kozyriatskyi.anton.sked.week.WeekViewFragment
@@ -54,10 +45,7 @@ object Injector {
     }
 
     private val mainComponent: MainComponent by lazy {
-        DaggerMainComponent.builder()
-            .mainModule(mainModule)
-            .appComponent(appComponent)
-            .build()
+        appComponent.mainComponent().create()
     }
 
     private val mainModule: MainModule by lazy(::MainModule)
@@ -65,10 +53,7 @@ object Injector {
     private var audiencesComponent: AudiencesComponent? = null
         get() {
             if (field == null) {
-                field = DaggerAudiencesComponent.builder()
-                    .appComponent(appComponent)
-                    .mainComponent(mainComponent)
-                    .build()
+                field = mainComponent.audiencesComponent()
             }
             return field
         }
@@ -86,10 +71,7 @@ object Injector {
     }
 
     fun inject(fragment: ScheduleFragment) {
-        DaggerScheduleComponent.builder()
-            .mainComponent(mainComponent)
-            .appComponent(appComponent)
-            .build()
+        mainComponent.scheduleComponent()
             .inject(fragment)
     }
 
@@ -102,18 +84,11 @@ object Injector {
     }
 
     fun inject(fragment: StudentLoginFragment) {
-        DaggerStudentLoginComponent.builder()
-            .mainComponent(mainComponent)
-            .appComponent(appComponent)
-            .build()
-            .inject(fragment)
+        appComponent.studentLoginComponent().create().inject(fragment)
     }
 
     fun inject(fragment: TeacherLoginFragment) {
-        DaggerTeacherLoginComponent.builder()
-            .mainComponent(mainComponent)
-            .appComponent(appComponent)
-            .build()
+        appComponent.teacherLoginComponent().create()
             .inject(fragment)
     }
 
@@ -134,31 +109,22 @@ object Injector {
     }
 
     fun inject(fragment: ByDayViewFragment) {
-        DaggerByDayViewComponent.builder()
-            .appComponent(appComponent)
-            .build()
+        mainComponent.scheduleComponent().byDayViewComponent()
             .inject(fragment)
     }
 
     fun inject(fragment: ByWeekViewFragment) {
-        DaggerByWeekViewComponent.builder()
-            .appComponent(appComponent)
-            .build()
+        mainComponent.scheduleComponent().byWeekViewComponent()
             .inject(fragment)
     }
 
     fun inject(service: UpdaterJobService) {
-        DaggerUpdaterComponent.builder()
-            .appComponent(appComponent)
-            .build()
+        appComponent.updaterComponent().create()
             .inject(service)
     }
 
     fun inject(fragment: SettingsScreenFragment) {
-        DaggerSettingsComponent.builder()
-            .mainComponent(mainComponent)
-            .appComponent(appComponent)
-            .build()
+        mainComponent.settingsComponent()
             .inject(fragment)
     }
 

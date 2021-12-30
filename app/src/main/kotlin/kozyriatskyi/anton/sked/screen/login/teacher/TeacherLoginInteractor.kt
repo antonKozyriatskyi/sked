@@ -1,4 +1,4 @@
-package kozyriatskyi.anton.sked.login.teacher
+package kozyriatskyi.anton.sked.screen.login.teacher
 
 import kotlinx.coroutines.flow.Flow
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
@@ -17,9 +17,9 @@ import kozyriatskyi.anton.sked.util.JobManager
 
 class TeacherLoginInteractor(
     private val teacherInfoProvider: TeacherInfoProvider,
-    private val userInfoStorage: UserInfoStorage, // to write info into
-    private val scheduleProvider: ScheduleProvider, // to get lessons from
-    private val scheduleRepository: ScheduleStorage, // to write lessons into
+    private val userInfoStorage: UserInfoStorage,
+    private val scheduleProvider: ScheduleProvider,
+    private val scheduleRepository: ScheduleStorage,
     private val connectionStateProvider: ConnectionStateProvider,
     private val mapper: LessonMapper,
     private val jobManager: JobManager,
