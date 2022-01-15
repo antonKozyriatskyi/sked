@@ -54,8 +54,8 @@ class StudentLoginInteractor(
             )
         }
 
-    fun loadGroups(courseId: String): Result<List<Item>> = kotlin.runCatching {
-        studentInfoProvider.getGroups(courseId)
+    fun loadGroups(facultyId: String, courseId: String): Result<List<Item>> = kotlin.runCatching {
+        studentInfoProvider.getGroups(facultyId, courseId)
     }
         .onFailure {
             val msg = """

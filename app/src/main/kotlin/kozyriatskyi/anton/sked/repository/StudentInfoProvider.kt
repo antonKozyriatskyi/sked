@@ -8,5 +8,5 @@ import kozyriatskyi.anton.sked.data.pojo.Item
 interface StudentInfoProvider {
     fun getFaculties(): List<Item>
     fun getCourses(facultyId: String): List<Item>
-    fun getGroups(courseId: String): List<Item>
+    fun getGroups(facultyId: String, courseId: String): List<Item>
 }

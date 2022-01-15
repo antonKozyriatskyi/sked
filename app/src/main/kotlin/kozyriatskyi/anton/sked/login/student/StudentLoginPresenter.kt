@@ -189,7 +189,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
         retryAction = { loadGroups(courseId) }
 
         scope.launch {
-            withContext(Dispatchers.IO) { interactor.loadGroups(courseId) }
+            withContext(Dispatchers.IO) { interactor.loadGroups(student.facultyId, courseId) }
                 .onSuccess { groups ->
                     viewState.showGroups(groups)
                     if (groups.isEmpty()) {
