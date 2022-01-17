@@ -23,9 +23,10 @@ class ScheduleProviderModule {
 
     @App
     @Provides
-    fun provideNetworkStudentScheduleLoader(dateFormatter: DateFormatter): StudentScheduleProvider {
-        return ParsedStudentScheduleProvider(StudentScheduleParser(), dateFormatter)
-    }
+    fun provideNetworkStudentScheduleLoader(
+        api: StudentApi,
+        dateFormatter: DateFormatter
+    ): StudentScheduleProvider = ApiStudentScheduleProvider(api, dateFormatter)
 
     @App
     @Provides
@@ -35,8 +36,10 @@ class ScheduleProviderModule {
 
     @App
     @Provides
-    fun provideScheduleLoader(studentScheduleLoader: Lazy<StudentScheduleProvider>,
-                              teacherScheduleLoader: Lazy<TeacherScheduleProvider>): ScheduleProvider {
+    fun provideScheduleLoader(
+        studentScheduleLoader: Lazy<StudentScheduleProvider>,
+        teacherScheduleLoader: Lazy<TeacherScheduleProvider>
+    ): ScheduleProvider {
         return ParsedScheduleLoader(studentScheduleLoader, teacherScheduleLoader)
     }
 }
