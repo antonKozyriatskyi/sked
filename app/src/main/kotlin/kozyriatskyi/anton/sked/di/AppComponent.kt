@@ -4,15 +4,13 @@ import android.content.Context
 import dagger.Component
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
+import kozyriatskyi.anton.sked.data.api.StudentApi
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
-import kozyriatskyi.anton.sked.di.module.AppModule
-import kozyriatskyi.anton.sked.di.module.MapperModule
-import kozyriatskyi.anton.sked.di.module.ScheduleProviderModule
-import kozyriatskyi.anton.sked.di.module.StorageModule
+import kozyriatskyi.anton.sked.di.module.*
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.util.DateFormatter
@@ -25,7 +23,7 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
  */
 
 @App
-@Component(modules = [AppModule::class, StorageModule::class, MapperModule::class, ScheduleProviderModule::class])
+@Component(modules = [AppModule::class, StorageModule::class, MapperModule::class, ScheduleProviderModule::class, NetworkingModule::class])
 interface AppComponent {
     fun appContext(): Context
     fun jobManager(): JobManager
@@ -41,4 +39,5 @@ interface AppComponent {
     fun dateManipulator(): DateManipulator
     fun dateFormatter(): DateFormatter
     fun appConfigurationManager(): AppConfigurationManager
+    fun studentApi(): StudentApi
 }
