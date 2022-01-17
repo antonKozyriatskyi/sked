@@ -3,12 +3,14 @@ package kozyriatskyi.anton.sked.di.module
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.BuildConfig
 import kozyriatskyi.anton.sked.data.LocalDateJsonAdapter
 import kozyriatskyi.anton.sked.data.api.StudentApi
 import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.di.App
 import kozyriatskyi.anton.sked.util.DateFormatter
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
@@ -30,6 +32,13 @@ class NetworkingModule {
         .callTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
         .connectTimeout(60, TimeUnit.SECONDS)
+        .apply {
+            if (BuildConfig.DEBUG) {
+                val interceptor = HttpLoggingInterceptor()
+                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+                addInterceptor(interceptor)
+            }
+        }
         .build()
 
     @App
