@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.main
 
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
@@ -16,18 +17,25 @@ class MainInteractor(
     private val scheduleLoader: ScheduleProvider,
     private val userInfoStorage: UserInfoStorage,
     private val dateManipulator: DateManipulator,
-    private val appConfigurationManager: AppConfigurationManager
+    private val appConfigurationManager: AppConfigurationManager,
+    private val analyticsManager: AnalyticsManager
 ) {
 
-    fun updateSchedule(): Result<Unit> = kotlin.runCatching {
-        val schedule = scheduleLoader.getSchedule(
-            user = userInfoStorage.getUser(),
-            startDate = dateManipulator.getFirstDayOfWeekDate(),
-            endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
-        )
+    fun updateSchedule(): Result<Unit> {
+        return kotlin.runCatching {
+            val schedule = scheduleLoader.getSchedule(
+                user = userInfoStorage.getUser(),
+                startDate = dateManipulator.getFirstDayOfWeekDate(),
+                endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
+            )
 
-        val dbSchedule = lessonMapper.networkToDb(schedule)
-        scheduleStorage.saveLessons(dbSchedule)
+            val dbSchedule = lessonMapper.networkToDb(schedule)
+            scheduleStorage.saveLessons(dbSchedule)
+        }.onFailure {
+            analyticsManager.logFailure(
+                throwable = it
+            )
+        }
     }
 
     fun updateLocale(locale: Locale) {
