@@ -5,6 +5,7 @@ import dagger.Component
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
 import kozyriatskyi.anton.sked.data.api.StudentApi
+import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
@@ -40,4 +41,5 @@ interface AppComponent {
     fun dateFormatter(): DateFormatter
     fun appConfigurationManager(): AppConfigurationManager
     fun studentApi(): StudentApi
+    fun teacherApi(): TeacherApi
 }
