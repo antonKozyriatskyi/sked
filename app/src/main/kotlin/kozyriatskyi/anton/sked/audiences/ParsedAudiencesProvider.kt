@@ -9,7 +9,7 @@ import kozyriatskyi.anton.sutparser.ParsedItem
 
 class ParsedAudiencesProvider(private val parser: AudiencesParser) : AudiencesProvider {
 
-    override fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork> {
+    override suspend fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork> {
         return parser.getAudiences(date, lessonStart, lessonEnd)
                 .map {
                     AudienceNetwork(
@@ -20,7 +20,7 @@ class ParsedAudiencesProvider(private val parser: AudiencesParser) : AudiencesPr
                 }
     }
 
-    override fun getTimes(): StartEndTimePair {
+    override suspend fun getTimes(): StartEndTimePair {
         val (start, end) = parser.getTimes()
 
         fun mapToTimes(parsedItems: List<ParsedItem>): List<Time> = parsedItems.map { Time(id = it.id, value = it.value) }
