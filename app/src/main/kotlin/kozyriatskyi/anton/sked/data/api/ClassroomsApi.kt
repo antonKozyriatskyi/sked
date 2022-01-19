@@ -7,10 +7,10 @@ import retrofit2.http.Query
 
 interface ClassroomsApi {
 
-    @GET("audiences/times")
+    @GET("classrooms/times")
     suspend fun getTimes(): GetClassroomsTimesResponse
 
-    @GET("audiences")
+    @GET("classrooms")
     suspend fun getAudiences(
         @Query("date") date: String,
         @Query("lessonStart") lessonStart: String,
