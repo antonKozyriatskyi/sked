@@ -21,7 +21,7 @@ class MainInteractor(
     private val analyticsManager: AnalyticsManager
 ) {
 
-    fun updateSchedule(): Result<Unit> {
+    suspend fun updateSchedule(): Result<Unit> {
         return kotlin.runCatching {
             val schedule = scheduleLoader.getSchedule(
                 user = userInfoStorage.getUser(),

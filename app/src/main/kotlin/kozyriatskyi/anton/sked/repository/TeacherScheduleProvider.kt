@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 interface TeacherScheduleProvider {
 
-    fun getSchedule(
+    suspend fun getSchedule(
         departmentId: String,
         teacherId: String,
         startDate: LocalDate,

@@ -1,16 +1,16 @@
 package kozyriatskyi.anton.sked.audiences
 
+import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.pojo.AudienceNetwork
+import kozyriatskyi.anton.sked.data.pojo.TimeNetwork
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
 import kozyriatskyi.anton.sked.repository.StartEndTimePair
 import kozyriatskyi.anton.sked.repository.Time
-import kozyriatskyi.anton.sutparser.AudiencesParser
-import kozyriatskyi.anton.sutparser.ParsedItem
 
-class ParsedAudiencesProvider(private val parser: AudiencesParser) : AudiencesProvider {
+class ApiAudiencesProvider(private val api: ClassroomsApi) : AudiencesProvider {
 
-    override fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork> {
-        return parser.getAudiences(date, lessonStart, lessonEnd)
+    override suspend fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork> {
+        return api.getAudiences(date, lessonStart, lessonEnd)
                 .map {
                     AudienceNetwork(
                             number = it.number,
@@ -20,10 +20,10 @@ class ParsedAudiencesProvider(private val parser: AudiencesParser) : AudiencesPr
                 }
     }
 
-    override fun getTimes(): StartEndTimePair {
-        val (start, end) = parser.getTimes()
+    override suspend fun getTimes(): StartEndTimePair {
+        val (start, end) = api.getTimes()
 
-        fun mapToTimes(parsedItems: List<ParsedItem>): List<Time> = parsedItems.map { Time(id = it.id, value = it.value) }
+        fun mapToTimes(items: List<TimeNetwork>): List<Time> = items.map { Time(id = it.id, value = it.value) }
 
         return StartEndTimePair(mapToTimes(start), mapToTimes(end))
     }

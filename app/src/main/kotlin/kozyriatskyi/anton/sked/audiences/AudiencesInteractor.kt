@@ -10,7 +10,7 @@ class AudiencesInteractor(
     private val analyticsManager: AnalyticsManager
 ) {
 
-    fun getAudiences(
+    suspend fun getAudiences(
         date: String,
         lessonStart: String,
         lessonEnd: String
@@ -24,7 +24,7 @@ class AudiencesInteractor(
     }
 
 
-    fun getTimes(): Result<Pair<List<Time>, List<Time>>> = kotlin.runCatching {
+    suspend fun getTimes(): Result<Pair<List<Time>, List<Time>>> = kotlin.runCatching {
         audiencesProvider.getTimes()
     }
         .onFailure {

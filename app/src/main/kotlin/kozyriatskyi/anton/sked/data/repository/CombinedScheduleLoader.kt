@@ -13,7 +13,7 @@ import java.time.LocalDate
 /**
  * Created by Anton on 26.07.2017.
  */
-class ParsedScheduleLoader(
+class CombinedScheduleLoader(
     studentScheduleProvider: Lazy<StudentScheduleProvider>,
     teacherScheduleProvider: Lazy<TeacherScheduleProvider>
 ) : ScheduleProvider {
@@ -26,7 +26,7 @@ class ParsedScheduleLoader(
         teacherScheduleProvider.get()
     }
 
-    override fun getSchedule(
+    override suspend fun getSchedule(
         user: User,
         startDate: LocalDate,
         endDate: LocalDate

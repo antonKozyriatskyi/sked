@@ -3,8 +3,9 @@ package kozyriatskyi.anton.sked.login.teacher
 import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
+import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
-import kozyriatskyi.anton.sked.data.provider.ParsedTeacherInfoProvider
+import kozyriatskyi.anton.sked.data.provider.ApiTeacherInfoProvider
 import kozyriatskyi.anton.sked.data.repository.ConnectionStateProvider
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.di.Login
@@ -13,15 +14,14 @@ import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
 import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.JobManager
-import kozyriatskyi.anton.sutparser.TeacherInfoParser
 
 @Module
 class TeacherLoginModule {
 
     @Provides
     @Login
-    fun provideTeacherInfoProvider(): TeacherInfoProvider =
-        ParsedTeacherInfoProvider(TeacherInfoParser())
+    fun provideTeacherInfoProvider(api: TeacherApi): TeacherInfoProvider =
+        ApiTeacherInfoProvider(api)
 
     @Provides
     fun providePresenter(interactor: TeacherLoginInteractor): TeacherLoginPresenter =

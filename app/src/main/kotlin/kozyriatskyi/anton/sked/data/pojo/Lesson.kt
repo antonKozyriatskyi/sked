@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.util.DateFormatter
 import java.time.LocalDate
@@ -13,6 +14,7 @@ import java.time.LocalDate
  * Created by Anton on 23.02.2017.
  */
 
+@JsonClass(generateAdapter = true)
 data class LessonNetwork(
     val date: LocalDate,
     val number: String,
