@@ -7,7 +7,7 @@ import kozyriatskyi.anton.sked.data.api.StudentApi
 import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.data.provider.ApiStudentScheduleProvider
 import kozyriatskyi.anton.sked.data.provider.ApiTeacherScheduleProvider
-import kozyriatskyi.anton.sked.data.repository.ParsedScheduleLoader
+import kozyriatskyi.anton.sked.data.repository.CombinedScheduleLoader
 import kozyriatskyi.anton.sked.di.App
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.StudentScheduleProvider
@@ -41,6 +41,6 @@ class ScheduleProviderModule {
         studentScheduleLoader: Lazy<StudentScheduleProvider>,
         teacherScheduleLoader: Lazy<TeacherScheduleProvider>
     ): ScheduleProvider {
-        return ParsedScheduleLoader(studentScheduleLoader, teacherScheduleLoader)
+        return CombinedScheduleLoader(studentScheduleLoader, teacherScheduleLoader)
     }
 }
