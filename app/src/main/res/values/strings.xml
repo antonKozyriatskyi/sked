@@ -103,8 +103,8 @@
 
 
     <!-- Audiences screen -->
-    <string name="audiences_title">Audiences</string>
-    <string name="audiences_loading_error">Error loading audiences</string>
+    <string name="audiences_title">Classrooms</string>
+    <string name="audiences_loading_error">Error loading classrooms</string>
     <string name="audiences_loading_retry" translatable="false">@string/retry</string>
     <string name="audience_status_free">Free</string>
     <string name="audience_status_busy">Busy</string>
