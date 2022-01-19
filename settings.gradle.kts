@@ -1,1 +1,1 @@
-include(":app", ":sut-parser")
+include(":app")

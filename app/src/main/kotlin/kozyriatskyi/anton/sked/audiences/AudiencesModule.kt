@@ -7,7 +7,6 @@ import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.Audiences
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
-import kozyriatskyi.anton.sutparser.AudiencesParser
 
 @Module
 class AudiencesModule {
@@ -34,9 +33,5 @@ class AudiencesModule {
     @Provides
     fun provideAudiencesProvider(api: ClassroomsApi): AudiencesProvider =
             ApiAudiencesProvider(api)
-//        return FakeAudiencesProvider()
 
-    @Audiences
-    @Provides
-    fun provideAudiencesParser(): AudiencesParser = AudiencesParser()
 }
