@@ -8,7 +8,7 @@ import java.time.LocalDate
  */
 interface StudentScheduleProvider {
 
-    fun getSchedule(
+    suspend fun getSchedule(
         facultyId: String,
         courseId: String,
         groupId: String,

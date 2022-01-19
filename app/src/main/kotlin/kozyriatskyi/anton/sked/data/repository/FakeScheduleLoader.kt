@@ -30,7 +30,7 @@ class FakeScheduleLoader : ScheduleProvider {
     }
 
 
-    override fun getSchedule(
+    override suspend fun getSchedule(
         user: User,
         startDate: LocalDate,
         endDate: LocalDate

@@ -10,14 +10,10 @@ import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
  */
 class ApiTeacherInfoProvider(private val api: TeacherApi) : TeacherInfoProvider {
 
-    override fun getDepartments(): List<Item> = api.getDepartments()
-        .execute()
-        .body()!!
+    override suspend fun getDepartments(): List<Item> = api.getDepartments()
         .map(::toItem)
 
-    override fun getTeachers(departmentId: String): List<Item> = api.getTeachers(departmentId)
-        .execute()
-        .body()!!
+    override suspend fun getTeachers(departmentId: String): List<Item> = api.getTeachers(departmentId)
         .map(::toItem)
 
     private fun toItem(item: LoginItem): Item = Item(item.id, item.value)

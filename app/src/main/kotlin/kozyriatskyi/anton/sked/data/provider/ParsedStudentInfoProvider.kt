@@ -10,17 +10,17 @@ import kozyriatskyi.anton.sutparser.StudentInfoParser
  */
 class ParsedStudentInfoProvider(private val parser: StudentInfoParser) : StudentInfoProvider {
 
-    override fun getFaculties(): List<Item> {
+    override suspend fun getFaculties(): List<Item> {
         return parser.getFaculties()
                 .map(::toItem)
     }
 
-    override fun getCourses(facultyId: String): List<Item> {
+    override suspend fun getCourses(facultyId: String): List<Item> {
         return parser.getCourses(facultyId)
                 .map(::toItem)
     }
 
-    override fun getGroups(facultyId: String, courseId: String): List<Item> {
+    override suspend fun getGroups(facultyId: String, courseId: String): List<Item> {
         return parser.getGroups(facultyId = facultyId, courseId = courseId)
                 .map(::toItem)
     }

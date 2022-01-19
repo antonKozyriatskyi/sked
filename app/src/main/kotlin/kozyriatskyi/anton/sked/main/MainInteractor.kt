@@ -19,7 +19,7 @@ class MainInteractor(
     private val appConfigurationManager: AppConfigurationManager
 ) {
 
-    fun updateSchedule(): Result<Unit> = kotlin.runCatching {
+    suspend fun updateSchedule(): Result<Unit> = kotlin.runCatching {
         val schedule = scheduleLoader.getSchedule(
             user = userInfoStorage.getUser(),
             startDate = dateManipulator.getFirstDayOfWeekDate(),

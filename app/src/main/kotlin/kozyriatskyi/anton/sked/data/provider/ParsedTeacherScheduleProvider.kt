@@ -14,7 +14,7 @@ class ParsedTeacherScheduleProvider(
     private val dateFormatter: DateFormatter
 ) : TeacherScheduleProvider {
 
-    override fun getSchedule(
+    override suspend fun getSchedule(
         departmentId: String,
         teacherId: String,
         startDate: LocalDate,

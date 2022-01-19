@@ -29,7 +29,7 @@ class TeacherLoginInteractor(
 
     fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
 
-    fun loadDepartments(): Result<List<Item>> = kotlin.runCatching {
+    suspend fun loadDepartments(): Result<List<Item>> = kotlin.runCatching {
         teacherInfoProvider.getDepartments()
     }.onFailure {
         analyticsManager.logFailure(
@@ -38,7 +38,7 @@ class TeacherLoginInteractor(
         )
     }
 
-    fun loadTeachers(departmentId: String): Result<List<Item>> = kotlin.runCatching {
+    suspend fun loadTeachers(departmentId: String): Result<List<Item>> = kotlin.runCatching {
         teacherInfoProvider.getTeachers(departmentId)
     }.onFailure {
         val msg = """
@@ -52,7 +52,7 @@ class TeacherLoginInteractor(
         )
     }
 
-    fun loadSchedule(teacher: Teacher): Result<List<LessonNetwork>> {
+    suspend fun loadSchedule(teacher: Teacher): Result<List<LessonNetwork>> {
         return kotlin.runCatching {
             scheduleProvider.getSchedule(
                 user = teacher,

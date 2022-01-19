@@ -23,7 +23,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
 
     private val student = Student()
 
-    private var retryAction: (() -> Unit)? = null
+    private var retryAction: (suspend () -> Unit)? = null
 
     override fun onFirstViewAttach() {
 
@@ -71,7 +71,7 @@ class StudentLoginPresenter @Inject constructor(private val interactor: StudentL
     fun retry() {
         retryAction?.let {
             viewState.switchError(show = false)
-            it()
+            scope.launch { it() }
         }
     }
 

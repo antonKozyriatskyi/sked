@@ -6,5 +6,5 @@ import java.time.LocalDate
 
 interface ScheduleProvider {
 
-    fun getSchedule(user: User, startDate: LocalDate, endDate: LocalDate): List<LessonNetwork>
+    suspend fun getSchedule(user: User, startDate: LocalDate, endDate: LocalDate): List<LessonNetwork>
 }

@@ -26,7 +26,7 @@ class ParsedScheduleLoader(
         teacherScheduleProvider.get()
     }
 
-    override fun getSchedule(
+    override suspend fun getSchedule(
         user: User,
         startDate: LocalDate,
         endDate: LocalDate

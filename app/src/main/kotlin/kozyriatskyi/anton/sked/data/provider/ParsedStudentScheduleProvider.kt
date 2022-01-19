@@ -14,7 +14,7 @@ class ParsedStudentScheduleProvider(
     private val dateFormatter: DateFormatter
 ) : StudentScheduleProvider {
 
-    override fun getSchedule(
+    override suspend fun getSchedule(
         facultyId: String,
         courseId: String,
         groupId: String,

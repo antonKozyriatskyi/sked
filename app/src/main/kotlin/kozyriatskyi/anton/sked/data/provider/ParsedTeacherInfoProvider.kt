@@ -10,10 +10,10 @@ import kozyriatskyi.anton.sutparser.TeacherInfoParser
  */
 class ParsedTeacherInfoProvider(private val parser: TeacherInfoParser) : TeacherInfoProvider {
 
-    override fun getDepartments(): List<Item> = parser.getDepartments()
+    override suspend fun getDepartments(): List<Item> = parser.getDepartments()
             .map(::toItem)
 
-    override fun getTeachers(departmentId: String): List<Item> {
+    override suspend fun getTeachers(departmentId: String): List<Item> {
         return parser.getTeachers(departmentId)
                 .map(::toItem)
     }

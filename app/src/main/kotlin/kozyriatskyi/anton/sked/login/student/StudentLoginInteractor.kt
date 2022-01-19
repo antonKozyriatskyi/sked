@@ -29,7 +29,7 @@ class StudentLoginInteractor(
 
     fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
 
-    fun loadFaculties(): Result<List<Item>> = kotlin.runCatching {
+    suspend fun loadFaculties(): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getFaculties()
     }
         .onFailure {
@@ -39,7 +39,7 @@ class StudentLoginInteractor(
             )
         }
 
-    fun loadCourses(facultyId: String): Result<List<Item>> = kotlin.runCatching {
+    suspend fun loadCourses(facultyId: String): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getCourses(facultyId)
     }
         .onFailure {
@@ -54,7 +54,7 @@ class StudentLoginInteractor(
             )
         }
 
-    fun loadGroups(facultyId: String, courseId: String): Result<List<Item>> = kotlin.runCatching {
+    suspend fun loadGroups(facultyId: String, courseId: String): Result<List<Item>> = kotlin.runCatching {
         studentInfoProvider.getGroups(facultyId, courseId)
     }
         .onFailure {
@@ -69,7 +69,7 @@ class StudentLoginInteractor(
             )
         }
 
-    fun loadSchedule(student: Student): Result<List<LessonNetwork>> = kotlin.runCatching {
+    suspend fun loadSchedule(student: Student): Result<List<LessonNetwork>> = kotlin.runCatching {
         scheduleProvider.getSchedule(
             user = student,
             startDate = dateManipulator.getFirstDayOfWeekDate(),
