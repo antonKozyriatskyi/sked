@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Component
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.common.AppConfigurationManager
+import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.api.StudentApi
 import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.data.pojo.DayMapper
@@ -42,4 +43,5 @@ interface AppComponent {
     fun appConfigurationManager(): AppConfigurationManager
     fun studentApi(): StudentApi
     fun teacherApi(): TeacherApi
+    fun classroomsApi(): ClassroomsApi
 }

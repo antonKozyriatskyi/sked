@@ -2,6 +2,7 @@ package kozyriatskyi.anton.sked.audiences
 
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.Audiences
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
@@ -28,8 +29,8 @@ class AudiencesModule {
 
     @Audiences
     @Provides
-    fun provideAudiencesProvider(parser: AudiencesParser): AudiencesProvider =
-            ParsedAudiencesProvider(parser)
+    fun provideAudiencesProvider(api: ClassroomsApi): AudiencesProvider =
+            ApiAudiencesProvider(api)
 //        return FakeAudiencesProvider()
 
     @Audiences

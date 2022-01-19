@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.BuildConfig
 import kozyriatskyi.anton.sked.data.LocalDateJsonAdapter
+import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.api.StudentApi
 import kozyriatskyi.anton.sked.data.api.TeacherApi
 import kozyriatskyi.anton.sked.di.App
@@ -56,4 +57,8 @@ class NetworkingModule {
     @App
     @Provides
     fun provideTeacherApi(retrofit: Retrofit): TeacherApi = retrofit.create()
+
+    @App
+    @Provides
+    fun provideClassroomsApi(retrofit: Retrofit): ClassroomsApi = retrofit.create()
 }
