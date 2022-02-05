@@ -23,4 +23,16 @@ class App : BaseApplication() {
         val defaultTheme = sharedPreferences.getString(UserSettingsStorage.KEY_DEFAULT_THEME, "0").toInt()
         AppCompatDelegate.setDefaultNightMode(defaultTheme)
     }
+
+    override fun onApplicationUpdate(
+        previousVersionName: String,
+        previousVersionCode: Int,
+        currentVersionName: String,
+        currentVersionCode: Int
+    ) {
+        // Sked migrated to WorkManger in v22 so need to launch it
+        if (previousVersionCode <= 21 && Injector.appComponent.userInfoStorage().hasUser()) {
+            Injector.appComponent.jobManager().launchUpdaterJob()
+        }
+    }
 }

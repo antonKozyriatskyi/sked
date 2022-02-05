@@ -56,6 +56,8 @@ class UserInfoStorage(private val preferences: SharedPreferences) {
         }
     }
 
+    fun hasUser(): Boolean = preferences.contains(KEY_USER_TYPE)
+
     @Throws(IllegalStateException::class)
     fun getUser(): User = when (preferences.getString(KEY_USER_TYPE, "")) {
         TYPE_STUDENT -> Student().apply {

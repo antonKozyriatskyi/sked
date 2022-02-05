@@ -40,7 +40,7 @@ object Injector {
 
     private lateinit var appContext: Context
 
-    private val appComponent: AppComponent by lazy {
+    val appComponent: AppComponent by lazy {
         DaggerAppComponent.builder()
                 .appModule(AppModule(appContext))
                 .build()
