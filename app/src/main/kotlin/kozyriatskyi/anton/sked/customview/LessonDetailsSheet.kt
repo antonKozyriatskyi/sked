@@ -87,7 +87,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
         cabinet.text = lesson.cabinet
         who.text = lesson.who
         time.text = lesson.time
-        date.text = lesson.date
+        date.text = lesson.shortDate
         addedOn.text = "${lesson.addedOnDate} ${lesson.addedOnTime}"
     }
 

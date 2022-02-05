@@ -4,87 +4,99 @@ import androidx.annotation.ColorRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.data.repository.ResourceManager
+import kozyriatskyi.anton.sked.util.DateFormatter
+import java.time.LocalDate
 
 
 /**
  * Created by Anton on 23.02.2017.
  */
 
-data class LessonNetwork(val date: String,
-                         val number: String,
-                         val type: String,
-                         val cabinet: String,
-                         val shortName: String,
-                         val name: String,
-                         val addedOnDate: String,
-                         val addedOnTime: String,
-                         val who: String,
-                         val whoShort: String)
+@JsonClass(generateAdapter = true)
+data class LessonNetwork(
+    val date: LocalDate,
+    val number: String,
+    val type: String,
+    val cabinet: String,
+    val shortName: String,
+    val name: String,
+    val addedOnDate: String,
+    val addedOnTime: String,
+    val who: String,
+    val whoShort: String
+)
 
-data class LessonUi(val date: String,
-                    val number: String,
-                    val type: String,
-                    val cabinet: String,
-                    @ColorRes val typeColorRes: Int,
-                    val shortName: String,
-                    val name: String,
-                    val addedOnDate: String,
-                    val addedOnTime: String,
-                    val who: String,
-                    val whoShort: String,
-                    val time: String)
+data class LessonUi(
+    val date: LocalDate,
+    val shortDate: String,
+    val number: String,
+    val type: String,
+    val cabinet: String,
+    @ColorRes val typeColorRes: Int,
+    val shortName: String,
+    val name: String,
+    val addedOnDate: String,
+    val addedOnTime: String,
+    val who: String,
+    val whoShort: String,
+    val time: String
+)
 
 @Entity(tableName = "lessons")
-data class LessonDb(var date: String,
-                    var number: String,
-                    var type: String,
-                    var cabinet: String,
-                    @ColumnInfo(name = "short_name") var shortName: String,
-                    var name: String,
-                    @ColumnInfo(name = "added_on_date") var addedOnDate: String,
-                    @ColumnInfo(name = "added_on_time") var addedOnTime: String,
-                    var who: String,
-                    @ColumnInfo(name = "who_short") var whoShort: String) {
+data class LessonDb(
+    var date: LocalDate,
+    var number: String,
+    var type: String,
+    var cabinet: String,
+    @ColumnInfo(name = "short_name") var shortName: String,
+    var name: String,
+    @ColumnInfo(name = "added_on_date") var addedOnDate: String,
+    @ColumnInfo(name = "added_on_time") var addedOnTime: String,
+    var who: String,
+    @ColumnInfo(name = "who_short") var whoShort: String
+) {
 
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0
 }
 
-class LessonMapper(private val resourceManager: ResourceManager) {
+class LessonMapper(
+    private val dateFormatter: DateFormatter
+) {
 
-    fun networkToDb(items: List<LessonNetwork>): List<LessonDb> {
-        return items.map {
-            LessonDb(it.date,
-                    it.number,
-                    it.type,
-                    it.cabinet,
-                    it.shortName,
-                    it.name,
-                    it.addedOnDate,
-                    it.addedOnTime,
-                    it.who,
-                    it.whoShort
-            )
-        }
+    fun networkToDb(items: List<LessonNetwork>): List<LessonDb> = items.map {
+        LessonDb(
+            it.date,
+            it.number,
+            it.type,
+            it.cabinet,
+            it.shortName,
+            it.name,
+            it.addedOnDate,
+            it.addedOnTime,
+            it.who,
+            it.whoShort
+        )
     }
 
-    fun dbToView(items: List<LessonDb>): List<LessonUi> {
-        return items.map {
-            LessonUi(it.date,
-                    it.number,
-                    it.type,
-                    it.cabinet,
-                    color(it.type),
-                    it.shortName,
-                    it.name,
-                    it.addedOnDate,
-                    it.addedOnTime,
-                    it.who,
-                    it.whoShort,
-                    time(it.number))
-        }
+    fun dbToView(items: List<LessonDb>): List<LessonUi> = items.map {
+        LessonUi(
+            date = it.date,
+            shortDate = dateFormatter.short(it.date),
+            number = it.number,
+            type = it.type,
+            cabinet = it.cabinet,
+            typeColorRes = color(it.type),
+            shortName = it.shortName,
+            name = it.name,
+            addedOnDate = it.addedOnDate,
+            addedOnTime = it.addedOnTime,
+            who = it.who,
+            whoShort = it.whoShort,
+            time = time(it.number)
+        )
     }
 
     private fun time(number: String) = when (number) {

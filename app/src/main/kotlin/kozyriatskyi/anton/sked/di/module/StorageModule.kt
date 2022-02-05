@@ -26,7 +26,7 @@ class StorageModule {
     @Provides
     @Named(PREFERENCES_USER_INFO)
     fun provideInfoSharedPreferences(context: Context): SharedPreferences =
-            context.getSharedPreferences(StorageModule.PREFERENCES_USER_INFO, Context.MODE_PRIVATE)
+            context.getSharedPreferences(PREFERENCES_USER_INFO, Context.MODE_PRIVATE)
 
     @App
     @Provides
@@ -46,7 +46,10 @@ class StorageModule {
 
     @App
     @Provides
-    fun provideScheduleStorage(context: Context, scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger): ScheduleStorage {
+    fun provideScheduleStorage(
+        context: Context,
+        scheduleUpdateTimeLogger: ScheduleUpdateTimeLogger
+    ): ScheduleStorage {
         val lessonsDatabase = LessonsDatabase.getInstance(context)
         return ScheduleDatabase(lessonsDatabase, scheduleUpdateTimeLogger)
     }

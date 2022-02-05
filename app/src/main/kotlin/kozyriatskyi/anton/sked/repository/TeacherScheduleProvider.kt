@@ -1,7 +1,14 @@
 package kozyriatskyi.anton.sked.repository
 
 import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
+import java.time.LocalDate
 
 interface TeacherScheduleProvider {
-    fun getSchedule(departmentId: String, teacherId: String): List<LessonNetwork>
+
+    suspend fun getSchedule(
+        departmentId: String,
+        teacherId: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): List<LessonNetwork>
 }

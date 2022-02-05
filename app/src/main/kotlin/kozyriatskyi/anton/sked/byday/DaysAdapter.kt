@@ -1,43 +1,33 @@
 package kozyriatskyi.anton.sked.byday
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import kozyriatskyi.anton.sked.day.DayViewFragment
 
 /**
  * Created by Anton on 04.08.2017.
  */
-class DaysAdapter(childFragmentManager: FragmentManager, private val titles: Array<String>,
-                  private val nextWeek: Boolean)
-    : FragmentStatePagerAdapter(childFragmentManager) {
 
-    companion object {
-        private const val DEFAULT_TABS_COUNT = 5
+
+class DaysAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+
+    private var items: List<ByDayViewItem> = emptyList()
+
+    override fun getItemCount(): Int = items.size
+
+    override fun createFragment(position: Int): Fragment {
+        return DayViewFragment.create(items[position].date)
     }
 
-    private var count = DEFAULT_TABS_COUNT
-
-    override fun getItem(i: Int): Fragment = DayViewFragment.create(i, nextWeek)
-
-    override fun getCount(): Int = count
-
-    override fun getPageTitle(position: Int): CharSequence = titles[position]
-
-    override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
-
-    fun addTab() {
-        if (count < 7) {
-            count++
-            notifyDataSetChanged()
-        }
+    fun getTitle(context: Context, position: Int): String {
+        return context.getString(items[position].title)
     }
 
-    fun removeTab() {
-        if (count > 5) {
-            count--
-            notifyDataSetChanged()
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(items: List<ByDayViewItem>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 }

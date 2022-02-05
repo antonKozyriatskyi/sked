@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.TabsOwner
+import kozyriatskyi.anton.sked.util.DateFormatter
 import kozyriatskyi.anton.sked.util.find
-import kozyriatskyi.anton.sked.util.inflate
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import java.time.LocalDate
 import javax.inject.Inject
 
 /**
@@ -30,9 +31,20 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
     @InjectPresenter
     lateinit var presenter: ByWeekViewPresenter
 
-    private lateinit var weeksViewPager: ViewPager
+    @Inject
+    lateinit var dateFormatter: DateFormatter
 
-    private var tabsOwner: TabsOwner? = null
+    private lateinit var weeksViewPager: ViewPager2
+
+    private val adapter: WeeksAdapter by lazy {
+        WeeksAdapter(this)
+    }
+
+    private lateinit var tabsOwner: TabsOwner
+
+    private val titleProvider: TabsOwner.TitleProvider by lazy {
+        TabsOwner.TitleProvider { position -> adapter.getTitle(position) }
+    }
 
     @ProvidePresenter
     fun providePresenter(): ByWeekViewPresenter {
@@ -47,29 +59,34 @@ class ByWeekViewFragment : MvpAppCompatFragment(), ByWeekView {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if (hidden.not()) {
-            tabsOwner?.setupWithViewPager(weeksViewPager, true)
-        }
+        setupTabsIfNeeded(hidden)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = container!!.inflate(R.layout.fragment_by_week_view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_by_week_view, container, false)
 
-        weeksViewPager = rootView.find(R.id.byweek_pager_weeks)
-
-        if (isHidden.not()) {
-            tabsOwner?.setupWithViewPager(weeksViewPager, true)
-        }
-
-        return rootView
-    }
-
-    override fun showWeeks(dateTitles: Array<String>) {
-        val adapter = WeeksAdapter(childFragmentManager, dateTitles)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        weeksViewPager = view.find(R.id.byweek_pager_weeks)
         weeksViewPager.adapter = adapter
+
+        setupTabsIfNeeded(isHidden)
     }
 
-    override fun showNextWeek() {
-        weeksViewPager.setCurrentItem(1, false)
+    override fun showWeekItems(weekItems: List<ByWeekViewItem>) {
+        weeksViewPager.offscreenPageLimit = weekItems.size / 2
+        adapter.update(weekItems)
+    }
+
+    override fun showWeekAt(position: Int) {
+        weeksViewPager.setCurrentItem(position, false)
+    }
+
+    private fun setupTabsIfNeeded(isHidden: Boolean) {
+        if (isHidden.not() && ::tabsOwner.isInitialized) {
+            tabsOwner.setupWithViewPager(weeksViewPager, titleProvider)
+        }
     }
 }

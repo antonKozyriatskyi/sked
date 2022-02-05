@@ -30,6 +30,7 @@ import kozyriatskyi.anton.sked.updater.UpdaterJobService
 import kozyriatskyi.anton.sked.week.DaggerWeekViewComponent
 import kozyriatskyi.anton.sked.week.WeekViewFragment
 import kozyriatskyi.anton.sked.week.WeekViewModule
+import java.time.LocalDate
 
 /**
  * Created by Anton on 02.02.2018.
@@ -39,7 +40,7 @@ object Injector {
 
     private lateinit var appContext: Context
 
-    private val appComponent: AppComponent by lazy {
+    val appComponent: AppComponent by lazy {
         DaggerAppComponent.builder()
                 .appModule(AppModule(appContext))
                 .build()
@@ -80,17 +81,17 @@ object Injector {
                 .inject(fragment)
     }
 
-    fun inject(fragment: DayViewFragment, dayNumber: Int, nextWeek: Boolean) {
+    fun inject(fragment: DayViewFragment, date: LocalDate) {
         DaggerDayViewComponent.builder()
-                .dayViewModule(DayViewModule(dayNumber, nextWeek))
+                .dayViewModule(DayViewModule(date))
                 .appComponent(appComponent)
                 .build()
                 .inject(fragment)
     }
 
-    fun inject(fragment: WeekViewFragment, weekNumber: Int) {
+    fun inject(fragment: WeekViewFragment, dates: List<LocalDate>) {
         DaggerWeekViewComponent.builder()
-                .weekViewModule(WeekViewModule(weekNumber))
+                .weekViewModule(WeekViewModule(dates))
                 .appComponent(appComponent)
                 .build()
                 .inject(fragment)

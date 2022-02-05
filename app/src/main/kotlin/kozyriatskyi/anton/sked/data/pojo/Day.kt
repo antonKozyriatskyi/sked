@@ -1,23 +1,41 @@
 package kozyriatskyi.anton.sked.data.pojo
 
-import kozyriatskyi.anton.sked.data.repository.DateFormatter
+import androidx.annotation.StringRes
+import kozyriatskyi.anton.sked.R
+import kozyriatskyi.anton.sked.util.DateFormatter
+import java.time.DayOfWeek
+import java.time.LocalDate
 
-/**
- * Created by Anton on 22.08.2017.
- */
-class Day(val dayNumber: Int, val weekNumber: Int, val date: String, val lessons: List<LessonDb>)
+class DayUi(
+    val date: LocalDate,
+    @StringRes val name: Int,
+    val shortDate: String,
+    val lessons: List<LessonUi>
+)
 
-class DayUi(val dayNum: Int, val weekNumber: Int, val day: String, val shortDate: String,
-                 val lessons: List<LessonUi>)
+class DayMapper(
+    private val lessonMapper: LessonMapper,
+    private val dateFormatter: DateFormatter
+) {
 
-class DayMapper(private val lessonMapper: LessonMapper, private val dateFormatter: DateFormatter) {
+    fun createUiModel(date: LocalDate, lessons: List<LessonDb>): DayUi = DayUi(
+        date = date,
+        name = getName(date.dayOfWeek),
+        shortDate = dateFormatter.short(date),
+        lessons = lessonMapper.dbToView(lessons)
+    )
 
-    fun dbToUi(day: Day): DayUi =
-            DayUi(day.dayNumber, day.weekNumber, dateFormatter.dayOfWeek(day.dayNumber),
-                    dateFormatter.shortDate(day.date), lessonMapper.dbToView(day.lessons))
+    private fun getName(dayOfWeek: DayOfWeek): Int {
+        val daysOfWeek = arrayOf(
+            R.string.day_of_week_monday,
+            R.string.day_of_week_tuesday,
+            R.string.day_of_week_wednesday,
+            R.string.day_of_week_thursday,
+            R.string.day_of_week_friday,
+            R.string.day_of_week_saturday,
+            R.string.day_of_week_sunday
+        )
 
-    fun dbToUi(days: List<Day>): List<DayUi> = days.map {
-        DayUi(it.dayNumber, it.weekNumber, dateFormatter.dayOfWeek(it.dayNumber),
-                dateFormatter.shortDate(it.date), lessonMapper.dbToView(it.lessons))
+        return daysOfWeek[DayOfWeek.values().indexOf(dayOfWeek)]
     }
 }

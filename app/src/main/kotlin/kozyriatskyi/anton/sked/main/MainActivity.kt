@@ -3,18 +3,17 @@ package kozyriatskyi.anton.sked.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
+import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.transition.AutoTransition
-import androidx.transition.Fade
-import androidx.transition.TransitionSet
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.about.AboutActivity
 import kozyriatskyi.anton.sked.audiences.AudiencesActivity
@@ -32,10 +31,9 @@ import javax.inject.Inject
 
 
 class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
-        BottomNavigationView.OnNavigationItemSelectedListener {
+    NavigationBarView.OnItemSelectedListener {
 
     companion object {
-        private const val KEY_SHOW_PROGRESS = "show_progress"
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -47,8 +45,6 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     @Inject
     lateinit var userInfoStorage: UserInfoStorage
 
-    private lateinit var tabs: TabLayout
-
     @Inject
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -58,9 +54,12 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     private lateinit var menuProgressItem: MenuItem
 
-    private var showProgressBar = false
+    private lateinit var appbar: AppBarLayout
+    private lateinit var toolbar: Toolbar
+    private lateinit var tabs: TabLayout
+    private lateinit var bottomNav: BottomNavigationView
 
-    private var nightMode = AppCompatDelegate.getDefaultNightMode()
+    private var tabLayoutMediator: TabLayoutMediator? = null
 
     @ProvidePresenter
     fun providePresenter(): MainPresenter {
@@ -68,13 +67,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         return presenter
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(KEY_SHOW_PROGRESS, showProgressBar)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        showProgressBar = savedInstanceState?.getBoolean(KEY_SHOW_PROGRESS) ?: false
         super.onCreate(savedInstanceState)
 
         checkForFirstLaunch(savedInstanceState)
@@ -82,71 +75,43 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(findViewById(R.id.main_toolbar))
-
+        appbar = findViewById(R.id.main_appbar)
+        toolbar = findViewById(R.id.main_toolbar)
         tabs = findViewById(R.id.main_tabs)
+        bottomNav = findViewById(R.id.main_bottomnavigation_viewmodes)
 
         findViewById<BottomNavigationView>(R.id.main_bottomnavigation_viewmodes)
-                .apply { tryFixBlinking() }
-                .setOnNavigationItemSelectedListener(this)
+            .setOnItemSelectedListener(this)
 
-        byDayViewFragment = supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
-        byWeekViewFragment = supportFragmentManager.findFragmentByTag(ByWeekViewFragment.TAG) ?: ByWeekViewFragment()
+        setupMenu()
+
+        byDayViewFragment =
+            supportFragmentManager.findFragmentByTag(ByDayViewFragment.TAG) ?: ByDayViewFragment()
+        byWeekViewFragment =
+            supportFragmentManager.findFragmentByTag(ByWeekViewFragment.TAG) ?: ByWeekViewFragment()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
-                    .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
-                    .commit()
+                .add(R.id.main_fragment_container, byWeekViewFragment, ByWeekViewFragment.TAG)
+                .add(R.id.main_fragment_container, byDayViewFragment, ByDayViewFragment.TAG)
+                .commit()
         }
+
+        presenter.updateLocale(ConfigurationCompat.getLocales(resources.configuration)[0])
     }
 
-    // When targeting api 29 bottom navigation view has weird issue with text flickering
-    // when switching tabs
-    private fun BottomNavigationView.tryFixBlinking() {
-        runCatching {
-            val menuView = getChildAt(0) as BottomNavigationMenuView
-            val declaredFields = menuView::class.java.declaredFields
-            val setField =  declaredFields.find { it.type == TransitionSet::class.java } ?: return
-
-            with(setField) {
-                isAccessible = true
-                val transitionSet = (get(menuView) as AutoTransition).apply {
-                    for (i in transitionCount downTo 0) {
-                        val transition = getTransitionAt(i) as? Fade ?: continue
-                        removeTransition(transition)
-                    }
-                }
-                set(menuView, transitionSet)
-            }
+    private fun setupMenu() {
+        toolbar.inflateMenu(R.menu.main_menu)
+        menuProgressItem = toolbar.menu.findItem(R.id.menu_main_update)
+        toolbar.setOnMenuItemClickListener {
+            onOptionsItemSelected(it)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val defaultNightMode = AppCompatDelegate.getDefaultNightMode()
-        if (nightMode != defaultNightMode) {
-            nightMode = defaultNightMode
-            recreate()
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        menuProgressItem = menu.findItem(R.id.menu_main_update)
-        switchProgress(showProgressBar)
-
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.main_relogin -> IntroActivity.start(this)
             R.id.main_preferences -> SettingsActivity.start(this)
-            33 /*Show notification*/ -> { // only for debugging
-                throw Exception("crashlytics test")
-            }
             R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_audiences -> AudiencesActivity.start(this)
             R.id.main_about -> AboutActivity.start(this)
@@ -159,23 +124,31 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
         when (menuItem.itemId) {
             R.id.navigation_day -> presenter.onSetDayViewClick()
             R.id.navigation_week -> presenter.onSetWeekViewClick()
-//            R.id.navigation_table -> presenter.onSetTableViewClick()
         }
 
         return true
     }
 
-    override fun setupWithViewPager(viewPager: ViewPager, autoRefresh: Boolean) {
-        tabs.setupWithViewPager(viewPager, autoRefresh)
+    override fun setupWithViewPager(viewPager: ViewPager2, titleProvider: TabsOwner.TitleProvider) {
+        tabLayoutMediator?.detach()
+        tabLayoutMediator = TabLayoutMediator(tabs, viewPager, true) { tab, positions ->
+            tab.text = titleProvider.getTitle(positions)
+        }.apply {
+            attach()
+        }
+
+        // Sometimes selected tab doesn't get scrolled to and appear visible on screen
+        // thus we manually scroll to it
+        tabs.post {
+            tabs.setScrollPosition(viewPager.currentItem, 0f, true)
+        }
     }
 
     override fun setSubtitle(text: String) {
-        supportActionBar?.subtitle = text
+        toolbar.subtitle = text
     }
 
     override fun switchProgress(showProgressBar: Boolean) {
-        this.showProgressBar = showProgressBar
-
         if (showProgressBar) {
             showProgress()
         } else {
@@ -208,21 +181,17 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     override fun setDayView() {
         supportFragmentManager.beginTransaction()
-                .hide(byWeekViewFragment)
-                .show(byDayViewFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
+            .hide(byWeekViewFragment)
+            .show(byDayViewFragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
     }
 
     override fun setWeekView() {
         supportFragmentManager.beginTransaction()
-                .hide(byDayViewFragment)
-                .show(byWeekViewFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
-    }
-
-    override fun setTableView() {
-
+            .hide(byDayViewFragment)
+            .show(byWeekViewFragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .commit()
     }
 }

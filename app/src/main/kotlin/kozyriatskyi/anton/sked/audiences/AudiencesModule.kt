@@ -2,10 +2,11 @@ package kozyriatskyi.anton.sked.audiences
 
 import dagger.Module
 import dagger.Provides
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
+import kozyriatskyi.anton.sked.data.api.ClassroomsApi
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 import kozyriatskyi.anton.sked.di.Audiences
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
-import kozyriatskyi.anton.sutparser.AudiencesParser
 
 @Module
 class AudiencesModule {
@@ -18,8 +19,10 @@ class AudiencesModule {
 
     @Audiences
     @Provides
-    fun provideInteractor(provider: AudiencesProvider): AudiencesInteractor =
-            AudiencesInteractor(provider)
+    fun provideInteractor(
+        provider: AudiencesProvider,
+        analyticsManager: AnalyticsManager
+    ): AudiencesInteractor = AudiencesInteractor(provider, analyticsManager)
 
     @Audiences
     @Provides
@@ -28,11 +31,7 @@ class AudiencesModule {
 
     @Audiences
     @Provides
-    fun provideAudiencesProvider(parser: AudiencesParser): AudiencesProvider =
-            ParsedAudiencesProvider(parser)
-//        return FakeAudiencesProvider()
+    fun provideAudiencesProvider(api: ClassroomsApi): AudiencesProvider =
+            ApiAudiencesProvider(api)
 
-    @Audiences
-    @Provides
-    fun provideAudiencesParser(): AudiencesParser = AudiencesParser()
 }

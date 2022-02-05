@@ -1,19 +1,17 @@
 package kozyriatskyi.anton.sked.day
 
-import io.reactivex.Observable
-import kozyriatskyi.anton.sked.data.pojo.Day
+import kotlinx.coroutines.flow.Flow
+import kozyriatskyi.anton.sked.data.pojo.LessonDb
 import kozyriatskyi.anton.sked.data.pojo.User
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
-import kozyriatskyi.anton.sked.util.DateUtils
+import java.time.LocalDate
 
 class DayViewInteractor(private val scheduleStorage: ScheduleStorage,
                         private val userInfoStorage: UserInfoStorage) {
 
-    fun lessons(dayNumber: Int, weekNum: Int): Observable<Day> {
-        val date = DateUtils.longDateForDayNum(dayNumber, weekNum)
-        return scheduleStorage.getLessonsByDate(date)
-                .map { Day(dayNumber, weekNum, date, it) }
+    fun observeLessons(date: LocalDate): Flow<List<LessonDb>> {
+        return scheduleStorage.getLessonsOnDate(date)
     }
 
     fun getUser(): User = userInfoStorage.getUser()

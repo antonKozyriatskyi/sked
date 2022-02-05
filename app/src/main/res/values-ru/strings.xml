@@ -42,22 +42,13 @@
         <item>Системная</item>
     </string-array>
 
-    <string-array name="pref_theme_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="days_of_week">
-        <item>Понедельник</item>
-        <item>Вторник</item>
-        <item>Среда</item>
-        <item>Четверг</item>
-        <item>Пятница</item>
-        <item>Суббота</item>
-        <item>Воскресенье</item>
-    </string-array>
+    <string name="day_of_week_monday">Понедельник</string>
+    <string name="day_of_week_tuesday">Вторник</string>
+    <string name="day_of_week_wednesday">Среда</string>
+    <string name="day_of_week_thursday">Четверг</string>
+    <string name="day_of_week_friday">Пятница</string>
+    <string name="day_of_week_saturday">Суббота</string>
+    <string name="day_of_week_sunday">Воскресенье</string>
 
     <string name="nav_update">Обновить</string>
     <string name="pref_appearance_header">Внешний вид</string>
@@ -83,5 +74,15 @@
     <string name="audience_sheet_end_time_title">Конец</string>
 
     <string name="about_privacy_policy">Политика конфиденциальности</string>
+
+    <string name="pref_first_day_of_week_header">Первый день недели</string>
+
+    <string-array name="pref_first_day_of_week_days">
+        <item>Понедельник</item>
+        <item>Воскресенье</item>
+        <item>В зависимости от локали</item>
+    </string-array>
+    <string name="notification_channel_name">Обновления расписания</string>
+    <string name="notification_channel_description">Здесь находяться уведомления об обновлении расписания</string>
 
 </resources>

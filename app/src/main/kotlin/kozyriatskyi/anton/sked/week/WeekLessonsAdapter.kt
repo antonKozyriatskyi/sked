@@ -1,5 +1,6 @@
 package kozyriatskyi.anton.sked.week
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -14,7 +15,10 @@ import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
 
 @Suppress("EqualsOrHashCode")
-class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListener) : StickyHeaderAdapter<RecyclerView.ViewHolder>() {
+class WeekLessonsAdapter(
+    private val context: Context,
+    private val onLessonClickListener: OnLessonClickListener
+) : StickyHeaderAdapter<RecyclerView.ViewHolder>() {
 
     private companion object {
         const val TYPE_HEADER = 1
@@ -28,7 +32,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         var itemPosition = itemPosition
         var headerPosition = itemPosition
         do {
-            if (this.isHeader(itemPosition)) {
+            if (isHeader(itemPosition)) {
                 headerPosition = itemPosition
                 break
             }
@@ -56,12 +60,12 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-            when (viewType) {
-                TYPE_HEADER -> HeaderHolder(parent.inflate(R.layout.item_week_day_header))
-                TYPE_LESSON -> LessonHolder(parent.inflate(R.layout.item_lesson))
-                TYPE_EMPTY -> EmptyHolder(parent.inflate(R.layout.item_lessons_empty))
-                else -> throw IllegalStateException("no view holder found for type $viewType")
-            }
+        when (viewType) {
+            TYPE_HEADER -> HeaderHolder(parent.inflate(R.layout.item_week_day_header))
+            TYPE_LESSON -> LessonHolder(parent.inflate(R.layout.item_lesson))
+            TYPE_EMPTY -> EmptyHolder(parent.inflate(R.layout.item_lessons_empty))
+            else -> throw IllegalStateException("no view holder found for type $viewType")
+        }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         @Suppress("UNCHECKED_CAST")
@@ -72,14 +76,14 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         val newItems = ArrayList<Item>(7)
 
         for (day in days) {
-            newItems.add(HeaderItem(day = day.day, date = day.shortDate))
+            newItems.add(HeaderItem(day = context.getString(day.name), date = day.shortDate))
 
             if (day.lessons.isNotEmpty()) {
                 for (lesson in day.lessons) {
                     newItems.add(LessonItem(lesson = lesson))
                 }
             } else {
-                newItems.add(EmptyItem(day = day.day, date = day.shortDate))
+                newItems.add(EmptyItem(day = context.getString(day.name), date = day.shortDate))
             }
         }
 
@@ -88,11 +92,12 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         result.dispatchUpdatesTo(this)
     }
 
-    private abstract inner class BindableHolder<T : Item>(view: View) : RecyclerView.ViewHolder(view) {
+    private abstract class BindableHolder<T : Item>(view: View) :
+        RecyclerView.ViewHolder(view) {
         abstract fun bind(item: T)
     }
 
-    private inner class HeaderHolder(view: View) : BindableHolder<HeaderItem>(view) {
+    private class HeaderHolder(view: View) : BindableHolder<HeaderItem>(view) {
 
         private val day = view.find<TextView>(R.id.lessons_tv_day)
         private val date = view.find<TextView>(R.id.lessons_tv_date)
@@ -131,7 +136,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         }
     }
 
-    private inner class EmptyHolder(view: View) : BindableHolder<EmptyItem>(view) {
+    private class EmptyHolder(view: View) : BindableHolder<EmptyItem>(view) {
         override fun bind(item: EmptyItem) {}
     }
 
@@ -142,7 +147,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         override fun equals(other: Any?): Boolean
     }
 
-    private inner class HeaderItem(val day: String, val date: String) : Item {
+    private class HeaderItem(val day: String, val date: String) : Item {
 
         override val type: Int = TYPE_HEADER
 
@@ -153,7 +158,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         }
     }
 
-    private inner class LessonItem(val lesson: LessonUi) : Item {
+    private class LessonItem(val lesson: LessonUi) : Item {
 
         override val type: Int = TYPE_LESSON
 
@@ -166,7 +171,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         }
     }
 
-    private inner class EmptyItem(val day: String, val date: String) : Item {
+    private class EmptyItem(val day: String, val date: String) : Item {
 
         override val type: Int = TYPE_EMPTY
 
@@ -177,8 +182,10 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         }
     }
 
-    private class LessonsDiffCallback(private val oldList: List<Item>,
-                                      private val newList: List<Item>) : DiffUtil.Callback() {
+    private class LessonsDiffCallback(
+        private val oldList: List<Item>,
+        private val newList: List<Item>
+    ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldList.size
 
@@ -192,7 +199,7 @@ class WeekLessonsAdapter(private val onLessonClickListener: OnLessonClickListene
         }
 
         override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean =
-                areItemsTheSame(oldPosition, newPosition)
+            areItemsTheSame(oldPosition, newPosition)
     }
 
     interface OnLessonClickListener {

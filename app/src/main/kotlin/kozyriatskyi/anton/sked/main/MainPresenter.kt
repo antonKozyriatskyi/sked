@@ -1,28 +1,42 @@
 package kozyriatskyi.anton.sked.main
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import moxy.InjectViewState
-import moxy.MvpPresenter
+import java.util.*
 
 @InjectViewState
-class MainPresenter(private val userInfoStorage: UserInfoStorage,
-                    private val userSettingsStorage: UserSettingsStorage,
-                    private val interactor: MainInteractor) : MvpPresenter<MainView>() {
+class MainPresenter(
+    private val userInfoStorage: UserInfoStorage,
+    private val userSettingsStorage: UserSettingsStorage,
+    private val interactor: MainInteractor
+) : BasePresenter<MainView>() {
 
-    private var scheduleUpdateDisposable: Disposable? = null
+    private var scheduleUpdateJob: Job? = null
 
     override fun onFirstViewAttach() {
         viewState.setSubtitle(userInfoStorage.getUserName())
 
-        when (userSettingsStorage.getInt(UserSettingsStorage.KEY_DEFAULT_VIEW_MODE, UserSettingsStorage.VIEW_BY_DAY)) {
+        when (userSettingsStorage.getInt(
+            UserSettingsStorage.KEY_DEFAULT_VIEW_MODE,
+            UserSettingsStorage.VIEW_BY_DAY
+        )) {
             UserSettingsStorage.VIEW_BY_DAY -> viewState.setDayView()
             UserSettingsStorage.VIEW_BY_WEEK -> viewState.setWeekView()
-            UserSettingsStorage.VIEW_TABLE -> viewState.setTableView()
         }
+
+        observeUserSettings()
+    }
+
+    fun updateLocale(locale: Locale) {
+        interactor.updateLocale(locale)
     }
 
     fun onSetDayViewClick() {
@@ -33,25 +47,31 @@ class MainPresenter(private val userInfoStorage: UserInfoStorage,
         viewState.setWeekView()
     }
 
-    fun onSetTableViewClick() {
-        viewState.setTableView()
-    }
-
     fun onUpdateTriggered() {
-        viewState.switchProgress(true)
         updateSchedule()
     }
 
     private fun updateSchedule() {
-        scheduleUpdateDisposable = interactor.updateSchedule()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { viewState.switchProgress(false) }
-                .subscribe({ viewState.onUpdateSucceeded() },
-                        { viewState.onUpdateFailed() })
+        scheduleUpdateJob?.cancel()
+
+        viewState.switchProgress(true)
+
+        scheduleUpdateJob = scope.launch {
+            withContext(Dispatchers.IO) {
+                interactor.updateSchedule()
+            }
+                .onSuccess { viewState.onUpdateSucceeded() }
+                .onFailure { viewState.onUpdateFailed() }
+
+            viewState.switchProgress(false)
+        }
     }
 
-    override fun onDestroy() {
-        scheduleUpdateDisposable?.dispose()
+    private fun observeUserSettings() = scope.launch {
+        userSettingsStorage.observeFirstDayOfWeek()
+            .flowOn(Dispatchers.IO)
+            .collect {
+                interactor.updateFirstDayOfWeekMode(it)
+            }
     }
 }

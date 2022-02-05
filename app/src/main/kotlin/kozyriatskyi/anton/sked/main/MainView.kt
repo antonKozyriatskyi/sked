@@ -15,11 +15,12 @@ interface MainView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setSubtitle(text: String)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun switchProgress(showProgressBar: Boolean)
 
     fun setDayView()
     fun setWeekView()
-    fun setTableView()
+
     fun onUpdateFailed()
     fun onUpdateSucceeded()
 }

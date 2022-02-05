@@ -38,7 +38,7 @@ class ItemSpinnerAdapter : BaseAdapter() {
 
     fun getSelectedItem(position: Int): Item = data[position]
 
-    fun updateData(newData: ArrayList<Item>) {
+    fun updateData(newData: List<Item>) {
         data.clear()
         data.addAll(newData)
 

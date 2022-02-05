@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kozyriatskyi.anton.sked.data.pojo.LessonDb
@@ -18,6 +19,7 @@ private const val DB_VERSION = 4
 private const val DB_NAME = "lessons.db"
 
 @Database(entities = [LessonDb::class], version = DB_VERSION)
+@TypeConverters(LocalDateSqliteConverter::class)
 abstract class LessonsDatabase : RoomDatabase() {
 
     companion object {

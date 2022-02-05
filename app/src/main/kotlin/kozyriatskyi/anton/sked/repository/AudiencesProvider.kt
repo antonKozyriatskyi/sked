@@ -5,6 +5,6 @@ import kozyriatskyi.anton.sked.data.pojo.AudienceNetwork
 typealias StartEndTimePair = Pair<List<Time>, List<Time>>
 
 interface AudiencesProvider {
-    fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork>
-    fun getTimes(): StartEndTimePair
+    suspend fun getAudiences(date: String, lessonStart: String, lessonEnd: String): List<AudienceNetwork>
+    suspend fun getTimes(): StartEndTimePair
 }

@@ -31,23 +31,17 @@
     <string name="notification_schedule_updated_title" translatable="false">@string/app_name</string>
     <string name="notification_schedule_updated_successfully">Schedule has been updated</string>
     <string name="notification_schedule_updated_unsuccessfully">Failed to update schedule</string>
+    <string name="notification_channel_name">Schedule updates</string>
+    <string name="notification_channel_description">All schedule update notifications go here</string>
 
 
-    <!-- Navigation drawer -->
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
-
-    <!-- By day TabLayout -->
-    <string-array name="days_of_week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-    </string-array>
+    <string name="day_of_week_monday">Monday</string>
+    <string name="day_of_week_tuesday">Tuesday</string>
+    <string name="day_of_week_wednesday">Wednesday</string>
+    <string name="day_of_week_thursday">Thursday</string>
+    <string name="day_of_week_friday">Friday</string>
+    <string name="day_of_week_saturday">Saturday</string>
+    <string name="day_of_week_sunday">Sunday</string>
 
 
     <!-- Settings -->
@@ -76,6 +70,20 @@
         <item>-1</item>
     </string-array>
 
+    <string name="pref_first_day_of_week_header">First day of week</string>
+
+    <string-array name="pref_first_day_of_week_days">
+        <item>Monday</item>
+        <item>Sunday</item>
+        <item>Based on locale</item>
+    </string-array>
+
+    <string-array name="pref_first_day_of_week_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 
     <!-- Navigation -->
     <string name="nav_by_day_schedule">Day</string>
@@ -95,8 +103,8 @@
 
 
     <!-- Audiences screen -->
-    <string name="audiences_title">Audiences</string>
-    <string name="audiences_loading_error">Error loading audiences</string>
+    <string name="audiences_title">Classrooms</string>
+    <string name="audiences_loading_error">Error loading classrooms</string>
     <string name="audiences_loading_retry" translatable="false">@string/retry</string>
     <string name="audience_status_free">Free</string>
     <string name="audience_status_busy">Busy</string>

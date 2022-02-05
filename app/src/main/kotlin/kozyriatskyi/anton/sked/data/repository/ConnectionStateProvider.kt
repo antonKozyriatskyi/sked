@@ -1,26 +1,25 @@
 package kozyriatskyi.anton.sked.data.repository
 
 import android.content.Context
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kozyriatskyi.anton.sked.util.ConnectionStateReceiver
+import kozyriatskyi.anton.sked.util.ConnectionStateReceiver.OnConnectionStateChangeListener
 
-class ConnectionStateProvider(context: Context) :
-        ConnectionStateReceiver.OnConnectionStateChangeListener {
+class ConnectionStateProvider(context: Context) {
 
-    private val emitter = BehaviorRelay.create<Boolean>()
     private val connectionReceiver = ConnectionStateReceiver(context)
 
-    init {
-        connectionReceiver.onConnectionStateChangeListener = this
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun connectionStateChanges(): Flow<Boolean> = callbackFlow {
+        val listener = OnConnectionStateChangeListener(::trySend)
+        connectionReceiver.onConnectionStateChangeListener = listener
         connectionReceiver.register()
-        emitter.doOnDispose { connectionReceiver.unregister() }
-    }
 
-    fun connectionStateChanges():
-            Observable<Boolean> = emitter.hide()
-
-    override fun onConnectionStateChanged(isConnectionAvailable: Boolean) {
-        emitter.accept(isConnectionAvailable)
+        awaitClose {
+            connectionReceiver.unregister()
+        }
     }
 }

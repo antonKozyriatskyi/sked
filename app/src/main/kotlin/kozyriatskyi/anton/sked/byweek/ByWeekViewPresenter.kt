@@ -1,61 +1,60 @@
 package kozyriatskyi.anton.sked.byweek
 
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import kozyriatskyi.anton.sked.util.DateUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kozyriatskyi.anton.sked.common.AppConfigurationManager
+import kozyriatskyi.anton.sked.common.BasePresenter
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
+import kozyriatskyi.anton.sked.util.DateManipulator
+import kozyriatskyi.anton.sked.util.combine
+import kozyriatskyi.anton.sked.util.onFirstEmit
 import moxy.InjectViewState
-import moxy.MvpPresenter
-import java.util.*
+import java.time.LocalDate
 
 @InjectViewState
-class ByWeekViewPresenter(private val interactor: ByWeekViewInteractor) : MvpPresenter<ByWeekView>() {
-
-    private val disposables = CompositeDisposable()
+class ByWeekViewPresenter(
+    private val interactor: ByWeekViewInteractor,
+    private val dateManipulator: DateManipulator,
+    private val mapper: ByWeekViewItemMapper,
+    private val appConfigurationManager: AppConfigurationManager
+) : BasePresenter<ByWeekView>() {
 
     override fun onFirstViewAttach() {
-        subscribe()
+        appConfigurationManager.configurationChanges
+            .flowOn(Dispatchers.IO)
+            .onEach { setupWeeks() }
+            .launchIn(scope)
     }
 
-    private fun subscribe() {
-        thisWeekendLessonsCount()
-    }
-
-    private fun thisWeekendLessonsCount() {
-        val disposable = interactor.firstWeekendLessonsCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { (hasLessonsOnSaturday, hasLessonsOnSunday) ->
-                    val showNextWeek = showNextWeek(hasLessonsOnSaturday, hasLessonsOnSunday)
-                    viewState.showWeeks(getDateTitles())
-                    if (showNextWeek) viewState.showNextWeek()
-                }
-
-        disposables.add(disposable)
-    }
-
-    private fun showNextWeek(hasLessonsOnSaturday: Boolean, hasLessonsOnSunday: Boolean): Boolean {
-        val c = Calendar.getInstance()
-
-        val dayOfWeek = c[Calendar.DAY_OF_WEEK]
-
-        if (dayOfWeek == Calendar.SUNDAY) {
-            return hasLessonsOnSunday.not()
+    private fun setupWeeks() {
+        List(SCHEDULE_WEEKS_RANGE) {
+            getItemForDate(dateManipulator.getWeekRange(it))
         }
-
-        val isWeekendToday = dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY
-        val hasLessonsOnWeekend = hasLessonsOnSaturday or hasLessonsOnSunday
-        // if today is weekend and there are no lessons on Saturday or Sunday - show next week
-        return isWeekendToday and hasLessonsOnWeekend.not()
+            .combine()
+            .flowOn(Dispatchers.IO)
+            .onFirstEmit { checkPosition() }
+            .onEach { viewState.showWeekItems(it) }
+            .launchIn(scope)
     }
 
-    private fun getDateTitles(): Array<String> {
-        return Array(5, {
-            "${DateUtils.mondayDate(it, inShortFormat = true)} - ${DateUtils.sundayDate(it, inShortFormat = true)}"
-        })
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun getItemForDate(dates: List<LocalDate>): Flow<ByWeekViewItem> {
+        return flow { emit(mapper.create(dates)) }
     }
 
-    override fun onDestroy() {
-        disposables.dispose()
+    private fun checkPosition() = scope.launch {
+        val today = dateManipulator.today()
+
+        val todayIsWorkday = dateManipulator.isWeekend(today).not()
+
+        val hasLessonsOnWeekends = dateManipulator.getRemainingWeekends(today)
+            .any { interactor.hasLessonsOnDate(it).take(1).single() }
+
+        val startWeek = when {
+            todayIsWorkday || hasLessonsOnWeekends -> 0
+            else -> 1
+        }
+        viewState.showWeekAt(startWeek)
     }
 }

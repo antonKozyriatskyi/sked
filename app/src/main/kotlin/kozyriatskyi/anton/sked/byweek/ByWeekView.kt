@@ -8,8 +8,8 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ByWeekView : MvpView {
 
-    fun showWeeks(dateTitles: Array<String>)
-
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun showNextWeek()
+    fun showWeekAt(position: Int)
+
+    fun showWeekItems(weekItems: List<ByWeekViewItem>)
 }

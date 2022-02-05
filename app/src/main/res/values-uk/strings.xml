@@ -15,22 +15,15 @@
         <item>Системна</item>
     </string-array>
 
-    <string-array name="pref_theme_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>-1</item>
-    </string-array>
 
-    <string-array name="days_of_week">
-        <item>Понеділок</item>
-        <item>Вівторок</item>
-        <item>Середа</item>
-        <item>Четвер</item>
-        <item>П\'ятниця</item>
-        <item>Субота</item>
-        <item>Неділя</item>
-    </string-array>
+    <string name="day_of_week_monday">Понеділок</string>
+    <string name="day_of_week_tuesday">Вівторок</string>
+    <string name="day_of_week_wednesday">Середа</string>
+    <string name="day_of_week_thursday">Четвер</string>
+    <string name="day_of_week_friday">П\'ятниця</string>
+    <string name="day_of_week_saturday">Субота</string>
+    <string name="day_of_week_sunday">Неділя</string>
+
 
     <string name="about_activity_title">Про додаток</string>
     <string name="about_developed_by">Розроблено Антоном Козиряцьким</string>
@@ -72,8 +65,8 @@
     <string name="lesson_details_who_teacher">Викладач:</string>
     <string name="lesson_details_room">Аудиторія:</string>
     <string name="audiences_title">Аудиторії</string>
-    <string name="audiences_loading_error">Не вдалось заантажити аудиторії</string>
-    <string name="audience_status_free">Вілно</string>
+    <string name="audiences_loading_error">Не вдалось завантажити аудиторії</string>
+    <string name="audience_status_free">Вільно</string>
     <string name="audience_status_busy">Зайнято</string>
     <string name="audience_sheet_title">Дата та час</string>
     <string name="audience_sheet_select_btn">Вибрати</string>
@@ -82,5 +75,15 @@
     <string name="audience_sheet_end_time_title">Кінець</string>
 
     <string name="about_privacy_policy">Політика конфіденційності</string>
+
+    <string name="pref_first_day_of_week_header">Перший день тижня</string>
+
+    <string-array name="pref_first_day_of_week_days">
+        <item>Понеділок</item>
+        <item>Неділя</item>
+        <item>В залежності від локалі</item>
+    </string-array>
+    <string name="notification_channel_name">Оновлення розкладу</string>
+    <string name="notification_channel_description">Тут знаходяться усі сповіщення про оновлення розкладу</string>
 
 </resources>

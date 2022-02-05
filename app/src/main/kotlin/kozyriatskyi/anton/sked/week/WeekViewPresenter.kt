@@ -1,77 +1,45 @@
 package kozyriatskyi.anton.sked.week
 
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
+import kozyriatskyi.anton.sked.common.BasePresenter
 import kozyriatskyi.anton.sked.data.pojo.*
-import kozyriatskyi.anton.sked.util.logD
-import kozyriatskyi.anton.sked.util.logE
+import kozyriatskyi.anton.sked.util.batched
+import kozyriatskyi.anton.sked.util.zipWith
 import moxy.InjectViewState
-import moxy.MvpPresenter
-import java.util.*
+import java.time.LocalDate
 
 @InjectViewState
-class WeekViewPresenter(private val weekNumber: Int,
-                        private val interactor: WeekViewInteractor,
-                        private val dayMapper: DayMapper)
-    : MvpPresenter<WeekView>() {
+class WeekViewPresenter(
+    private val dates: List<LocalDate>,
+    private val interactor: WeekViewInteractor,
+    private val dayMapper: DayMapper
+) : BasePresenter<WeekView>() {
 
-    private val disposables = CompositeDisposable()
+    private var lessonsJob: Job? = null
 
     override fun onFirstViewAttach() {
         observeLessons()
     }
 
     fun onLessonClick(lesson: LessonUi) {
-        val user = interactor.getUser()
-        when (user) {
+        when (interactor.getUser()) {
             is Teacher -> viewState.showTeacherLessonDetails(lesson)
             is Student -> viewState.showStudentLessonDetails(lesson)
         }
     }
 
     private fun observeLessons() {
-        val disposable = interactor.lessons(weekNumber)
-                .map(::removeWeekendsIfNoLessons)
-                .map(dayMapper::dbToUi)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError {
-                    logD("Error: $it")
-                    viewState.showError(it.message ?: "Error")
-                }
-                .retry()
-                .subscribe(viewState::showLessons)
-
-        disposables.add(disposable)
-    }
-
-    @Suppress("NAME_SHADOWING")
-    private fun removeWeekendsIfNoLessons(days: List<Day>): List<Day> {
-        val days = days.toMutableList()
-
-        val sunday = days[days.lastIndex]
-        val saturday = days[days.lastIndex - 1]
-
-        if (sunday.lessons.isEmpty()) {
-            days.remove(sunday)
-        }
-
-        if (saturday.lessons.isEmpty()) {
-            days.remove(saturday)
-        }
-
-        return days
-    }
-
-    //TODO
-    private fun todayPosition(isNextWeek: Boolean): Int {
-        if (isNextWeek) return 0
-
-        val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        return if (dayOfWeek == Calendar.SUNDAY) 6 else dayOfWeek - 2
-    }
-
-    override fun onDestroy() {
-        disposables.clear()
+        lessonsJob = interactor.getLessons(dates.first(), dates.last())
+            .flowOn(Dispatchers.IO)
+            .map { lessons -> lessons.groupBy(LessonDb::date) }
+            .zipWith(dates.asFlow()) { groupedLessons, date -> date to groupedLessons[date].orEmpty() }
+            .map { (date, lessons) -> dayMapper.createUiModel(date, lessons) }
+            .batched(dates.size)
+            .flowOn(Dispatchers.Default)
+            .catch { viewState.showError(it.message.orEmpty()) }
+            .onEach(viewState::showLessons)
+            .launchIn(scope)
     }
 }

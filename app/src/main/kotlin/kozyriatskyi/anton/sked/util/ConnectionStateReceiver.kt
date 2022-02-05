@@ -8,7 +8,7 @@ import android.net.ConnectivityManager
 
 class ConnectionStateReceiver(private val context: Context) : BroadcastReceiver() {
 
-    interface OnConnectionStateChangeListener {
+    fun interface OnConnectionStateChangeListener {
         fun onConnectionStateChanged(isConnectionAvailable: Boolean)
     }
 

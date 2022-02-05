@@ -1,72 +1,84 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-import com.crashlytics.android.Crashlytics
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
+import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.data.pojo.LessonMapper
+import kozyriatskyi.anton.sked.data.pojo.LessonNetwork
 import kozyriatskyi.anton.sked.data.pojo.Teacher
 import kozyriatskyi.anton.sked.data.repository.ConnectionStateProvider
 import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.repository.ScheduleProvider
 import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import kozyriatskyi.anton.sked.repository.TeacherInfoProvider
-import kozyriatskyi.anton.sked.util.FirebaseAnalyticsLogger
+import kozyriatskyi.anton.sked.util.DateManipulator
 import kozyriatskyi.anton.sked.util.JobManager
-import java.util.*
 
-class TeacherLoginInteractor(private val teacherInfoProvider: TeacherInfoProvider,
-                             private val userInfoStorage: UserInfoStorage, // to write info into
-                             private val scheduleProvider: ScheduleProvider, // to get lessons from
-                             private val scheduleRepository: ScheduleStorage, // to write lessons into
-                             private val connectionStateProvider: ConnectionStateProvider,
-                             private val mapper: LessonMapper,
-                             private val jobManager: JobManager,
-                             private val logger: FirebaseAnalyticsLogger) {
+class TeacherLoginInteractor(
+    private val teacherInfoProvider: TeacherInfoProvider,
+    private val userInfoStorage: UserInfoStorage, // to write info into
+    private val scheduleProvider: ScheduleProvider, // to get lessons from
+    private val scheduleRepository: ScheduleStorage, // to write lessons into
+    private val connectionStateProvider: ConnectionStateProvider,
+    private val mapper: LessonMapper,
+    private val jobManager: JobManager,
+    private val analyticsManager: AnalyticsManager,
+    private val dateManipulator: DateManipulator
+) {
 
-    private val departments = PublishRelay.create<Boolean>()
-    private val teachers = PublishRelay.create<String>()
-    private val schedule = PublishRelay.create<Teacher>()
+    fun connectionStateChanges(): Flow<Boolean> = connectionStateProvider.connectionStateChanges()
 
-    fun departments(): Observable<ArrayList<Item>> = departments
-            .observeOn(Schedulers.io())
-            .map { teacherInfoProvider.getDepartments() }
-            .map { ArrayList(it) }
-            .hide()
-
-    fun teachers(): Observable<ArrayList<Item>> = teachers
-            .observeOn(Schedulers.io())
-            .map { teacherInfoProvider.getTeachers(it) }
-            .map { ArrayList(it) }
-            .hide()
-
-    fun getDepartments() {
-        departments.accept(true)
+    suspend fun loadDepartments(): Result<List<Item>> = kotlin.runCatching {
+        teacherInfoProvider.getDepartments()
+    }.onFailure {
+        analyticsManager.logFailure(
+            message = "Teachers departments loading failed",
+            throwable = it
+        )
     }
 
-    fun getTeachers(departmentId: String) {
-        teachers.accept(departmentId)
+    suspend fun loadTeachers(departmentId: String): Result<List<Item>> = kotlin.runCatching {
+        teacherInfoProvider.getTeachers(departmentId)
+    }.onFailure {
+        val msg = """
+                Teachers list loading failed:
+                departmentId: $departmentId
+                """.trimIndent()
+
+        analyticsManager.logFailure(
+            message = msg,
+            throwable = it
+        )
     }
 
-    fun connectionStateChanges(): Observable<Boolean> =
-            connectionStateProvider.connectionStateChanges()
+    suspend fun loadSchedule(teacher: Teacher): Result<List<LessonNetwork>> {
+        return kotlin.runCatching {
+            scheduleProvider.getSchedule(
+                user = teacher,
+                startDate = dateManipulator.getFirstDayOfWeekDate(),
+                endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
+            )
+        }.onSuccess {
+            scheduleRepository.saveLessons(mapper.networkToDb(it))
 
-    fun loadSchedule(teacher: Teacher) {
-        schedule.accept(teacher)
+            jobManager.launchUpdaterJob()
+            analyticsManager.logUserType(AnalyticsManager.UserType.Teacher)
+            userInfoStorage.saveUser(teacher)
+
+        }.onFailure {
+            val msg = """
+                Teacher schedule loading failed:
+                department: ${teacher.department}
+                departmentId: ${teacher.departmentId}
+                teacher: ${teacher.teacher}
+                teacherId: ${teacher.teacherId}
+                """.trimIndent()
+
+            analyticsManager.logFailure(
+                message = msg,
+                throwable = it
+            )
+        }
     }
-
-    fun scheduleLoadingStatus(): Observable<Boolean>  = schedule
-            .observeOn(Schedulers.io())
-            .map(scheduleProvider::getSchedule)
-            .map(mapper::networkToDb)
-            .map { scheduleRepository.saveLessons(it) }
-            .map { true }
-            .doOnNext {
-                jobManager.launchUpdaterJob()
-                logger.logTeacher()
-            }
-            .doOnError { Crashlytics.logException(it) }
-
-    fun saveUser(teacher: Teacher) = userInfoStorage.saveUser(teacher)
 }

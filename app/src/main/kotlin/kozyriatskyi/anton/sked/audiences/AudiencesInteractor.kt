@@ -1,15 +1,36 @@
 package kozyriatskyi.anton.sked.audiences
 
-import io.reactivex.Single
+import kozyriatskyi.anton.sked.analytics.AnalyticsManager
 import kozyriatskyi.anton.sked.data.pojo.AudienceNetwork
 import kozyriatskyi.anton.sked.repository.AudiencesProvider
 import kozyriatskyi.anton.sked.repository.Time
-import kozyriatskyi.anton.sked.util.safeSingle
 
-class AudiencesInteractor(private val audiencesProvider: AudiencesProvider) {
+class AudiencesInteractor(
+    private val audiencesProvider: AudiencesProvider,
+    private val analyticsManager: AnalyticsManager
+) {
 
-    fun getAudiences(date: String, lessonStart: String, lessonEnd: String): Single<List<AudienceNetwork>> =
-            safeSingle { audiencesProvider.getAudiences(date, lessonStart, lessonEnd) }
+    suspend fun getAudiences(
+        date: String,
+        lessonStart: String,
+        lessonEnd: String
+    ): Result<List<AudienceNetwork>> = kotlin.runCatching {
+        audiencesProvider.getAudiences(date, lessonStart, lessonEnd)
+    }.onFailure {
+        analyticsManager.logFailure(
+            message = "Error loading classrooms",
+            throwable = it
+        )
+    }
 
-    fun getTimes(): Single<Pair<List<Time>, List<Time>>> = safeSingle(audiencesProvider::getTimes)
+
+    suspend fun getTimes(): Result<Pair<List<Time>, List<Time>>> = kotlin.runCatching {
+        audiencesProvider.getTimes()
+    }
+        .onFailure {
+            analyticsManager.logFailure(
+                message = "Error loading classroom times",
+                throwable = it
+            )
+        }
 }
