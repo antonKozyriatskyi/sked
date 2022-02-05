@@ -1,1 +1,3 @@
-Bugfixes and improvements
+Fix crash when changing switching notifications on or off
+Add capability to select first day of week
+Sked now uses beckend
