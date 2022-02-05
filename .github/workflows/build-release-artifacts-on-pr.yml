@@ -1,4 +1,4 @@
-name: Publish release APK and AAB artifacts
+name: Publish release AAB artifact
 
 on:
   pull_request:
@@ -52,9 +52,6 @@ jobs:
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/update-version-code-and-name.sh ${GITHUB_HEAD_REF} ${GITHUB_REPOSITORY} ${GITHUB_WORKSPACE} "${{ env.release_name }}" ${GITHUB_TOKEN}
 
-      - name: Build release APK
-        run: ./gradlew assembleRelease --stacktrace
-
       - name: Build release AAB
         run: ./gradlew bundleRelease --stacktrace
 
@@ -63,7 +60,7 @@ jobs:
         with:
           serviceAccountJson: "${{ secrets.KEYSTORE_REPO_TARGET }}/service_account.json"
           packageName: kozyriatskyi.anton.sked
-          releaseFiles: app/build/outputs/apk/release/*.apk,app/build/outputs/bundle/release/*.aab
+          releaseFiles: app/build/outputs/bundle/release/*.aab
           track: beta
           userFraction: 0.1
           status: inProgress
