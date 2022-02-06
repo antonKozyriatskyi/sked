@@ -145,6 +145,6 @@ class StickyHeaderItemDecoration(recyclerView: RecyclerView) : RecyclerView.Item
 
         view.measure(childWidthSpec, childHeightSpec)
 
-        view.layout(paddingStart, parent.paddingTop, parent.width - paddingEnd, parent.paddingTop + view.measuredHeight)
+        view.layout(0, parent.paddingTop, parent.width, parent.paddingTop + view.measuredHeight)
     }
 }
