@@ -69,9 +69,11 @@ jobs:
           mappingFile: app/build/outputs/mapping/release/mapping.txt
 
       - name: Tag release version
+        if: success()
         run: |
          "${GITHUB_WORKSPACE}"/.github/workflows/tag-release.sh "${{ env.release_name }}"
 
       - name: Push updated version
+        if: success()
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"
