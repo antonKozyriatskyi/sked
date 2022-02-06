@@ -41,6 +41,7 @@ jobs:
           chmod +x gradlew
           chmod +x "${GITHUB_WORKSPACE}/.github/workflows/tag-release.sh"
           chmod +x "${GITHUB_WORKSPACE}/.github/workflows/update-version-code-and-name.sh"
+          chmod +x "${GITHUB_WORKSPACE}/.github/workflows/push-updated-version.sh"
 
       - name: Get release name
         run: |
@@ -70,3 +71,7 @@ jobs:
       - name: Tag release version
         run: |
          "${GITHUB_WORKSPACE}"/.github/workflows/tag-release.sh "${{ env.release_name }}"
+
+      - name: Push updated version
+        run: |
+          "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"

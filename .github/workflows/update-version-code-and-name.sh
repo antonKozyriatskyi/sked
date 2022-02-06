@@ -9,9 +9,3 @@ git fetch
 git checkout -b "$branch" "origin/$branch"
 
 kotlinc -script "${workspace}/.github/workflows/update-release-version.kts" -- --name "$releaseName" --workspace "$workspace"
-
-git config --local user.name "GitHub CI"
-git config --local user.email "ci@github.com"
-git add "$workspace/app/build.gradle"
-git commit -m "Prepare release $releaseName [skip-ci]"
-git push origin
