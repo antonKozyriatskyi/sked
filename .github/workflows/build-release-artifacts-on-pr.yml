@@ -71,3 +71,7 @@ jobs:
       - name: Tag release version
         run: |
          "${GITHUB_WORKSPACE}"/.github/workflows/tag-release.sh "${{ env.release_name }}"
+
+      - name: Push updated version
+        run: |
+          "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"
