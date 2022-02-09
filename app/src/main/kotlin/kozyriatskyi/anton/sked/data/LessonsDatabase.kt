@@ -31,10 +31,12 @@ abstract class LessonsDatabase : RoomDatabase() {
                 synchronized(LessonsDatabase::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(
-                                context.applicationContext,
-                                LessonsDatabase::class.java, DB_NAME)
-                                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
-                                .build()
+                            context.applicationContext,
+                            LessonsDatabase::class.java, DB_NAME
+                        )
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                            .fallbackToDestructiveMigration()
+                            .build()
                     }
                 }
             }
