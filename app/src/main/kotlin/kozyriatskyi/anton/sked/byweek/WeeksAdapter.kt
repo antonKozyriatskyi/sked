@@ -11,6 +11,10 @@ class WeeksAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int = items.size
 
+    override fun getItemId(position: Int): Long {
+        return items[position].dates.first().dayOfYear.toLong()
+    }
+
     override fun createFragment(position: Int): Fragment {
         return WeekViewFragment.create(items[position].dates)
     }
