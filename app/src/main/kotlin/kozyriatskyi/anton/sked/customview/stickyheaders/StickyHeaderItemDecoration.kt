@@ -23,7 +23,7 @@ class StickyHeaderItemDecoration(recyclerView: RecyclerView) : RecyclerView.Item
     init {
         recyclerView.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(recyclerView: RecyclerView, motionEvent: MotionEvent): Boolean {
-                return motionEvent.y <= headerHolder.itemView.height
+                return ::headerHolder.isInitialized && motionEvent.y <= headerHolder.itemView.height
             }
         })
 
