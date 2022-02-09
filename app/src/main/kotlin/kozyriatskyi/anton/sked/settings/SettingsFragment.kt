@@ -15,6 +15,7 @@ import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import kozyriatskyi.anton.sked.util.setGone
 import javax.inject.Inject
 
+
 /**
  * Created by Anton on 26.08.2017.
  */
@@ -34,8 +35,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        requireActivity().window.setWindowAnimations(R.style.WindowTransition_Fade)
 
         val timeTitle = view.findViewById<TextView>(R.id.settings_tv_update_time_title)
         val timeValue = view.findViewById<TextView>(R.id.settings_tv_update_time)
