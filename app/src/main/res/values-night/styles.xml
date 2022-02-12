@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+    <style name="AppTheme" parent="Base.AppTheme">
+        <item name="colorPrimary">@color/teal700</item>
+        <item name="colorPrimaryVariant">@color/teal900</item>
+
+        <item name="colorSecondary">@color/lightGreen600</item>
+        <item name="colorSecondaryVariant">@color/lightGreen800</item>
+
+        <item name="dividerColor">@color/grey600A120</item>
+
+        <item name="colorLessonExam">@color/purpleAс100</item>
+        <item name="colorLessonLab">@color/blue300</item>
+        <item name="colorLessonLecture">@color/orange800</item>
+        <item name="colorLessonPractice">@color/green400</item>
+        <item name="colorLessonSeminar">@color/redAс100</item>
+        <item name="colorLessonTest">@color/lightGreenAс200</item>
+
+        <item name="colorAudienceFree">@color/green400</item>
+        <item name="colorAudienceBusy">@color/redAс100</item>
+
+    </style>
 
 </resources>

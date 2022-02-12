@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="colorLessonExam" format="color|reference"/>
+    <attr name="colorLessonLab" format="color|reference"/>
+    <attr name="colorLessonLecture" format="color|reference"/>
+    <attr name="colorLessonPractice" format="color|reference"/>
+    <attr name="colorLessonLessonsDivider" format="color|reference"/>
+    <attr name="colorLessonSeminar" format="color|reference"/>
+    <attr name="colorLessonTest" format="color|reference"/>
+    <attr name="colorLessonUnknown" format="color|reference"/>
+    <attr name="colorAudienceFree" format="color|reference"/>
+    <attr name="colorAudienceBusy" format="color|reference"/>
+
+</resources>

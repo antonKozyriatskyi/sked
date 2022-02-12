@@ -12,13 +12,12 @@
         android:id="@+id/audiences_sheet_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/audiences_sheet_header_height"
-        android:background="?colorAccent">
+        android:background="?colorSecondary">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?selectableItemBackground"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:background="?selectableItemBackground">
 
             <TextView
                 android:id="@+id/audiences_time_title"
@@ -68,9 +67,9 @@
         android:layout_height="wrap_content"
         android:background="?android:colorBackground">
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/audiences_time_progress"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
@@ -81,12 +80,14 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/audiences_time_date_edittext"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textColor="?colorSecondary"
+            app:rippleColor="?colorSecondaryVariant"
             app:layout_constraintEnd_toEndOf="@id/audiences_time_start_spinner"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@id/audiences_time_start_spinner"
@@ -137,7 +138,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:spinnerMode="dialog"
             app:layout_constraintBottom_toBottomOf="@id/audiences_time_end_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -150,7 +150,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:spinnerMode="dialog"
             app:layout_constraintBottom_toBottomOf="@id/audiences_time_start_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

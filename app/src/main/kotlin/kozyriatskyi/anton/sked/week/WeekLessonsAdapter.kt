@@ -4,9 +4,9 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.customview.stickyheaders.StickyHeaderAdapter
 import kozyriatskyi.anton.sked.data.pojo.DayUi
@@ -129,7 +129,7 @@ class WeekLessonsAdapter(
             lessonName.text = lesson.name
             lessonWho.text = lesson.who
             lessonType.text = lesson.type
-            lessonType.setTextColor(ContextCompat.getColor(itemView.context, lesson.typeColorRes))
+            lessonType.setTextColor(MaterialColors.getColor(itemView, lesson.typeColorAttr))
             lessonNumber.text = lesson.number
             lessonCabinet.text = lesson.cabinet
             lessonTime.text = lesson.time

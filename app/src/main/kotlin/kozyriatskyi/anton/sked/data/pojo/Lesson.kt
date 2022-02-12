@@ -34,7 +34,7 @@ data class LessonUi(
     val number: String,
     val type: String,
     val cabinet: String,
-    @ColorRes val typeColorRes: Int,
+    val typeColorAttr: Int,
     val shortName: String,
     val name: String,
     val addedOnDate: String,
@@ -88,7 +88,7 @@ class LessonMapper(
             number = it.number,
             type = it.type,
             cabinet = it.cabinet,
-            typeColorRes = color(it.type),
+            typeColorAttr = color(it.type),
             shortName = it.shortName,
             name = it.name,
             addedOnDate = it.addedOnDate,
@@ -113,12 +113,12 @@ class LessonMapper(
 
     @ColorRes
     private fun color(type: String): Int = when (type) {
-        "Лк" -> R.color.lessonTypeLecture
-        "Пз" -> R.color.lessonTypePractice
-        "Лб" -> R.color.lessonTypeLab
-        "Екз", "Экз" -> R.color.lessonTypeExamLight
-        "Зал", "Зач" -> R.color.lessonTypeTest
-        "Сем" -> R.color.lessonTypeSeminar
-        else -> R.color.lessonTypeUnknown
+        "Лк" -> R.attr.colorLessonLecture
+        "Пз" -> R.attr.colorLessonPractice
+        "Лб" -> R.attr.colorLessonLab
+        "Екз", "Экз" -> R.attr.colorLessonExam
+        "Зал", "Зач" -> R.attr.colorLessonTest
+        "Сем" -> R.attr.colorLessonSeminar
+        else -> R.attr.colorLessonUnknown
     }
 }

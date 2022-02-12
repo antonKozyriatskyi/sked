@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Item
 import kozyriatskyi.anton.sked.di.Injector
@@ -39,7 +39,7 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
     @InjectPresenter
     lateinit var presenter: StudentLoginPresenter
 
-    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBar: LinearProgressIndicator
     private lateinit var facultiesSpinner: Spinner
     private lateinit var coursesSpinner: Spinner
     private lateinit var groupsSpinner: Spinner
@@ -75,7 +75,7 @@ class StudentLoginFragment : MvpAppCompatFragment(), StudentLoginView, AdapterVi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_student_login, container, false)
 
-        progressBar = view.find<ProgressBar>(R.id.progress_login_student)
+        progressBar = view.find(R.id.progress_login_student)
 
         facultiesSpinner = view.find<Spinner>(R.id.spinner_login_student_faculties)
         coursesSpinner = view.find<Spinner>(R.id.spinner_login_student_courses)

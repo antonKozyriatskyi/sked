@@ -11,6 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.R
@@ -131,7 +132,13 @@ class UpdaterJobService(appContext: Context, params: WorkerParameters) : Corouti
             .setContentTitle(context.getString(R.string.notification_schedule_updated_title))
             .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_notif_update)
-            .setColor(ContextCompat.getColor(context, R.color.primary))
+            .setColor(
+                MaterialColors.getColor(
+                    applicationContext,
+                    R.attr.colorPrimary,
+                    ContextCompat.getColor(context, R.color.teal500)
+                )
+            )
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_MIN)

@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator
 import android.annotation.TargetApi
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
@@ -14,11 +15,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.repository.Time
 import kozyriatskyi.anton.sked.util.setDisabled
@@ -35,10 +38,11 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
     private lateinit var overlayView: OverlayView
 
     private lateinit var headerView: View
+    private lateinit var headerTitle: TextView
     private lateinit var timeStartSpinner: Spinner
     private lateinit var timeEndSpinner: Spinner
     private lateinit var dateText: Button
-    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBar: LinearProgressIndicator
     private lateinit var chooseText: TextView
     private lateinit var upIcon: ImageView
 
@@ -167,6 +171,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
         super.onFinishInflate()
 
         headerView = findViewById<View>(R.id.audiences_sheet_header)
+        headerTitle = findViewById(R.id.audiences_time_title)
         timeStartSpinner = findViewById(R.id.audiences_time_start_spinner)
         timeEndSpinner = findViewById(R.id.audiences_time_end_spinner)
         dateText = findViewById(R.id.audiences_time_date_edittext)
@@ -194,23 +199,32 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
 
         val typedValue = TypedValue()
 
-        fun resolveColor(@AttrRes id: Int): Int {
-            context.theme.resolveAttribute(id, typedValue, true)
-            return ContextCompat.getColor(context, typedValue.resourceId)
-        }
+        val headerStartColor = resolveColor(R.attr.colorPrimaryVariant, typedValue)
+        val headerEndColor = resolveColor(R.attr.colorSecondary, typedValue)
 
-        val startColor = resolveColor(R.attr.colorPrimaryDark)
-        val endColor = resolveColor(R.attr.colorAccent)
+        val headerContentStartColor = resolveColor(R.attr.colorOnPrimary, typedValue)
+        val headerContentEndColor = resolveColor(R.attr.colorOnSecondary, typedValue)
 
         val colorEvaluator = ArgbEvaluator()
-        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (slideOffset in 0f..1f) {
-                    headerView.setBackgroundColor(colorEvaluator.evaluate(slideOffset, startColor, endColor) as Int)
+                    val contentColor = colorEvaluator.evaluate(
+                        slideOffset,
+                        headerContentStartColor,
+                        headerContentEndColor
+                    ) as Int
+
+                    adjustHeaderColor(
+                        backgroundColor = colorEvaluator.evaluate(slideOffset, headerStartColor, headerEndColor) as Int,
+                        contentColor = contentColor
+                    )
+
                     overlayView.alpha = slideOffset * 0.6f
                     upIcon.alpha = 1 - slideOffset
                     chooseText.alpha = slideOffset
+
                     upIcon.translationY = upIcon.height * (slideOffset)
                     chooseText.translationY = -chooseText.height * (1 - slideOffset)
                 }
@@ -223,6 +237,21 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
 
         // show current date
         showDate(Calendar.getInstance())
+    }
+
+    private fun resolveColor(@AttrRes id: Int, typedValue: TypedValue = TypedValue()): Int {
+        context.theme.resolveAttribute(id, typedValue, true)
+        return ContextCompat.getColor(context, typedValue.resourceId)
+    }
+
+    private fun adjustHeaderColor(
+        @ColorInt backgroundColor: Int,
+        @ColorInt contentColor: Int,
+    ) {
+        headerView.setBackgroundColor(backgroundColor)
+        headerTitle.setTextColor(contentColor)
+        upIcon.imageTintList = ColorStateList.valueOf(contentColor)
+        chooseText.setTextColor(contentColor)
     }
 
     // prevent touch event from reaching to the OverlayView
@@ -276,13 +305,27 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
             return
         }
 
+        super.onRestoreInstanceState(state.superState)
+
         post {
+            val typedValue = TypedValue()
+
             behavior.state = state.sheetState
 
             // fix bug when text overlaps the icon
             if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
                 chooseText.translationY = -chooseText.height.toFloat()
                 chooseText.alpha = 0f
+
+                adjustHeaderColor(
+                    backgroundColor = resolveColor(R.attr.colorPrimaryVariant, typedValue),
+                    contentColor = resolveColor(R.attr.colorOnPrimary, typedValue),
+                )
+            } else {
+                adjustHeaderColor(
+                    backgroundColor = resolveColor(R.attr.colorSecondary, typedValue),
+                    contentColor = resolveColor(R.attr.colorOnSecondary, typedValue),
+                )
             }
 
             selectedDateCalendar.also {
@@ -293,8 +336,6 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
 
             showDate(selectedDateCalendar)
         }
-
-        super.onRestoreInstanceState(state.superState)
     }
 
     interface OnTimeSelectListener {
@@ -329,6 +370,7 @@ class AudiencesTimeSelectionSheet : LinearLayout, OverlayView.OnTapListener, Vie
 
         override fun describeContents(): Int = 0
 
+        @Suppress("unused")
         @JvmField
         val CREATOR: Parcelable.Creator<SheetSavedState> = object : Parcelable.Creator<SheetSavedState> {
             override fun createFromParcel(parcel: Parcel): SheetSavedState = SheetSavedState(parcel)
