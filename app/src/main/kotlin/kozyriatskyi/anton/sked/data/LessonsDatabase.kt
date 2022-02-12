@@ -15,7 +15,7 @@ import kozyriatskyi.anton.sked.util.logI
  * Created by Anton on 27.07.2017.
  */
 
-private const val DB_VERSION = 4
+private const val DB_VERSION = 5
 private const val DB_NAME = "lessons.db"
 
 @Database(entities = [LessonDb::class], version = DB_VERSION)
