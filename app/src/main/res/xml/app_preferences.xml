@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.preference.PreferenceCategory android:title="@string/pref_notifications_header">
+    <PreferenceCategory android:title="@string/pref_notifications_header">
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
@@ -9,9 +9,9 @@
             android:summary="@string/pref_notifications_schedule_updates_summary"
             android:title="@string/pref_notifications_schedule_updates_title" />
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <androidx.preference.PreferenceCategory android:title="@string/pref_appearance_header">
+    <PreferenceCategory android:title="@string/pref_appearance_header">
 
         <ListPreference
             android:defaultValue="0"
@@ -29,6 +29,6 @@
             android:summary="%s"
             android:title="@string/pref_first_day_of_week_header" />
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-</androidx.preference.PreferenceScreen>
+</PreferenceScreen>
