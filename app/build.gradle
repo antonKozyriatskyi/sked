@@ -111,8 +111,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.2.8'
     implementation 'com.google.firebase:firebase-analytics:20.1.0'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     implementation "com.github.moxy-community:moxy:$moxy"
     implementation "com.github.moxy-community:moxy-androidx:$moxy"
     kapt "com.github.moxy-community:moxy-compiler:$moxy"
