@@ -150,10 +150,4 @@ class AudiencesActivity : MvpAppCompatActivity(), AudiencesView, AudiencesTimeSe
         timeSheet.unlock()
         timeSheet.collapseAndLock()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        if (isFinishing) Injector.release(this)
-    }
 }

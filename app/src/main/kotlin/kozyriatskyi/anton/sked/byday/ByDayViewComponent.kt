@@ -1,12 +1,16 @@
 package kozyriatskyi.anton.sked.byday
 
-import dagger.Component
+import dagger.Subcomponent
 import kozyriatskyi.anton.sked.di.ByDay
-import kozyriatskyi.anton.sked.di.AppComponent
 
 @ByDay
-@Component(modules = [ByDayViewModule::class],
-        dependencies = [AppComponent::class])
+@Subcomponent(modules = [ByDayViewModule::class])
 interface ByDayViewComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): ByDayViewComponent
+    }
+
     fun inject(fragment: ByDayViewFragment)
 }

@@ -86,20 +86,16 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionCha
     }
 
     override fun setTitle(title: String) {
-//        toolbarTitle = title
         supportActionBar?.title = title
-//        supportActionBar?.title = toolbarTitle
     }
 
     override fun showStudentLayout() {
-//        supportActionBar?.title = toolbarTitle
         supportFragmentManager.beginTransaction()
                 .add(R.id.login_layout_container, StudentLoginFragment(), StudentLoginFragment.TAG)
                 .commit()
     }
 
     override fun showTeacherLayout() {
-//        supportActionBar?.title = toolbarTitle
         supportFragmentManager.beginTransaction()
                 .add(R.id.login_layout_container, TeacherLoginFragment(), TeacherLoginFragment.TAG)
                 .commit()
@@ -112,6 +108,14 @@ class LoginActivity : MvpAppCompatActivity(), LoginView, OnInternetConnectionCha
             onLoadButtonClickListener = fragment
         } else {
             throw IllegalArgumentException("fragment $fragment must implement OnLoadButtonClickListener")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (isFinishing) {
+            Injector.clear(this)
         }
     }
 }

@@ -4,32 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import kozyriatskyi.anton.sked.audiences.AudiencesActivity
 import kozyriatskyi.anton.sked.byday.ByDayViewFragment
-import kozyriatskyi.anton.sked.byday.DaggerByDayViewComponent
 import kozyriatskyi.anton.sked.byweek.ByWeekViewFragment
-import kozyriatskyi.anton.sked.byweek.DaggerByWeekViewComponent
-import kozyriatskyi.anton.sked.day.DaggerDayViewComponent
 import kozyriatskyi.anton.sked.day.DayViewFragment
-import kozyriatskyi.anton.sked.day.DayViewModule
-import kozyriatskyi.anton.sked.di.module.AppModule
-import kozyriatskyi.anton.sked.login.DaggerLoginComponent
 import kozyriatskyi.anton.sked.login.LoginActivity
-import kozyriatskyi.anton.sked.login.LoginModule
+import kozyriatskyi.anton.sked.login.LoginComponent
 import kozyriatskyi.anton.sked.login.LoginView
-import kozyriatskyi.anton.sked.login.student.DaggerStudentLoginComponent
 import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
-import kozyriatskyi.anton.sked.login.teacher.DaggerTeacherLoginComponent
 import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
-import kozyriatskyi.anton.sked.main.DaggerMainComponent
 import kozyriatskyi.anton.sked.main.MainActivity
-import kozyriatskyi.anton.sked.repository.AudiencesComponent
-import kozyriatskyi.anton.sked.repository.DaggerAudiencesComponent
-import kozyriatskyi.anton.sked.settings.DaggerSettingsComponent
+import kozyriatskyi.anton.sked.main.MainComponent
 import kozyriatskyi.anton.sked.settings.SettingsFragment
-import kozyriatskyi.anton.sked.updater.DaggerUpdaterComponent
 import kozyriatskyi.anton.sked.updater.UpdaterJobService
-import kozyriatskyi.anton.sked.week.DaggerWeekViewComponent
 import kozyriatskyi.anton.sked.week.WeekViewFragment
-import kozyriatskyi.anton.sked.week.WeekViewModule
 import java.time.LocalDate
 
 /**
@@ -38,106 +24,65 @@ import java.time.LocalDate
 @SuppressLint("StaticFieldLeak")
 object Injector {
 
-    private lateinit var appContext: Context
+    lateinit var appComponent: AppComponent
 
-    val appComponent: AppComponent by lazy {
-        DaggerAppComponent.builder()
-                .appModule(AppModule(appContext))
-                .build()
-    }
+    private var mainComponent: MainComponent? = null
 
-    private var audiencesComponent: AudiencesComponent? = null
-        get() {
-            if (field == null) {
-                field = DaggerAudiencesComponent.builder()
-                        .appComponent(appComponent)
-                        .build()
-            }
-            return field
-        }
+    private var loginComponent: LoginComponent? = null
 
-    fun init(appContext: Context) {
-        this.appContext = appContext
-    }
-
-    fun inject(activity: MainActivity) {
-        DaggerMainComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(activity)
-    }
-
-    fun inject(fragment: StudentLoginFragment) {
-        DaggerStudentLoginComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(fragment: TeacherLoginFragment) {
-        DaggerTeacherLoginComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(fragment: DayViewFragment, date: LocalDate) {
-        DaggerDayViewComponent.builder()
-                .dayViewModule(DayViewModule(date))
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(fragment: WeekViewFragment, dates: List<LocalDate>) {
-        DaggerWeekViewComponent.builder()
-                .weekViewModule(WeekViewModule(dates))
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(fragment: ByDayViewFragment) {
-        DaggerByDayViewComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(fragment: ByWeekViewFragment) {
-        DaggerByWeekViewComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(service: UpdaterJobService) {
-        DaggerUpdaterComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(service)
-    }
-
-    fun inject(fragment: SettingsFragment) {
-        DaggerSettingsComponent.builder()
-                .appComponent(appComponent)
-                .build()
-                .inject(fragment)
-    }
-
-    fun inject(activity: AudiencesActivity) {
-        audiencesComponent!!.inject(activity)
-    }
-
-    fun release(activity: AudiencesActivity) {
-        audiencesComponent = null
+    fun init(context: Context) {
+        appComponent = DaggerAppComponent.factory().create(context)
     }
 
     fun inject(activity: LoginActivity, userType: LoginView.UserType) {
-        DaggerLoginComponent.builder()
-                .appComponent(appComponent)
-                .loginModule(LoginModule(userType))
-                .build()
-                .inject(activity)
+        loginComponent = appComponent.loginComponent().create(userType).apply {
+            inject(activity)
+        }
+    }
+
+    fun inject(fragment: StudentLoginFragment) {
+       loginComponent!!.inject(fragment)
+    }
+
+    fun inject(fragment: TeacherLoginFragment) {
+        loginComponent!!.inject(fragment)
+    }
+
+    fun clear(activity: LoginActivity) {
+        loginComponent = null
+    }
+
+    fun inject(activity: MainActivity) {
+        mainComponent = appComponent.mainComponent().create().apply {
+            inject(activity)
+        }
+    }
+
+    fun inject(fragment: DayViewFragment, date: LocalDate) {
+        mainComponent!!.dayViewComponent().create(date).inject(fragment)
+    }
+
+    fun inject(fragment: WeekViewFragment, dates: List<LocalDate>) {
+        mainComponent!!.weekViewComponent().create(dates).inject(fragment)
+    }
+
+    fun inject(fragment: ByDayViewFragment) {
+        mainComponent!!.byDayViewComponent().create().inject(fragment)
+    }
+
+    fun inject(fragment: ByWeekViewFragment) {
+        mainComponent!!.byWeekViewComponent().create().inject(fragment)
+    }
+
+    fun inject(service: UpdaterJobService) {
+        appComponent.updaterComponent().create().inject(service)
+    }
+
+    fun inject(fragment: SettingsFragment) {
+        mainComponent!!.settingsComponent().create().inject(fragment)
+    }
+
+    fun inject(activity: AudiencesActivity) {
+        mainComponent!!.classroomsComponent().create().inject(activity)
     }
 }

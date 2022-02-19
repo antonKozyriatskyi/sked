@@ -8,7 +8,7 @@ import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import java.time.LocalDate
 
 @Module
-class WeekViewModule(private val dates: List<LocalDate>) {
+class WeekViewModule {
 
     @Provides
     fun provideInteractor(
@@ -19,6 +19,7 @@ class WeekViewModule(private val dates: List<LocalDate>) {
     @Provides
     fun providePresenter(
         interactor: WeekViewInteractor,
-        dayMapper: DayMapper
+        dayMapper: DayMapper,
+        dates: List<LocalDate>
     ): WeekViewPresenter = WeekViewPresenter(dates, interactor, dayMapper)
 }
