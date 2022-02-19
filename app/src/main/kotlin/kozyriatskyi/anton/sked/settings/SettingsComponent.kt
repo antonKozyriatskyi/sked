@@ -1,11 +1,16 @@
 package kozyriatskyi.anton.sked.settings
 
-import dagger.Component
+import dagger.Subcomponent
 import kozyriatskyi.anton.sked.di.Settings
-import kozyriatskyi.anton.sked.di.AppComponent
 
 @Settings
-@Component(dependencies = [AppComponent::class])
+@Subcomponent
 interface SettingsComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): SettingsComponent
+    }
+
     fun inject(settingsFragment: SettingsFragment)
 }

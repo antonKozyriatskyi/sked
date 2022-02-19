@@ -8,7 +8,7 @@ import kozyriatskyi.anton.sked.repository.ScheduleStorage
 import java.time.LocalDate
 
 @Module
-class DayViewModule(private val date: LocalDate) {
+class DayViewModule {
 
     @Provides
     fun provideInteractor(scheduleRepository: ScheduleStorage, userInfoStorage: UserInfoStorage): DayViewInteractor {
@@ -16,7 +16,7 @@ class DayViewModule(private val date: LocalDate) {
     }
 
     @Provides
-    fun providePresenter(dayViewInteractor: DayViewInteractor, dayMapper: DayMapper): DayViewPresenter {
+    fun providePresenter(dayViewInteractor: DayViewInteractor, dayMapper: DayMapper, date: LocalDate): DayViewPresenter {
         return DayViewPresenter(date, dayViewInteractor, dayMapper)
     }
 }

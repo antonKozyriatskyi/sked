@@ -5,8 +5,8 @@ import dagger.Provides
 import kozyriatskyi.anton.sked.data.repository.ResourceManager
 
 @Module
-class LoginModule(private val userType: LoginView.UserType) {
+class LoginModule {
 
     @Provides
-    fun provideLoginPresenter(resourceManager: ResourceManager): LoginPresenter = LoginPresenter(userType, resourceManager)
+    fun provideLoginPresenter(resourceManager: ResourceManager, userType: LoginView.UserType): LoginPresenter = LoginPresenter(userType, resourceManager)
 }

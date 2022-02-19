@@ -3,6 +3,7 @@ package kozyriatskyi.anton.sked.di.module
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kozyriatskyi.anton.sked.analytics.AnalyticsManager
@@ -18,20 +19,16 @@ import kozyriatskyi.anton.sked.util.JobManager
  * Created by Anton on 13.07.2017.
  */
 
-@Module
-class AppModule(private val appContext: Context) {
+@Module(includes = [AppModule.Bindings::class])
+class AppModule {
+
+    @Provides
+    fun provideJobManager(context: Context): JobManager = JobManager(context)
 
     @App
     @Provides
-    fun provideContext(): Context = appContext
-
-    @Provides
-    fun provideJobManager(): JobManager = JobManager(appContext)
-
-    @App
-    @Provides
-    fun provideAnalyticsManager(): AnalyticsManager {
-        val analytics = FirebaseAnalytics.getInstance(appContext)
+    fun provideFirebaseAnalyticsManager(context: Context): FirebaseAnalyticsManager {
+        val analytics = FirebaseAnalytics.getInstance(context)
         val crashlytics = FirebaseCrashlytics.getInstance()
 
         return FirebaseAnalyticsManager(analytics, crashlytics)
@@ -53,5 +50,13 @@ class AppModule(private val appContext: Context) {
     @Provides
     fun provideAppConfigurationManager(): AppConfigurationManager = AppConfigurationManager()
 
+    @Module
+    abstract class Bindings {
+
+        @App
+        @Binds
+        abstract fun provideAnalyticsManager(analyticsManager: FirebaseAnalyticsManager): AnalyticsManager
+
+    }
 }
 

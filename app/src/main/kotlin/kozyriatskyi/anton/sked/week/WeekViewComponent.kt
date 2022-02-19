@@ -1,12 +1,18 @@
 package kozyriatskyi.anton.sked.week
 
-import dagger.Component
-import kozyriatskyi.anton.sked.di.AppComponent
+import dagger.BindsInstance
+import dagger.Subcomponent
 import kozyriatskyi.anton.sked.di.Week
+import java.time.LocalDate
 
 @Week
-@Component(modules = [WeekViewModule::class],
-        dependencies = [AppComponent::class])
+@Subcomponent(modules = [WeekViewModule::class])
 interface WeekViewComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(@BindsInstance dates: List<LocalDate>): WeekViewComponent
+    }
+
     fun inject(fragment: WeekViewFragment)
 }
