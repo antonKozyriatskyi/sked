@@ -1,11 +1,22 @@
 name: Build debug artifacts
 
 on:
-  push:
-    branches: [dev]
-
-  pull_request:
-    branches: [master, dev]
+  workflow_call:
+    secrets:
+      KEYSTORE_FILE:
+        required: true
+      KEYSTORE_PASSWORD:
+        required: true
+      RELEASE_KEY_ALIAS:
+        required: true
+      RELEASE_KEY_PASSWORD:
+        required: true
+      KEYSTORE_GIT_REPO:
+        required: true
+      KEYSTORE_ACCESS_TOKEN:
+        required: true
+      KEYSTORE_REPO_TARGET:
+        required: true
 
 env:
   KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
@@ -15,7 +26,6 @@ env:
 
 jobs:
   build-debug-artifacts:
-    name: Build debug apk and appbundle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +42,7 @@ jobs:
           token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
           path: ${{ secrets.KEYSTORE_REPO_TARGET }}
 
-      - name: Move google-services to app folder
+      - name: Move google-services.json to app folder
         run: mv "${{ secrets.KEYSTORE_REPO_TARGET }}/google-services.json" app
 
       - name: Grant execute permission for gradlew
@@ -45,5 +55,3 @@ jobs:
       - name: Build debug AAB
         run: |
           ./gradlew bundleDebug --stacktrace
-
-
