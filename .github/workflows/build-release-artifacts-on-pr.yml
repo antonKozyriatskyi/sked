@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      startsWith(github.head_ref, 'release/') && !startsWith(github.event.commits[0].message, 'Prepare release')
+      startsWith(github.head_ref, 'release/') && !startsWith(github.event.commits[0].message, 'Update version to')
 
     steps:
       - uses: actions/checkout@v2
@@ -79,3 +79,27 @@ jobs:
         if: success()
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"
+
+      - name: Create branch with updated version code and name
+        if: success()
+        run: |
+          branchName="update-app-version-to-${{ env.release_name }}"
+          echo "UPDATE_VERSION_BRANCH=$branchName" >> $GITHUB_ENV
+
+          lastCommitSha="$(git log -1 --format="%H")"
+
+          git fetch
+          git reset HEAD --hard
+          git checkout -b dev origin/dev
+          git checkout -b "$branchName"
+          git cherry-pick "$lastCommitSha"
+          git push -u origin "$branchName"
+
+      - name: Create PR with new version to dev branch
+        if: success()
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: ${{ env.UPDATE_VERSION_BRANCH }}
+          destination_branch: "dev"
+          pr_title: "Update version to ${{ env.release_name }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
