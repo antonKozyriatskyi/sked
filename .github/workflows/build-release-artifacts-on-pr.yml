@@ -3,7 +3,7 @@ name: Publish release AAB artifact
 on:
   pull_request:
     branches:
-      - master
+      - dev
 
 env:
   KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
@@ -28,15 +28,15 @@ jobs:
           java-version: '11'
           cache: 'gradle'
 
-      - name: Checkout secret repo
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ secrets.KEYSTORE_GIT_REPO }}
-          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-          path: ${{ secrets.KEYSTORE_REPO_TARGET }}
-
-      - name: Move google-services to app folder
-        run: mv "${{ secrets.KEYSTORE_REPO_TARGET }}/google-services.json" app
+#      - name: Checkout secret repo
+#        uses: actions/checkout@v2
+#        with:
+#          repository: ${{ secrets.KEYSTORE_GIT_REPO }}
+#          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
+#          path: ${{ secrets.KEYSTORE_REPO_TARGET }}
+#
+#      - name: Move google-services to app folder
+#        run: mv "${{ secrets.KEYSTORE_REPO_TARGET }}/google-services.json" app
 
       - name: Grant execute permission for sh scripts
         run: |
@@ -55,27 +55,48 @@ jobs:
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/update-version-code-and-name.sh ${GITHUB_HEAD_REF} ${GITHUB_REPOSITORY} ${GITHUB_WORKSPACE} "${{ env.release_name }}" ${GITHUB_TOKEN}
 
-      - name: Build release AAB
-        run: ./gradlew bundleRelease --stacktrace
+#      - name: Build release AAB
+#        run: ./gradlew bundleRelease --stacktrace
+#
+#      - name: Deploy to beta track
+#        uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJson: "${{ secrets.KEYSTORE_REPO_TARGET }}/service_account.json"
+#          packageName: kozyriatskyi.anton.sked
+#          releaseFiles: app/build/outputs/bundle/release/*.aab
+#          track: beta
+#          userFraction: 0.1
+#          status: inProgress
+#          whatsNewDirectory: distribution/changelog
+#          mappingFile: app/build/outputs/mapping/release/mapping.txt
 
-      - name: Deploy to beta track
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJson: "${{ secrets.KEYSTORE_REPO_TARGET }}/service_account.json"
-          packageName: kozyriatskyi.anton.sked
-          releaseFiles: app/build/outputs/bundle/release/*.aab
-          track: beta
-          userFraction: 0.1
-          status: inProgress
-          whatsNewDirectory: distribution/changelog
-          mappingFile: app/build/outputs/mapping/release/mapping.txt
-
-      - name: Tag release version
-        if: success()
-        run: |
-         "${GITHUB_WORKSPACE}"/.github/workflows/tag-release.sh "${{ env.release_name }}"
+#      - name: Tag release version
+#        if: success()
+#        run: |
+#         "${GITHUB_WORKSPACE}"/.github/workflows/tag-release.sh "${{ env.release_name }}"
 
       - name: Push updated version
         if: success()
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"
+      - name: Create branch with updated version code and name
+        if: success()
+        run: |
+          branchName="update-app-version-${{ env.release_name }}"
+          lastCommitSha="$(git log -1 --format="%H")"
+
+#          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+          git fetch
+
+          git reset HEAD --hard
+          git checkout -b "dev" "origin/dev"
+          git checkout -b "$branchName"
+          git cherry-pick "$lastCommitSha"
+          git push -u origin "$branchName"
+
+      - name: Create PR with new version to dev branch
+        uses: devops-infra/action-pull-request@v0.4.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: ${{ github.event.commits[0].message }}
+          target_branch: dev
