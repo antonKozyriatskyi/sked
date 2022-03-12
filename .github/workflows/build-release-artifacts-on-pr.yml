@@ -84,7 +84,7 @@ jobs:
         if: success()
         run: |
           branchName="update-app-version-${{ env.release_name }}"
-#          lastCommitSha="$(git log -1 --format="%H")"
+          lastCommitSha="$(git log -1 --format="%H")"
 
 #          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
 #          git fetch
