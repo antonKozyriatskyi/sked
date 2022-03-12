@@ -84,7 +84,10 @@ jobs:
         if: success()
         run: |
           branchName="update-app-version-to-${{ env.release_name }}"
+          echo "UPDATE_VERSION_BRANCH=$branchName" >> $GITHUB_ENV
+
           lastCommitSha="$(git log -1 --format="%H")"
+
           git fetch
           git reset HEAD --hard
           git checkout -b dev origin/dev
@@ -94,9 +97,9 @@ jobs:
 
       - name: Create PR with new version to dev branch
         if: success()
-        uses: peter-evans/create-pull-request@v3
+        uses: repo-sync/pull-request@v2
         with:
+          source_branch: ${{ env.UPDATE_VERSION_BRANCH }}
+          destination_branch: "dev"
+          pr_title: "Pulling ${{ env.UPDATE_VERSION_BRANCH }} into dev"
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: ${{ github.event.commits[0].message }}
-          branch: dev
-          delete-branch: true
