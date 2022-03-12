@@ -80,10 +80,10 @@ jobs:
         run: |
           "${GITHUB_WORKSPACE}"/.github/workflows/push-updated-version.sh "${GITHUB_WORKSPACE}" "${{ env.release_name }}" "${GITHUB_TOKEN}"
 
-#      - name: Create branch with updated version code and name
-#        if: success()
-#        run: |
-#          branchName="update-app-version-${{ env.release_name }}"
+      - name: Create branch with updated version code and name
+        if: success()
+        run: |
+          branchName="update-app-version-${{ env.release_name }}"
 #          lastCommitSha="$(git log -1 --format="%H")"
 
 #          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
@@ -96,6 +96,7 @@ jobs:
 #          git push -u origin "$branchName"
 
 #      - name: Create PR with new version to dev branch
+#        if: success()
 #        uses: devops-infra/action-pull-request@v0.4.2
 #        with:
 #          github_token: ${{ secrets.GITHUB_TOKEN }}
