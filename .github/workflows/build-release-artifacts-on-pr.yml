@@ -93,10 +93,10 @@ jobs:
           git push -u origin "$branchName"
 #          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
 
-#      - name: Create PR with new version to dev branch
-#        if: success()
-#        uses: devops-infra/action-pull-request@v0.4.2
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          title: ${{ github.event.commits[0].message }}
-#          target_branch: dev
+      - name: Create PR with new version to dev branch
+        if: success()
+        uses: devops-infra/action-pull-request@v0.4.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: ${{ github.event.commits[0].message }}
+          target_branch: dev
