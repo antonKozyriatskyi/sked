@@ -1,0 +1,19 @@
+name: Build debug artifacts
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-debug-artifacts:
+    uses: ./.github/workflows/build-debug-artifacts.yml
+    secrets:
+      KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      KEYSTORE_ACCESS_TOKEN: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
+      KEYSTORE_GIT_REPO: ${{ secrets.KEYSTORE_GIT_REPO }}
+      KEYSTORE_REPO_TARGET: ${{ secrets.KEYSTORE_REPO_TARGET }}
+
