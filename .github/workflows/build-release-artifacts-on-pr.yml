@@ -2,7 +2,8 @@ name: Publish release AAB artifact
 
 on:
   pull_request:
-    branches: [master]
+    branches:
+      - master
 
 env:
   KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
@@ -12,11 +13,12 @@ env:
 
 jobs:
   publish-release-artifacts:
-    name: Publish release
+    name: Publish release AAB
 
     runs-on: ubuntu-latest
 
-    if: ${{ startsWith(github.head_ref, 'release/') }}
+    if: |
+      startsWith(github.head_ref, 'release/') && !startsWith(github.event.commits[0].message, 'Prepare release')
 
     steps:
       - uses: actions/checkout@v2
