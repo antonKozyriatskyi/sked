@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      startsWith(github.head_ref, 'release/') && !startsWith(github.event.commits[0].message, 'Prepare release')
+      startsWith(github.head_ref, 'release/') && !startsWith(github.event.commits[0].message, 'Update version to')
 
     steps:
       - uses: actions/checkout@v2
@@ -100,3 +100,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ github.event.commits[0].message }}
           target_branch: dev
+          body: ""
