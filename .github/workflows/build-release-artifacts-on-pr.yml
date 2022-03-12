@@ -87,8 +87,8 @@ jobs:
           lastCommitSha="$(git log -1 --format="%H")"
           git fetch
           git reset HEAD --hard
-#          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
           git checkout -b dev origin/dev
+#          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
 #          git checkout -b "$branchName"
 #          git cherry-pick "$lastCommitSha"
 #          git push -u origin "$branchName"
