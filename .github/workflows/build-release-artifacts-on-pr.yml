@@ -83,7 +83,7 @@ jobs:
       - name: Create branch with updated version code and name
         if: success()
         run: |
-          branchName="update-app-version-${{ env.release_name }}"
+          branchName="update-app-version-to-${{ env.release_name }}"
           lastCommitSha="$(git log -1 --format="%H")"
           git fetch
           git reset HEAD --hard
@@ -91,7 +91,6 @@ jobs:
           git checkout -b "$branchName"
           git cherry-pick "$lastCommitSha"
           git push -u origin "$branchName"
-#          git remote set-url --push origin "https://antonKozyriatskyi:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
 
       - name: Create PR with new version to dev branch
         if: success()
