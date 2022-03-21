@@ -23,7 +23,7 @@ import kozyriatskyi.anton.sked.util.JobManager
         StorageModule::class,
         MapperModule::class,
         ScheduleProviderModule::class,
-        NetworkingModule::class
+        NetworkingModule::class,
     ]
 )
 interface AppComponent {

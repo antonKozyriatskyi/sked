@@ -24,8 +24,9 @@ class StudentLoginModule {
         ApiStudentInfoProvider(api)
 
     @Provides
-    fun providePresenter(interactor: StudentLoginInteractor): StudentLoginPresenter =
-        StudentLoginPresenter(interactor)
+    @Login
+    fun provideViewModel(interactor: StudentLoginInteractor): StudentLoginViewModel =
+        StudentLoginViewModel(interactor)
 
     @Provides
     @Login

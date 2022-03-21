@@ -24,8 +24,8 @@ class TeacherLoginModule {
         ApiTeacherInfoProvider(api)
 
     @Provides
-    fun providePresenter(interactor: TeacherLoginInteractor): TeacherLoginPresenter =
-        TeacherLoginPresenter(interactor)
+    fun provideViewModel(interactor: TeacherLoginInteractor): TeacherLoginViewModel =
+        TeacherLoginViewModel(interactor)
 
     @Provides
     @Login

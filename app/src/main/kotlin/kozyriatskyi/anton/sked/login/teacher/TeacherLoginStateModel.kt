@@ -1,42 +1,35 @@
 package kozyriatskyi.anton.sked.login.teacher
 
-class TeacherLoginStateModel {
+import kotlin.properties.Delegates
 
-    var departmentPosition = 0
-    var teacherPosition = 0
+class TeacherLoginStateModel {
 
     var isConnectionAvailable: Boolean = false
 
-    var isLoading: Boolean = false
-        set(value) {
-            if (value) {
-                isLoaded = false
-                isError = false
-            }
-            field = value
+    var isLoading: Boolean by Delegates.observable(false) { _, _, isLoading ->
+        if (isLoading) {
+            isLoaded = false
+            isError = false
         }
+    }
 
-    var isError: Boolean = false
-        set(value) {
-            if (value) {
-                isLoading = false
-                isLoaded = false
-            }
-            field = value
+    var isError: Boolean by Delegates.observable(false) { _, _, isError ->
+        if (isError) {
+            isLoading = false
+            isLoaded = false
         }
+    }
 
-    var isLoaded = false
-        set(value) {
-            if (value) {
-                isError = false
-                isLoading = false
-            }
-            field = value
+    var isLoaded by Delegates.observable(false) { _, _, isLoaded ->
+        if (isLoaded) {
+            isError = false
+            isLoading = false
         }
+    }
 
     val enableUi: Boolean
-        get() = isConnectionAvailable and isLoading.not() and isError.not()
+        get() = isConnectionAvailable && isLoading.not() && isError.not()
 
     val showProgress: Boolean
-        get() = isConnectionAvailable and isLoading and isError.not() and isLoaded.not()
+        get() = isConnectionAvailable && isLoading && isError.not() && isLoaded.not()
 }

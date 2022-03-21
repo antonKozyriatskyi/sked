@@ -8,9 +8,7 @@ import kozyriatskyi.anton.sked.byweek.ByWeekViewFragment
 import kozyriatskyi.anton.sked.day.DayViewFragment
 import kozyriatskyi.anton.sked.login.LoginActivity
 import kozyriatskyi.anton.sked.login.LoginComponent
-import kozyriatskyi.anton.sked.login.LoginView
-import kozyriatskyi.anton.sked.login.student.StudentLoginFragment
-import kozyriatskyi.anton.sked.login.teacher.TeacherLoginFragment
+import kozyriatskyi.anton.sked.login.LoginUserType
 import kozyriatskyi.anton.sked.main.MainActivity
 import kozyriatskyi.anton.sked.main.MainComponent
 import kozyriatskyi.anton.sked.settings.SettingsFragment
@@ -34,19 +32,13 @@ object Injector {
         appComponent = DaggerAppComponent.factory().create(context)
     }
 
-    fun inject(activity: LoginActivity, userType: LoginView.UserType) {
-        loginComponent = appComponent.loginComponent().create(userType).apply {
-            inject(activity)
+    fun createLoginComponent(userType: LoginUserType): LoginComponent {
+        return appComponent.loginComponent().create(userType).also {
+            loginComponent = it
         }
     }
 
-    fun inject(fragment: StudentLoginFragment) {
-       loginComponent!!.inject(fragment)
-    }
-
-    fun inject(fragment: TeacherLoginFragment) {
-        loginComponent!!.inject(fragment)
-    }
+    fun loginComponent(): LoginComponent = requireNotNull(loginComponent)
 
     fun clear(activity: LoginActivity) {
         loginComponent = null

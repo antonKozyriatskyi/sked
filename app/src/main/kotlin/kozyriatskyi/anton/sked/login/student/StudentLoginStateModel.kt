@@ -1,46 +1,38 @@
 package kozyriatskyi.anton.sked.login.student
 
+import kotlin.properties.Delegates
+
 /**
  * Created by Anton on 08.07.2017.
  */
 class StudentLoginStateModel {
 
-    var facultyPosition = 0
-    var coursePosition = 0
-    var groupPosition = 0
-
     var isConnectionAvailable: Boolean = false
 
-    var isLoading: Boolean = false
-        set(value) {
-            if (value) {
-                isLoaded = false
-                isError = false
-            }
-            field = value
+    var isLoading: Boolean by Delegates.observable(false) { _, _, isLoading ->
+        if (isLoading) {
+            isLoaded = false
+            isError = false
         }
+    }
 
-    var isError: Boolean = false
-        set(value) {
-            if (value) {
-                isLoading = false
-                isLoaded = false
-            }
-            field = value
+    var isError: Boolean by Delegates.observable(false) { _, _, isError ->
+        if (isError) {
+            isLoading = false
+            isLoaded = false
         }
+    }
 
-    var isLoaded = false
-        set(value) {
-            if (value) {
-                isError = false
-                isLoading = false
-            }
-            field = value
+    var isLoaded by Delegates.observable(false) { _, _, isLoaded ->
+        if (isLoaded) {
+            isError = false
+            isLoading = false
         }
+    }
 
     val enableUi: Boolean
-        get() = isConnectionAvailable and isLoading.not() and isError.not()
+        get() = isConnectionAvailable && isLoading.not() && isError.not()
 
     val showProgress: Boolean
-        get() = isConnectionAvailable and isLoading and isError.not() and isLoaded.not()
+        get() = isConnectionAvailable && isLoading && isError.not() && isLoaded.not()
 }

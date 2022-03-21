@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.material.composethemeadapter.MdcTheme
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.login.LoginActivity
-import kozyriatskyi.anton.sked.login.LoginView
+import kozyriatskyi.anton.sked.login.LoginUserType
 import kozyriatskyi.anton.sked.util.takeIf
 
 @Suppress("UNUSED_PARAMETER")
@@ -68,9 +68,9 @@ class IntroActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    private fun onStudentClick() = LoginActivity.start(this, LoginView.UserType.STUDENT)
+    private fun onStudentClick() = LoginActivity.start(this, LoginUserType.Student)
 
-    private fun onTeacherClick() = LoginActivity.start(this, LoginView.UserType.TEACHER)
+    private fun onTeacherClick() = LoginActivity.start(this, LoginUserType.Teacher)
 }
 
 @Composable

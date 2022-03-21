@@ -96,8 +96,9 @@ ext {
     rxandroid = '2.1.1'
     rxrelay = '2.1.0'
     preferences = '1.2.0'
+    lifecycle_version = "2.4.1"
     coroutines = '1.5.2'
-    compose = '1.0.5'
+    compose = '1.1.1'
 
     junitVersion = '4.13'
     mockitoVersion = '1.10.19'
@@ -108,6 +109,9 @@ dependencies {
 
     debugImplementation 'com.github.haroldadmin:WhatTheStack:1.0.0-alpha02'
 
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
     // Compose Material Design
     implementation "androidx.compose.material:material:$compose"
     // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
@@ -117,9 +121,9 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose"
     // Integration with ViewModels
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
     // MDC theme adapter
-    implementation "com.google.android.material:compose-theme-adapter:1.1.3"
+    implementation "com.google.android.material:compose-theme-adapter:1.1.5"
 
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.core:core-ktx:1.7.0'
