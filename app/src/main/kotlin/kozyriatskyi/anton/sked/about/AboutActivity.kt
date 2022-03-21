@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import kozyriatskyi.anton.sked.BuildConfig
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.Library
-import java.util.*
 
 class AboutActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         private const val URL_PRIVACY_POLICY = "https://firebasestorage.googleapis.com/v0/b/sked-a797c.appspot.com/o/privacy_policy.html?alt=media&token=cf8d3456-a2ff-49c8-a9f6-f879e0e55775"
-        private const val URL_VK = "http://vk.com/kozyriatskyi"
         private const val URL_TG_APP = "tg://resolve?domain=antonKozyriatskyi"
         private const val URL_TG_WEB = "http://www.telegram.me/antonKozyriatskyi"
 
@@ -38,7 +36,6 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<TextView>(R.id.about_tv_version).text = getString(R.string.about_version_name,
                 BuildConfig.VERSION_NAME)
         findViewById<TextView>(R.id.about_tv_telegram).setOnClickListener(this)
-        findViewById<TextView>(R.id.about_tv_vk).setOnClickListener(this)
         findViewById<TextView>(R.id.about_tv_privacy_policy).setOnClickListener(this)
     }
 
@@ -46,7 +43,6 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.about_tv_telegram -> if (tryOpenUri(URL_TG_APP).not()) tryOpenUri(URL_TG_WEB)
-            R.id.about_tv_vk -> tryOpenUri(URL_VK)
             R.id.about_tv_privacy_policy -> tryOpenUri(URL_PRIVACY_POLICY)
         }
     }
@@ -59,7 +55,7 @@ class AboutActivity : AppCompatActivity(), View.OnClickListener {
         return canOpen
     }
 
-    private fun getLibraries(): ArrayList<Library> {
+    private fun getLibraries(): List<Library> {
 
         val libs = ArrayList<Library>()
 

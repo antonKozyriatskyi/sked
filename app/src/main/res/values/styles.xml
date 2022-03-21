@@ -1,29 +1,79 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:spinnerMode">dialog</item>
+    <style name="AppTheme" parent="Base.AppTheme">
+
+        <item name="colorPrimary">@color/teal500</item>
+        <item name="colorPrimaryVariant">@color/teal700</item>
+
+        <item name="colorSecondary">@color/lightGreen400</item>
+        <item name="colorSecondaryVariant">@color/lightGreen600</item>
+
+        <item name="dividerColor">@color/grey200</item>
+
+        <item name="colorLessonExam">@color/yellowAс700</item>
+        <item name="colorLessonLab">@color/lightBlue700</item>
+        <item name="colorLessonLecture">@color/orange300</item>
+        <item name="colorLessonPractice">@color/green800</item>
+        <item name="colorLessonSeminar">@color/redAс700</item>
+        <item name="colorLessonTest">@color/lightGreenAс400</item>
+        <item name="colorLessonUnknown">@color/black</item>
+        <item name="colorAudienceFree">@color/green400</item>
+        <item name="colorAudienceBusy">@color/redAс700</item>
+
+    </style>
+
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <item name="android:statusBarColor">?colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">?colorPrimaryVariant</item>
+
         <item name="preferenceTheme">@style/AppTheme.Preference</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
-        <item name="actionBarPopupTheme">@style/AppTheme.PopupOverlay</item>
-        <item name="actionBarTheme">@style/AppTheme.AppBarOverlay</item>
+        <item name="actionOverflowButtonStyle">@style/Widget.Sked.ActionButton.Overflow</item>
+        <item name="tabStyle">@style/Widget.Sked.TabLayout.Colored</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Primary</item>
+        <item name="spinnerStyle">@style/Widget.Sked.Spinner</item>
+        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.Sked.LinearProgressIndicator.Secondary</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.Sked.CircularProgressIndicator.Secondary</item>
+
     </style>
 
-    <style name="AppTheme.Splash" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
-
-    <style name="AppTheme.ActionBar" parent="AppTheme">
+    <style name="AppTheme.ActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Widget.Sked.TabLayout.Colored" parent="Widget.MaterialComponents.TabLayout.Colored">
+        <item name="tabIndicatorColor">?attr/colorSecondary</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Widget.Sked.LinearProgressIndicator.Secondary" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="indicatorColor">?colorSecondary</item>
+    </style>
+
+    <style name="Widget.Sked.CircularProgressIndicator.Secondary" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">?colorSecondary</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="Widget.Sked.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:spinnerMode">dialog</item>
+    </style>
+
+    <style name="Widget.Sked.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="tint">?colorOnPrimary</item>
+    </style>
 
     <!-- Custom Preference Theme -->
     <style name="AppTheme.Preference" parent="@style/PreferenceThemeOverlay.v14.Material">

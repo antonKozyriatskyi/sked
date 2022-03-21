@@ -103,14 +103,12 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
     private fun setupMenu() {
         toolbar.inflateMenu(R.menu.main_menu)
         menuProgressItem = toolbar.menu.findItem(R.id.menu_main_update)
-        toolbar.setOnMenuItemClickListener {
-            onOptionsItemSelected(it)
-        }
+        toolbar.setOnMenuItemClickListener(::onMenuItemSelected)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.main_relogin -> IntroActivity.start(this)
+            R.id.main_relogin -> IntroActivity.start(this, true)
             R.id.main_preferences -> SettingsActivity.start(this)
             R.id.menu_main_update -> presenter.onUpdateTriggered()
             R.id.main_audiences -> AudiencesActivity.start(this)
@@ -158,7 +156,7 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     private fun checkForFirstLaunch(savedInstanceState: Bundle?) {
         if (savedInstanceState == null && userInfoStorage.isFirstLaunch()) {
-            IntroActivity.start(this)
+            IntroActivity.start(this, false)
             finish()
         }
     }

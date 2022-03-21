@@ -2,6 +2,7 @@
 
 package kozyriatskyi.anton.sked.util
 
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 
 fun <T> Flow<T>.onFirstEmit(action: suspend (T) -> Unit): Flow<T> = flow {
@@ -89,4 +90,14 @@ fun <T, R> combineFlows(
     }
 
     return accF
+}
+
+@Suppress("FunctionName")
+fun <T> MutableEventFlow(): MutableSharedFlow<T> = MutableSharedFlow(
+    extraBufferCapacity = 1,
+    onBufferOverflow = BufferOverflow.DROP_OLDEST
+)
+
+suspend fun MutableSharedFlow<Unit>.emit() {
+    emit(Unit)
 }

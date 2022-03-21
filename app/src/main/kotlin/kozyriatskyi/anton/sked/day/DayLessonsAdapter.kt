@@ -3,14 +3,13 @@ package kozyriatskyi.anton.sked.day
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.DayUi
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.util.find
 import kozyriatskyi.anton.sked.util.inflate
-import java.util.*
 
 /**
  * Created by Anton on 05.08.2017.
@@ -89,7 +88,7 @@ class DayLessonsAdapter(private val onLessonClickListener: OnLessonClickListener
             name.text = lesson.name
             who.text = lesson.who
             type.text = lesson.type
-            type.setTextColor(ContextCompat.getColor(itemView.context, lesson.typeColorRes))
+            type.setTextColor(MaterialColors.getColor(itemView, lesson.typeColorAttr))
             number.text = lesson.number
             cabinet.text = lesson.cabinet
             time.text = lesson.time

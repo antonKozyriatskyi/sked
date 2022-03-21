@@ -9,22 +9,22 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/main_appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:theme="?actionBarTheme">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/main_toolbar"
-            app:title="@string/app_name"
+            style="@style/ThemeOverlay.MaterialComponents.ActionBar.Surface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|snap|enterAlways" />
+            app:layout_scrollFlags="scroll|snap|enterAlways"
+            app:title="@string/app_name" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_tabs"
-            app:tabIndicatorFullWidth="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:tabIndicatorFullWidth="false"
             app:tabMode="scrollable" />
 
     </com.google.android.material.appbar.AppBarLayout>

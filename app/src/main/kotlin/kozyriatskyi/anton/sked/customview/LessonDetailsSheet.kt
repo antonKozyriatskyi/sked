@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.IntDef
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.color.MaterialColors
 import kozyriatskyi.anton.sked.R
 import kozyriatskyi.anton.sked.data.pojo.LessonUi
 import kozyriatskyi.anton.sked.storage.StorageManager
@@ -82,7 +82,7 @@ class LessonDetailsSheet : BottomSheetDialogFragment() {
     private fun showLesson(lesson: LessonUi) {
         name.text = "${lesson.name} (${lesson.shortName})"
         type.text = lesson.type
-        type.setTextColor(ContextCompat.getColor(context!!, lesson.typeColorRes))
+        type.setTextColor(MaterialColors.getColor(type, lesson.typeColorAttr))
         number.text = lesson.number
         cabinet.text = lesson.cabinet
         who.text = lesson.who
