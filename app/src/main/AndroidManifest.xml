@@ -6,6 +6,23 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tg" />
+        </intent>
+    </queries>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -40,7 +57,8 @@
         <activity
             android:name=".about.AboutActivity"
             android:exported="false"
-            android:label="@string/about_activity_title" />
+            android:label="@string/about_activity_title"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".audiences.AudiencesActivity"
             android:exported="false"
