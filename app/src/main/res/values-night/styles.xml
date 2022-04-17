@@ -2,6 +2,7 @@
 <resources>
 
     <style name="AppTheme" parent="Base.AppTheme">
+
         <item name="colorPrimary">@color/teal700</item>
         <item name="colorPrimaryVariant">@color/teal900</item>
 
@@ -16,7 +17,7 @@
         <item name="colorLessonPractice">@color/green400</item>
         <item name="colorLessonSeminar">@color/redAс100</item>
         <item name="colorLessonTest">@color/lightGreenAс200</item>
-
+        <item name="colorLessonUnknown">@color/white</item>
         <item name="colorAudienceFree">@color/green400</item>
         <item name="colorAudienceBusy">@color/redAс100</item>
 
