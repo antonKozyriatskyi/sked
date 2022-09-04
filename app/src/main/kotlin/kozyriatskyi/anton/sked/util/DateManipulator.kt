@@ -7,9 +7,6 @@ import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
 import java.util.*
 
-/**
- * Created by Backbase R&D B.V. on 18.10.2021.
- */
 class DateManipulator {
 
     private var locale: Locale = Locale.getDefault()
