@@ -18,6 +18,10 @@ class Student : User() {
 
     override val name: String
         get() = group
+
+    override fun toString(): String {
+        return "Student(faculty='$faculty', facultyId='$facultyId', course='$course', courseId='$courseId', group='$group', groupId='$groupId')"
+    }
 }
 
 class Teacher : User() {
@@ -28,4 +32,8 @@ class Teacher : User() {
 
     override val name: String
         get() = teacher
+
+    override fun toString(): String {
+        return "Teacher(department='$department', departmentId='$departmentId', teacher='$teacher', teacherId='$teacherId')"
+    }
 }
