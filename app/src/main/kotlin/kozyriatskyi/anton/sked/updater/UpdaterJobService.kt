@@ -15,15 +15,9 @@ import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kozyriatskyi.anton.sked.R
-import kozyriatskyi.anton.sked.analytics.AnalyticsManager
-import kozyriatskyi.anton.sked.common.SCHEDULE_WEEKS_RANGE
-import kozyriatskyi.anton.sked.data.repository.UserInfoStorage
 import kozyriatskyi.anton.sked.data.repository.UserSettingsStorage
 import kozyriatskyi.anton.sked.di.Injector
 import kozyriatskyi.anton.sked.main.MainActivity
-import kozyriatskyi.anton.sked.repository.ScheduleProvider
-import kozyriatskyi.anton.sked.util.DateManipulator
-import kozyriatskyi.anton.sked.util.ScheduleUpdateTimeLogger
 import javax.inject.Inject
 
 
@@ -31,7 +25,8 @@ import javax.inject.Inject
  * Created by Anton on 06.09.2017.
  */
 
-class UpdaterJobService(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
+class UpdaterJobService @Inject constructor(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params) {
 
     companion object {
         private const val CHANNEL_ID = "updater_02"
@@ -39,48 +34,18 @@ class UpdaterJobService(appContext: Context, params: WorkerParameters) : Corouti
     }
 
     @Inject
-    lateinit var scheduleLoader: ScheduleProvider
+    lateinit var interactor: UpdaterInteractor
 
     @Inject
     lateinit var userPreferences: UserSettingsStorage
-
-    @Inject
-    lateinit var userInfoPreferences: UserInfoStorage
-
-    @Inject
-    lateinit var timeLogger: ScheduleUpdateTimeLogger
-
-    @Inject
-    lateinit var dateManipulator: DateManipulator
-
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
 
     override suspend fun doWork(): Result {
         Injector.inject(this)
 
         val updateSuccessful = withContext(Dispatchers.IO) {
-            val user = userInfoPreferences.getUser()
-            val startDate = dateManipulator.getFirstDayOfWeekDate()
-            val endDate = dateManipulator.getLastDayOfWeekDate(SCHEDULE_WEEKS_RANGE - 1)
-
             kotlin.runCatching {
-                scheduleLoader.getSchedule(
-                    user,
-                    startDate = startDate,
-                    endDate = endDate
-                )
-            }
-                .onSuccess {
-                    timeLogger.saveTime()
-                }
-                .onFailure {
-                    analyticsManager.logFailure(
-                        message = "Couldn't update schedule for user ${user.name} {$user} [$startDate - $endDate]",
-                        throwable = it
-                    )
-                }
-                .isSuccess
+                interactor.updateSchedule()
+            }.isSuccess
         }
 
         val notifyOnUpdate = userPreferences.shouldSendUpdateNotification
@@ -112,9 +77,9 @@ class UpdaterJobService(appContext: Context, params: WorkerParameters) : Corouti
         val channelName = context.getString(R.string.notification_channel_name)
         val channelDescriptions = context.getString(R.string.notification_channel_description)
         val contentText = when {
-                successfullyUpdated -> R.string.notification_schedule_updated_successfully
-                else -> R.string.notification_schedule_updated_unsuccessfully
-            }.let(context::getString)
+            successfullyUpdated -> R.string.notification_schedule_updated_successfully
+            else -> R.string.notification_schedule_updated_unsuccessfully
+        }.let(context::getString)
 
         val manager = NotificationManagerCompat.from(context)
 
