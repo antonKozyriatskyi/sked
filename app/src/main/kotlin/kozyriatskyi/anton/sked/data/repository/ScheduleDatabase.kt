@@ -28,9 +28,9 @@ class ScheduleDatabase(
                 deleteAll()
                 insertAll(lessons)
             }
-        }
 
-        timeLogger.saveTime()
+            timeLogger.saveTime()
+        }
     }
 
     override fun amountOfLessonsOnDate(date: LocalDate): Flow<Int> =
