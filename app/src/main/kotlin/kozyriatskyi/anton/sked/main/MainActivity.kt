@@ -1,10 +1,16 @@
 package kozyriatskyi.anton.sked.main
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -171,6 +177,29 @@ class MainActivity : MvpAppCompatActivity(), MainView, TabsOwner,
 
     override fun onUpdateSucceeded() {
         toast(R.string.notification_schedule_updated_successfully)
+    }
+
+    override fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+
+        val result = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+        val hasPermission = result == PackageManager.PERMISSION_GRANTED
+
+        presenter.onNotificationPermissionChecked(hasPermission)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    override fun requestNotificationPermission() {
+        val launcher = registerForActivityResult(RequestPermission()) {
+            // Do nothing
+        }
+
+        launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     override fun onUpdateFailed() {
