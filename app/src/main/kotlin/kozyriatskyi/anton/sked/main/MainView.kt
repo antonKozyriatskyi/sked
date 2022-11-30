@@ -23,4 +23,7 @@ interface MainView : MvpView {
 
     fun onUpdateFailed()
     fun onUpdateSucceeded()
+
+    fun checkNotificationPermission()
+    fun requestNotificationPermission()
 }

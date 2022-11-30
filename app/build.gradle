@@ -34,12 +34,12 @@ android {
             }
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion '32.0.0'
     defaultConfig {
         applicationId 'kozyriatskyi.anton.sked'
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 31
         versionName "1.3.6"
 

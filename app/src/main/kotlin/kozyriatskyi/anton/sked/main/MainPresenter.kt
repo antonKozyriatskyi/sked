@@ -33,6 +33,8 @@ class MainPresenter(
         }
 
         observeUserSettings()
+
+        viewState.checkNotificationPermission()
     }
 
     fun updateLocale(locale: Locale) {
@@ -73,5 +75,11 @@ class MainPresenter(
             .collect {
                 interactor.updateFirstDayOfWeekMode(it)
             }
+    }
+
+    fun onNotificationPermissionChecked(hasPermission: Boolean) {
+        if (hasPermission.not()) {
+            viewState.requestNotificationPermission()
+        }
     }
 }
